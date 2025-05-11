@@ -1,4 +1,4 @@
-export const appUrl = "http://192.168.0.4:3000";
+export const appUrl = "https://minwebappcmgr.vercel.app";
 export const mainUserHomeUrl = appUrl + "/home";
 export const defaultClientImage = appUrl + "/clientdefault.jpg";
 export const appLogo = appUrl + "/applogo.png";
