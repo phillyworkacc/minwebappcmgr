@@ -1,0 +1,11 @@
+.block {
+   width: 400px;
+   height: 15vh;
+   display: flex;
+   flex-direction: column;
+   background: #e7e7e7;
+   border-radius: 10px;
+   padding: 25px 20px;
+   cursor: pointer;
+}
+.block:hover { opacity: 0.8; }

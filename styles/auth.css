@@ -1,0 +1,25 @@
+.auth {
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.auth .auth-container {
+   width: 100%;
+   max-width: 500px;
+   padding: 20px 15px;
+   display: flex;
+   flex-direction: column;
+   text-align: center;
+   gap: 10px;
+}
+
+.auth .auth-container .form-content {
+   width: 100%;
+   padding: 3px 20px;
+}
+
+.auth .auth-container .form-content input { width: 100%; }
+.auth .auth-container .form-content button { width: 100%; padding: 12px; }

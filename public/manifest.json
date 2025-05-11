@@ -1,0 +1,21 @@
+{
+  "name": "MinWeb",
+  "short_name": "MinWeb",
+  "description": "An app to manage clients of MinWeb",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+    "src": "/logo.png",
+    "sizes": "192x192",
+    "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["productivity"]
+}
+ 

@@ -1,0 +1,255 @@
+:root {
+  --accent-color: #236cff;
+}
+
+html,
+body {
+	max-width: 100vw;
+	overflow-x: hidden;
+}
+
+body {
+	color: var(--foreground);
+	background: var(--background) !important;
+	font-family: 'Inter', Arial, Helvetica, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+* {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+	font-family: 'Inter';
+   transition: all 0.2s;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+img {
+   user-select: none;
+   -webkit-user-drag: none;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { width: 8px; background: transparent; }
+::-webkit-scrollbar-thumb { width: 8px; background-color: #373435; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { width: 8px; background-color: #3734359f; border-radius: 8px; }
+
+input {
+   padding: 12px 15px;
+   font-size: 1.1rem;
+   border: none;
+   border: 1px solid var(--inputBorder);
+   outline: 1px solid #00000000;
+   background: var(--inputBackground);
+   color: var(--inputForeground);
+   border-radius: 8px;
+   font-family: 'Inter';
+}
+input.full { width: 100%; }
+input.full.max { width: 100%; max-width: 500px; }
+input:focus { outline: 1px solid var(--inputBorder); }
+input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+}
+
+
+/* 
+select {
+   width: 400px;
+   padding: 10px 15px;
+   font-size: 1.3rem;
+   border: 1px solid #dedede;
+   border-radius: 8px;
+   outline: none;
+}
+@media screen and (max-width: 900px) {
+   select { max-width: 100%; }
+}
+ */
+textarea {
+   height: 30vh;
+   width: 100%;
+   max-width: 500px;
+   padding: 10px 15px;
+   font-size: 1.1rem;
+   border: 1px solid var(--inputBorder);
+   background: var(--inputBackground);
+   color: var(--inputForeground);
+   border-radius: 8px;
+   outline: 1px solid #00000000;
+   resize: none;
+}
+textarea:focus { outline: 1px solid var(--inputBorder); }
+
+button {
+   width: fit-content;
+   padding: 8px 15px;
+   font-size: 1.1rem;
+   border: none;
+   border-radius: 8px;
+   outline: none;
+   background-color: #236cff;
+   color: white;
+   font-family: 'Inter';
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 5px;
+}
+button.full { width: 100%; }
+button.full.max { width: 100%; max-width: 500px; }
+button.outline {
+   background-color: white;
+   color: #236cff;
+   border: 1px solid #236cff;
+}
+button.outline-black {
+   background-color: white;
+   color: #303030;
+   border: 1px solid #8d8d8d;
+}
+button.delete { background-color: #ff3030; }
+button:hover { opacity: 0.8; }
+button:active { scale: 0.92; }
+button:disabled { opacity: 0.75; scale: 1; }
+
+.text-c-xxxs { font-size: 0.85rem; }
+.text-c-xxs { font-size: 1rem; }
+.text-c-xs { font-size: 1.1rem; }
+.text-c-s { font-size: 1.2rem; }
+.text-c-sm { font-size: 1.35rem; }
+.text-c-m { font-size: 1.5rem; }
+.text-c-l { font-size: 1.8rem; }
+.text-c-xl { font-size: 2rem; }
+.text-c-xxl { font-size: 2.15rem; }
+.text-c-b { font-size: 2.8rem; }
+.text-c-xb { font-size: 3rem; }
+.text-c-xxb { font-size: 3.25rem; }
+.text-c-xxxb { font-size: 3.85rem; }
+
+[class*="text-c-"].bold-300 { font-weight: 300; }
+[class*="text-c-"].bold-400 { font-weight: 400; }
+[class*="text-c-"].bold-500 { font-weight: 500; }
+[class*="text-c-"].bold-600 { font-weight: 600; }
+[class*="text-c-"].bold-700 { font-weight: 700; }
+[class*="text-c-"].bold-800 { font-weight: 800; }
+[class*="text-c-"].bold-900 { font-weight: 900; }
+
+[class*="text-c-"].pd-0-5 { padding: 5px 0px; }
+[class*="text-c-"].pd-1 { padding: 10px 0px; }
+[class*="text-c-"].pd-1-5 { padding: 15px 0px; }
+[class*="text-c-"].pd-2 { padding: 20px 0px; }
+[class*="text-c-"].pd-3 { padding: 30px 0px; }
+[class*="text-c-"].pd-4 { padding: 40px 0px; }
+[class*="text-c-"].pd-5 { padding: 50px 0px; }
+[class*="text-c-"].pd-6 { padding: 60px 0px; }
+[class*="text-c-"].pd-7 { padding: 70px 0px; }
+[class*="text-c-"].pd-8 { padding: 80px 0px; }
+[class*="text-c-"].pd-9 { padding: 90px 0px; }
+
+[class*="text-c-"].full { width: 100%; }
+[class*="text-c-"].full-width { width: 100%; }
+[class*="text-c-"].flex-wrap { flex-wrap: wrap; }
+[class*="text-c-"].flex-fill { flex-grow: 1; }
+[class*="text-c-"].error { color: #ff2d2d; }
+[class*="text-c-"].cursor-pointer { cursor: pointer; }
+[class*="text-c-"].grey { color: #000000a2; }
+.home-page.dark [class*="text-c-"].grey { color: #ffffffa2; }
+[class*="text-c-"].text-center { text-align: center; }
+
+
+[class*="text-c-"].dfb {
+   display: flex;
+   align-items: center;
+   justify-content: start;
+}
+
+[class*="text-c-"].dfbc {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: start;
+}
+
+[class*="text-c-"].dfbc.left-align {
+   display: flex;
+   flex-direction: column;
+   align-items: start;
+   justify-content: start;
+}
+
+[class*="text-c-"].dfb.gap-1 { gap: 1px; }
+[class*="text-c-"].dfb.gap-2 { gap: 2px; }
+[class*="text-c-"].dfb.gap-3 { gap: 3px; }
+[class*="text-c-"].dfb.gap-4 { gap: 4px; }
+[class*="text-c-"].dfb.gap-5 { gap: 5px; }
+[class*="text-c-"].dfb.gap-6 { gap: 6px; }
+[class*="text-c-"].dfb.gap-7 { gap: 7px; }
+[class*="text-c-"].dfb.gap-8 { gap: 8px; }
+[class*="text-c-"].dfb.gap-9 { gap: 9px; }
+[class*="text-c-"].dfb.gap-10 { gap: 10px; }
+[class*="text-c-"].dfb.gap-11 { gap: 11px; }
+[class*="text-c-"].dfb.gap-12 { gap: 12px; }
+[class*="text-c-"].dfb.gap-13 { gap: 13px; }
+[class*="text-c-"].dfb.gap-14 { gap: 14px; }
+[class*="text-c-"].dfb.gap-15 { gap: 15px; }
+
+[class*="text-c-"].dfbc.gap-1 { gap: 1px; }
+[class*="text-c-"].dfbc.gap-2 { gap: 2px; }
+[class*="text-c-"].dfbc.gap-3 { gap: 3px; }
+[class*="text-c-"].dfbc.gap-4 { gap: 4px; }
+[class*="text-c-"].dfbc.gap-5 { gap: 5px; }
+[class*="text-c-"].dfbc.gap-6 { gap: 6px; }
+[class*="text-c-"].dfbc.gap-7 { gap: 7px; }
+[class*="text-c-"].dfbc.gap-8 { gap: 8px; }
+[class*="text-c-"].dfbc.gap-9 { gap: 9px; }
+[class*="text-c-"].dfbc.gap-10 { gap: 10px; }
+[class*="text-c-"].dfbc.gap-11 { gap: 11px; }
+[class*="text-c-"].dfbc.gap-12 { gap: 12px; }
+[class*="text-c-"].dfbc.gap-13 { gap: 13px; }
+[class*="text-c-"].dfbc.gap-14 { gap: 14px; }
+[class*="text-c-"].dfbc.gap-15 { gap: 15px; }
+
+[class*="text-c-"].italicise { font-style: italic; }
+
+
+/** rechart styles  */
+.recharts-tooltip-wrapper > .recharts-default-tooltip {
+   border-radius: 10px !important;
+   padding: 5px 10px !important;
+   display: flex;
+   align-items: center;
+   gap: 20px;
+   box-shadow: 0 2px 4px 4px rgba(209, 209, 209, 0.267);
+   border: 1px solid #e4e4e4 !important;
+}
+.home-page.dark .recharts-tooltip-wrapper > .recharts-default-tooltip {
+   background: var(--background) !important;
+   border: 1px solid #424242 !important;
+   box-shadow: 0 2px 4px 4px rgba(73, 73, 73, 0.267);
+}
+.recharts-tooltip-wrapper > .recharts-default-tooltip p { font-weight: 700 !important; }
+.recharts-tooltip-wrapper > .recharts-default-tooltip .recharts-tooltip-item-value {
+   color: var(--accent-color) !important;
+   font-weight: 600 !important;
+}
+
+.recharts-wrapper > svg > g.recharts-cartesian-grid > g > line {
+   stroke: #adadad69;
+}
+
+.recharts-wrapper > svg > g.recharts-layer.recharts-cartesian-axis.recharts-xAxis.xAxis > g > g > line { display: none !important; }
+.recharts-wrapper > svg > g.recharts-layer.recharts-cartesian-axis.recharts-xAxis.xAxis > g > g > line { display: none !important; }
+.recharts-wrapper > svg > g.recharts-layer.recharts-cartesian-axis.recharts-yAxis.yAxis > g > g > line { display: none !important; }
+.recharts-wrapper > svg > g.recharts-layer.recharts-cartesian-axis.recharts-yAxis.yAxis > line { display: none !important; }
+.recharts-wrapper > svg > g.recharts-layer.recharts-cartesian-axis.recharts-xAxis.xAxis > line { display: none !important; }
+.recharts-tooltip-wrapper > .recharts-default-tooltip .recharts-tooltip-item-name { display: none !important; }
+.recharts-tooltip-wrapper > .recharts-default-tooltip .recharts-tooltip-item-separator { display: none !important; }
