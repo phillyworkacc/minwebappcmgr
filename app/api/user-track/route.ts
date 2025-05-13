@@ -9,12 +9,12 @@ const allowedOrigins = [
 export async function POST (req: NextRequest) {
    const origin = req.headers.get('origin');
 
-   console.log(origin);
-
    const headers = new Headers();
    if (origin && allowedOrigins.includes(origin)) {
       headers.set('Access-Control-Allow-Origin', origin);
       headers.set('Vary', 'Origin');
+      headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
    }
 
    const body = await req.json() as UserTrackingDataPartial;
