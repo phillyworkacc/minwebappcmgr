@@ -7,7 +7,7 @@ import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "MinWeb",
-  description: "MinWeb Client Manager, Manage clients that are paying me",
+  description: "MinWeb Client Manager",
 };
 
 export default function RootLayout({
