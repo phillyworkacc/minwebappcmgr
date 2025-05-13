@@ -9,6 +9,8 @@ const allowedOrigins = [
 export async function POST (req: NextRequest) {
    const origin = req.headers.get('origin');
 
+   console.log(origin);
+
    const headers = new Headers();
    if (origin && allowedOrigins.includes(origin)) {
       headers.set('Access-Control-Allow-Origin', origin);
