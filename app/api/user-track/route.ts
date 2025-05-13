@@ -6,16 +6,32 @@ const allowedOrigins = [
   'https://detix-website.vercel.app',
 ];
 
+function getCorsHeaders(origin: string | null): Headers {
+  const headers = new Headers();
+
+  if (origin && allowedOrigins.includes(origin)) {
+    headers.set('Access-Control-Allow-Origin', origin);
+    headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    headers.set('Vary', 'Origin');
+  }
+
+  return headers;
+}
+
+// Handle CORS Preflight
+export async function OPTIONS(req: Request) {
+  const origin = req.headers.get('origin');
+  const headers = getCorsHeaders(origin);
+  return new NextResponse(null, {
+    status: 204,
+    headers,
+  });
+}
+
 export async function POST (req: NextRequest) {
    const origin = req.headers.get('origin');
-
-   const headers = new Headers();
-   if (origin && allowedOrigins.includes(origin)) {
-      headers.set('Access-Control-Allow-Origin', origin);
-      headers.set('Vary', 'Origin');
-      headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-   }
+   const headers = getCorsHeaders(origin);
 
    const body = await req.json() as UserTrackingDataPartial;
    const authHeader = await req.headers.get("authorization")
