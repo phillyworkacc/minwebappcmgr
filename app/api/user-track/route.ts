@@ -1,28 +1,39 @@
 import { UserTrackerDB } from "@/db/UserTrackerDb";
-import { NextRequest, NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from "next";
 
+const allowedOrigins = [
+   'https://minweb.freevar.com',
+   'https://detix-website.vercel.app',
+];
 
-export async function POST (req: NextRequest) {
-   const body = await req.json() as UserTrackingDataPartial;
-   const authHeader = await req.headers.get("authorization")
+export async function POST (req: NextApiRequest, res: NextApiResponse) {
+   const origin = req.headers.origin;
+
+   if (origin && allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Vary', 'Origin');
+   }
+
+   const body = await req.body.json() as UserTrackingDataPartial;
+   const authHeader = req.headers.authorization;
 
    const { location, time, utmsource, device, os, page } = body;
 
    if (authHeader == undefined) {
       //! invalid request
-      return NextResponse.json({ message: "Forbidden Request" }, { status: 500 })
+      res.status(500).json({ message: "Forbidden Request" })
 
    } else if (page == undefined || location == undefined || os == undefined || time == undefined || utmsource == undefined || device == undefined) {
       //! invalid request
-      return NextResponse.json({ message: "Forbidden Request" }, { status: 500 })
+      res.status(500).json({ message: "Forbidden Request" })
 
    } else if (authHeader === "lSjFmFulZGPw+So4SVI5W/jcd3RMm6YH/c5nS2cGBWQ=") {
       //* valid request
       try {
          await UserTrackerDB.insert({ time, location, utmsource, device, os, page })
-         return NextResponse.json({ message: "success" }, { status: 200 })
+         res.status(200).json({ message: "success" })
       } catch (er) {
-         return NextResponse.json({}, { status: 500 })
+         res.status(500).json({})
       }
    }
 
