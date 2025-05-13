@@ -36,5 +36,4 @@ export async function POST (req: NextApiRequest, res: NextApiResponse) {
          res.status(500).json({})
       }
    }
-
 }
