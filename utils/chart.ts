@@ -26,7 +26,6 @@ export function chartGroupByMonth (data: Payment[], clients: Client[], targetYea
       "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
    ];
 
-   // Initialize an object to track the amounts for each year and month
    const grouped: { [key: number]: { [key: string]: { totalAmount: number; totalPayments: number; clients: ClientChartInfo[] } } } = {};
 
    // Get the current date for determining the current month and year
