@@ -2,6 +2,7 @@
 import AppWrapper from "@/components/AppWrapper/AppWrapper"
 import ListClients from "./ListClients"
 import AwaitButton from "@/components/AwaitButton/AwaitButton"
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb"
 import { useState } from "react"
 import { CustomUserIcon, MinwebAppLogo } from "@/components/Icons/Icon"
 import { ArrowLeft, CreditCard } from "lucide-react"
@@ -9,7 +10,6 @@ import { addPayment } from "../actions/payments"
 import { formatNumber } from "@/utils/num"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import Breadcrumb from "@/components/Breadcrumb/Breadcrumb"
 
 type FormType = 'choose-client' | 'amount' | 'success' | 'fail'
 type AddPaymentPageProps = {
