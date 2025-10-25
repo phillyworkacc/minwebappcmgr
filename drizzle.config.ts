@@ -1,6 +1,6 @@
 import { defineConfig } from "drizzle-kit";
 
-if (!process.env.DATABASE_URL) {
+if (!process.env.NEON_DB) {
    throw new Error("No process.env.DATABASE_URL");
 }
 
@@ -9,6 +9,6 @@ export default defineConfig({
    schema: './db/schemas.ts',
    dialect: 'postgresql',
    dbCredentials: {
-      url: process.env.DATABASE_URL
+      url: process.env.NEON_DB
    }
 })
