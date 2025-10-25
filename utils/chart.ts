@@ -37,7 +37,7 @@ export function chartGroupByMonth (data: Payment[], clients: Client[], targetYea
    data.forEach(({ amount, date, clientid }) => {
       const dateObj = new Date(parseInt(date));
       const year = dateObj.getFullYear();
-      const month = months[dateObj.getMonth()]; // Get the 3-letter month name (Jan, Feb, etc.)
+      const month = months[dateObj.getMonth()];
 
       // Only process data for the target year
       if (year === targetYear) {
