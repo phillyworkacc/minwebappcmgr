@@ -22,7 +22,6 @@ function convertClientsToClientChartInfo (clients: ClientChartInfo[]) {
 }
 
 export function chartGroupByMonth (data: Payment[], clients: Client[], targetYear: number): ChartMonthlyData[] {
-   // Initialize the months of the year
    const months = [
       "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
    ];
