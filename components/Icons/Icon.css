@@ -1,0 +1,14 @@
+.icon {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.icon img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   object-position: center;
+}
+
+.icon.round img { border-radius: 100% !important; }

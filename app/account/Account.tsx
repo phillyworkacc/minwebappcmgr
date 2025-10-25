@@ -1,31 +1,24 @@
 'use client'
-
-import "@/styles/home.css"
-import { signOut, useSession } from "next-auth/react";
-import { useUser } from "../context/UserContext";
-import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar/Navbar";
-import AppLogoUserWelcome from "@/components/AppLogoUserWelcome/AppLogoUserWelcome";
-import LoadingAccountPage from "./LoadingAccount";
+import { signOut } from "next-auth/react";
 import { LogOut } from "lucide-react";
+import AppWrapper from "@/components/AppWrapper/AppWrapper";
 
-export default function AccountPage() {
-   const { data: session, status } = useSession();
-   const { user } = useUser();
-   const router = useRouter();
+type UserDetails = {
+   userid: string;
+   name: string;
+   email: string;
+}
 
-   if (status == "loading") return <LoadingAccountPage />;
-   if (!session?.user) return <LoadingAccountPage />;
-   if (!user) return <LoadingAccountPage />;
-
-   return (<div className={`home-page ${user.color_theme}`}>
-      <Navbar page="account" />
-      <div className="app-content">
-         <div className="text-c-xxl bold-700 pd-2">Your account</div>
-         <AppLogoUserWelcome name={user.name} />
-         <div className="text-c-xs pd-2">You are signed in with <b>{user.email}</b></div>
-         <br />
-         <button onClick={() => signOut()}><LogOut /> Sign Out</button>
-      </div>
-   </div>)
+export default function AccountPage ({ user }: { user: UserDetails }) {
+   return (
+      <AppWrapper>
+         <div className="text-l bold-700 mb-1">Your account</div>
+         <div className="text-sm bold-500">{user.name}</div>
+         <div className="text-xs bold-500">{user.email}</div>
+         <div className="text-xs pd-2">You are signed in with <b>{user.email}</b></div>
+         <button className="xxs pd-11 full" onClick={() => signOut()}>
+            <LogOut /> Sign Out
+         </button>
+      </AppWrapper>
+   )
 }

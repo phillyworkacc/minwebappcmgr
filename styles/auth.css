@@ -2,14 +2,15 @@
    width: 100vw;
    height: 100vh;
    display: flex;
-   align-items: center;
+   align-items: start;
    justify-content: center;
 }
 
 .auth .auth-container {
    width: 100%;
    max-width: 500px;
-   padding: 20px 15px;
+   height: fit-content;
+   padding: 20px;
    display: flex;
    flex-direction: column;
    text-align: center;
@@ -18,8 +19,8 @@
 
 .auth .auth-container .form-content {
    width: 100%;
-   padding: 3px 20px;
 }
 
 .auth .auth-container .form-content input { width: 100%; border: 1px solid #efefef; }
+.auth .auth-container .form-content input:focus { border: 1px solid #1121ff; }
 .auth .auth-container .form-content button { width: 100%; padding: 12px; }

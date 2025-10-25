@@ -1,47 +1,48 @@
-export const formatDate = (day: number, month: number, year: number) => {
-   const date = new Date(year, month - 1, day);
-   return date.toLocaleDateString("en-GB", {
-      weekday: "long",
-      day: "2-digit",
-      month: "long",
-      year: "numeric"
-   });
+export function convertToMilliseconds(
+  date: string,
+  hour: number,
+  minutes: number,
+  timePeriod: 'am' | 'pm'
+): number {
+  // Parse date string (YYYY-MM-DD)
+  const [yearStr, monthStr, dayStr] = date.split('-');
+  const year = parseInt(yearStr, 10);
+  const month = parseInt(monthStr, 10) - 1; // JS months are 0-based
+  const day = parseInt(dayStr, 10);
+
+  // Convert hour to 24-hour format
+  let adjustedHour = hour;
+  if (timePeriod === 'pm' && hour < 12) adjustedHour += 12;
+  if (timePeriod === 'am' && hour === 12) adjustedHour = 0;
+
+  // Create the Date object
+  const dateObj = new Date(year, month, day, adjustedHour, minutes);
+
+  // Return time in milliseconds
+  return dateObj.getTime();
 }
 
-export function formatDateV2(ms: number) {
-   const date = new Date(ms);
-   return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-}
+export function formatMilliseconds(ms: number, withoutTime?: boolean, shortHandMonth?: boolean): string {
+  const date = new Date(ms);
 
-export function formatDateTime(ms: number) {
-   const date = new Date(ms);
-   return date.toLocaleString('en-GB', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-   }).replace(',', '');
-}
+  const day = date.getDate();
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
 
-export function formatDateForMinwebAnalytic(ms: number) {
-   const now = Date.now();
-   const diffMs = now - ms;
-   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-   
-   const date = new Date(ms);
-   let hours = date.getHours();
-   const minutes = String(date.getMinutes()).padStart(2, '0');
-   const period = hours >= 12 ? 'pm' : 'am';
-   hours = hours % 12 || 12; // convert to 12-hour format
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  const timePeriod = hours >= 12 ? 'pm' : 'am';
 
-   if (diffDays < 1) return `today, ${hours}:${minutes} ${period}`;
-   if (diffDays < 7) return `${diffDays} day${diffDays === 1 ? '' : 's'} ago, ${hours}:${minutes} ${period}`;
+  hours = hours % 12;
+  if (hours === 0) hours = 12;
 
-   const day = date.getDate();
-   const month = date.toLocaleString('en-GB', { month: 'long' });
-   const year = date.getFullYear();
+  const formattedMinutes = minutes.toString().padStart(2, '0');
 
-   return `on ${day} ${month} ${year}, ${hours}:${minutes} ${period}`;
+  return withoutTime
+    ? `${day} ${shortHandMonth ? month.substring(0,3) : month} ${year}`
+    : `${day} ${shortHandMonth ? month.substring(0,3) : month} ${year}, ${hours}:${formattedMinutes} ${timePeriod}`
 }

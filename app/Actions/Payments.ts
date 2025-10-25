@@ -1,41 +1,67 @@
 "use server"
+import { dalDbOperation, dalRequireAuth } from "@/dal/helpers";
+import { db } from "@/db";
+import { paymentsTable } from "@/db/schemas";
+import { and, desc, eq } from "drizzle-orm";
 
-import { PaymentsDB } from "@/db/PaymentsDb";
-import { getUserServer } from "./User";
-
-export async function getRecentPaymentsData (): Promise<Payment[] | false> {
-   try {
-      const payments = await PaymentsDB.getAllRecentPayments();
-      return JSON.parse(JSON.stringify(payments));
-   } catch (err) {
-      return false;
-   }
+export async function getRecentPaymentsData () {
+   const payments = await dalRequireAuth(user => 
+      dalDbOperation(async () => {
+         const res = await db.select()
+            .from(paymentsTable)
+            .where(eq(paymentsTable.userid, user.userid!))
+            .orderBy(desc(paymentsTable.date))
+            .limit(3)
+         return res;
+      })
+   )
+   return payments;
 }
 
-export async function getAllTimePaymentsData (): Promise<Payment[] | false> {
-   try {
-      const payments = await PaymentsDB.getAllPayments();
-      return JSON.parse(JSON.stringify(payments));
-   } catch (err) {
-      return false;
-   }
+export async function getAllTimePaymentsData () {
+   const payments = await dalRequireAuth(user => 
+      dalDbOperation(async () => {
+         const res = await db.select()
+            .from(paymentsTable)
+            .where(eq(paymentsTable.userid, user.userid!))
+            .orderBy(desc(paymentsTable.date));
+         return res;
+      })
+   )
+   return payments;
 }
 
-export async function addPayment (clientId: string, amount: string, reason: string): Promise<boolean> {
-   try {
-      const user = await getUserServer();
-      if (!user) return false;
+export async function addPayment (clientId: string, amount: string, reason: string) {
+   const addedPayment = await dalRequireAuth(user => 
+      dalDbOperation(async () => {
+         const now = `${Date.now()}`
+         const res = await db.insert(paymentsTable)
+            .values({
+               userid: user.userid!,
+               clientid: clientId,
+               amount: amount,
+               text: reason,
+               date: now
+            })
+         return (res.rowCount > 0);
+      })
+   )
+   return addedPayment;
+}
 
-      const res = await PaymentsDB.insert({
-         userid: user.userid,
-         clientid: clientId,
-         amount: amount,
-         text: reason,
-         date: `${Date.now()}`
-      });
-
-      return res;
-   } catch (err) {
-      return false;
-   }
+export async function deletePayment (clientId: string, paymentDate: string, paymentAmount: string) {
+   const deleted = await dalRequireAuth(user =>
+      dalDbOperation(async () => {
+         const res = await db
+            .delete(paymentsTable)
+            .where(and(
+               eq(paymentsTable.userid, user.userid!),
+               eq(paymentsTable.clientid, clientId),
+               eq(paymentsTable.amount, paymentAmount),
+               eq(paymentsTable.date, paymentDate)
+            ));
+         return (res.rowCount > 0);
+      })
+   )
+   return deleted;
 }

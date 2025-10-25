@@ -1,14 +1,16 @@
-type ColorTheme = 'dark' | 'light'
+declare module "*.css"
+
 type User = {
+   id: number;
    userid: string;
    name: string;
    email: string;
    password: string;
-   color_theme: ColorTheme;
 }
 
 type ClientStatus = 'working' | 'finished' | 'beginning' | 'failed'
 type Client = {
+   id: number;
    userid: string;
    clientid: string;
    name: string;
@@ -21,24 +23,35 @@ type Client = {
    latestupdate: string;
 }
 
-type DeviceType = 'Desktop' | 'Mobile'
-type UserTrackingDataPage = 'Minweb' | 'Detix'
-type OS = 'Windows' | 'iOS' | 'macOS' | 'Android' | 'Linux' | 'Unknown'
-type UserTrackingData = {
-   location: string;
-   time: number;
-   utmsource: string;
-   device: DeviceType;
-   os: OS;
-   page: UserTrackingDataPage;
+type ClientChartInfo = Client & {
+   amountPaid: number;
 }
-type UserTrackingDataPartial = Partial<UserTrackingData>
-
 
 type Payment = {
+   id: number;
    userid: string;
    clientid: string;
    amount: string;
    text: string;
    date: string;
+}
+
+type ClientPayment = {
+   client: {
+      clientid: string;
+      name: string;
+      image: string;
+   },
+   amount: string;
+   text: string;
+   date: string;
+}
+
+type ClientReview = {
+   client: {
+      clientid: string;
+      name: string;
+      image: string;
+   };
+   review: string;
 }

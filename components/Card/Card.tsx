@@ -1,14 +1,21 @@
 'use client'
-
-import './Card.css'
-import { ReactNode } from "react"
+import { CSSProperties, ReactNode } from "react";
+import "./Card.css"
 
 type CardProps = {
-   children: ReactNode
+   children: ReactNode;
+   styles?: CSSProperties;
+   className?: string;
+   cursor?: boolean;
+   onClick?: Function;
 }
 
-export default function Card({ children }: CardProps) {
+export default function Card({ children, className, cursor, onClick, styles }: CardProps) {
    return (
-      <div className="card">{children}</div>
+      <div 
+         className={`card ${className}`}
+         style={styles}
+         onClick={() => onClick ? onClick() : {}}
+      >{children}</div>
    )
 }

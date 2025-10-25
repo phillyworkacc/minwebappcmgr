@@ -1,0 +1,26 @@
+.switch-ui {
+   width: 90px;
+   height: 40px;
+   border-radius: 9999px;
+   background: #c0c0c0;
+   padding: 5px;
+   margin: 10px 0;
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+}
+
+.switch-ui .ball {
+   height: 100%;
+   aspect-ratio: 1;
+   border-radius: 100%;
+   background-color: white;
+   transition: all 0.2s;
+   transform: translateX(0);
+}
+
+.switch-ui.on { background: #6c2eff; }
+
+.switch-ui.on .ball {
+   transform: translateX(calc(100% + 20px));
+}

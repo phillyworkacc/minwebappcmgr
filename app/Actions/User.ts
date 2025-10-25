@@ -1,29 +1,22 @@
 "use server"
+import { dalDbOperation, dalRequireAuth } from "@/dal/helpers";
+import { db } from "@/db";
+import { eq } from "drizzle-orm";
+import { usersTable } from "@/db/schemas";
+import { authOptions } from "@/lib/authOptions"
+import { getServerSession } from "next-auth"
 
-import { UsersDB } from "@/db/UserDb";
-import { authOptions } from "@/lib/authOptions";
-import { getServerSession } from "next-auth";
-
-export async function getUserServer () {
+export async function getCurrentUser (): Promise<User | null> {
    try {
       const session = await getServerSession(authOptions);
-      if (!session?.user) return false;
 
-      const user = await UsersDB.getUser(session.user.email!);
-      return user ? user : false;
+      if (!session) return null;
+      if (!session.user) return null;
+
+      const user = await db.select().from(usersTable).where(eq(usersTable.email, session.user.email!)).limit(1);
+      
+      return user[0] as User;
    } catch (err) {
-      return false;
-   }
-}
-
-export async function updateUserColorTheme (newCT: ColorTheme) {
-   try {
-      const user = await getUserServer();
-      if (!user) return false;
-
-      let result = await UsersDB.changeColorTheme(user.email, newCT);
-      return result;
-   } catch (err) {
-      return false;
+      return null;
    }
 }

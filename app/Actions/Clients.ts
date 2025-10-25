@@ -1,86 +1,138 @@
 "use server"
-
-import { ClientsDB } from "@/db/ClientDb";
-import { getUserServer } from "./User";
+import { dalDbOperation, dalRequireAuth } from "@/dal/helpers";
+import { db } from "@/db";
+import { clientsTable } from "@/db/schemas";
+import { and, eq } from "drizzle-orm";
+import { uuid } from "@/utils/uuid";
 
 export async function getAllUserClients () {
-   try {
-      const user = await getUserServer();
-      if (!user) return false;
-      const clients = await ClientsDB.getAllClients(user.userid);
-      return JSON.parse(JSON.stringify(clients));
-   } catch (err) {
-      return false;
-   }
+   const clients = await dalRequireAuth(user =>
+      dalDbOperation(async () => {
+         const res = await db.select()
+            .from(clientsTable)
+            .where(eq(clientsTable.userid, user.userid!));
+         
+         return res;
+      })
+   )
+   return clients;
 }
 
 export async function getInfoForReviewClient (clientId: string) {
-   try {
-      const client = await ClientsDB.getClientOnlyCID(clientId);
-      return JSON.parse(JSON.stringify(client));
-   } catch (err) {
-      return false;
-   }
+   const clients: any = await dalDbOperation(async () => {
+      const res = await db.select()
+         .from(clientsTable)
+         .where(eq(clientsTable.clientid, clientId))
+         .limit(1);
+      
+      return res;
+   })
+   return clients[0];
 }
 
 export async function sendReviewForClient (clientId: string, review: string) {
-   try {
-      const client = await getInfoForReviewClient(clientId);
-      const reviews = [review, ...client.review.split("@@!!@@")];
-      const result = await ClientsDB.addClientReview(clientId, reviews.join("@@!!@@"), `${Date.now()}`);
-      return result;
-   } catch (err) {
-      return false;
-   }
+   const result: any = await dalDbOperation(async () => {
+      const client = await db.select()
+         .from(clientsTable)
+         .where(eq(clientsTable.clientid, clientId));
+      
+      const reviews = [review, ...client[0]?.review?.split("@@!!@@")!].join("@@!!@@");
+      const now = `${Date.now()}`;
+
+      const res = await db.update(clientsTable)
+         .set({
+            review: reviews,
+            latestupdate: now
+         })
+         .where(eq(clientsTable.clientid, clientId));
+      
+      return (res.rowCount > 0);
+   })
+   return result;
 }
 
 export async function createUserClient (name: string, description: string, image: string) {
-   try {
-      const user = await getUserServer();
-      if (!user) return false;
-
-      const result = await ClientsDB.add({
-         userid: user.userid,
-         name, description, image,
-         createdat: `${Date.now()}`,
-         latestupdate: `${Date.now()}`
-      });
-
-      return result
-   } catch (err) {
-      return false;
-   }
+   const now = `${Date.now()}`;
+   const clientid = uuid().replaceAll("-","");
+   const inserted = await dalRequireAuth(user =>
+      dalDbOperation(async () => {
+         const res = await db.insert(clientsTable).values({
+            userid: user.userid, clientid,
+            name, description, image,
+            notes: "", status: "beginning", review: "",
+            latestupdate: now, createdat: now
+         });
+         return (res.rowCount > 0);
+      })
+   )
+   return inserted
 }
 
 export async function getUserClientInfo (clientId: string) {
-   try {
-      const user = await getUserServer();
-      if (!user) return false;
-      const client = await ClientsDB.getClient(user.userid, clientId);
-      return client ? JSON.parse(JSON.stringify(client)) : false;
-   } catch (err) {
-      return false;
-   }
+   const client = await dalRequireAuth(user =>
+      dalDbOperation(async () => {
+         const res = await db.select()
+            .from(clientsTable)
+            .where(and(
+               eq(clientsTable.userid, user.userid!),
+               eq(clientsTable.clientid, clientId)
+            ))
+            .limit(1);
+         return res[0];
+      })
+   )
+   return client;
+}
+
+export async function deleteClientAccount (clientId: string) {
+   const deleted = await dalRequireAuth(user =>
+      dalDbOperation(async () => {
+         const res = await db
+            .delete(clientsTable)
+            .where(and(
+               eq(clientsTable.userid, user.userid!),
+               eq(clientsTable.clientid, clientId)
+            ));
+         return (res.rowCount > 0);
+      })
+   )
+   return deleted;
 }
 
 export async function updateClientInfoStatus (clientId: string, newStatus: ClientStatus) {
-   try {
-      const user = await getUserServer();
-      if (!user) return false;
-      const result = await ClientsDB.updateClientStatus(user.userid, clientId, newStatus, `${Date.now()}`);
-      return result
-   } catch (err) {
-      return false;
-   }
+   const now = `${Date.now()}`;
+   const result = await dalRequireAuth(user =>
+      dalDbOperation(async () => {
+         const res = await db.update(clientsTable)
+            .set({
+               status: newStatus,
+               latestupdate: now
+            })
+            .where(and(
+               eq(clientsTable.userid, user.userid!),
+               eq(clientsTable.clientid, clientId)
+            ));
+         return (res.rowCount > 0);
+      })
+   )
+   return result
 }
 
 export async function updateClientInfoNotes (clientId: string, newNotes: string) {
-   try {
-      const user = await getUserServer();
-      if (!user) return false;
-      const result = await ClientsDB.updateClientNote(user.userid, clientId, newNotes, `${Date.now()}`);
-      return result
-   } catch (err) {
-      return false;
-   }
+   const now = `${Date.now()}`;
+   const result = await dalRequireAuth(user =>
+      dalDbOperation(async () => {
+         const res = await db.update(clientsTable)
+            .set({
+               notes: newNotes,
+               latestupdate: now
+            })
+            .where(and(
+               eq(clientsTable.userid, user.userid!),
+               eq(clientsTable.clientid, clientId)
+            ));
+         return (res.rowCount > 0);
+      })
+   )
+   return result;
 }

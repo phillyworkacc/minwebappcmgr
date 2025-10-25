@@ -1,35 +1,33 @@
 "use server"
-
-import { UsersDB } from "@/db/UserDb";
-import { hashPassword } from "@/utils/keygen";
+import { dalDbOperation } from "@/dal/helpers";
+import { db } from "@/db";
+import { usersTable } from "@/db/schemas";
+import { hashPwd } from "@/utils/uuid";
+import { and, eq } from "drizzle-orm";
 
 export async function userEmailExists (email: string) {
-   try {
-      let user = await UsersDB.getUser(email);
-      return user ? true : false;
-   } catch (err) {
-      return false;
-   }
+   const userExists = await dalDbOperation(async () => {
+      const res = await db.select()
+         .from(usersTable)
+         .where(eq(usersTable.email, email))
+         .limit(1);
+      
+      return (res.length > 0);
+   })
+   console.log(userExists)
+   return userExists;
 }
 
 export async function userLogIn (email: string, password: string) {
-   try {
-      let user = await UsersDB.login(email, hashPassword(password));
-      return user ? true : false;
-   } catch (err) {
-      return false;
-   }
-}
-
-export async function createUser (name: string, email: string, password: string) {
-   try {
-      let user = await UsersDB.insert({
-         name: name,
-         email: email,
-         password: hashPassword(password)
-      });
-      return user ? true : false;
-   } catch (err) {
-      return false;
-   }
+   const logUserIn = await dalDbOperation(async () => {
+      const res = await db.select()
+         .from(usersTable)
+         .where(and(
+            eq(usersTable.email, email),
+            eq(usersTable.password, hashPwd(password))
+         ))
+         .limit(1);
+      return (res.length > 0);
+   })
+   return logUserIn;
 }

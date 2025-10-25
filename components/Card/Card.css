@@ -1,9 +1,58 @@
 .card {
-   background-color: var(--background);
-   color: var(--foreground);
-   border: 1px solid var(--officialCardBorder);
-   padding: 15px 20px;
-   border-radius: 10px;
    width: 100%;
-   max-width: 550px;
+   background-color: white;
+   border-radius: 15px;
+   border: 1px solid #ececec;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.loading-card {
+   background-color: #e0e0e0;
+   border-radius: 10px;
+   animation: pulse 1.5s infinite ease-in-out;
+}
+
+.tool-card {
+   width: 100%;
+   padding: 20px;
+   background-color: white;
+   border-radius: 15px;
+   border: 1px solid #ececec;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+   position: relative;
+}
+.tool-card.note-maker { border: 2px solid #ff6c16; }
+.tool-card.human-writer { border: 2px solid #b20acf; }
+.tool-card.quiz-maker { border: 2px solid #48c416; }
+.tool-card.essay-grader { border: 2px solid #f31268; }
+
+.tool-card .icon {
+   position: absolute;
+   top: 20px;
+   right: 20px;
+   padding: 10px;
+   color: white;
+   border-radius: 100%;
+}
+
+.tool-card.human-writer .icon { background: linear-gradient(to bottom, #4b0058, #800396); }
+.tool-card.essay-grader .icon { background: linear-gradient(to bottom, #c4004b, #ff1b72); }
+.tool-card.quiz-maker .icon { background: linear-gradient(to bottom, #186101, #48c416); }
+.tool-card.note-maker .icon { background: linear-gradient(to bottom, #c75001, #f17126); }
+
+.tool-card.human-writer button { background: linear-gradient(to bottom, #740188, #a60ac2); }
+.tool-card.essay-grader button { background: linear-gradient(to bottom, #d3105a, #ff1b72); }
+.tool-card.quiz-maker button { background: linear-gradient(to bottom, #1a6e01, #399e12); }
+.tool-card.note-maker button { background: linear-gradient(to bottom, #c75001, #f17126); }
+
+@keyframes pulse {
+   0% {
+      background-color: #e0e0e0;
+   }
+   50% {
+      background-color: #f0f0f0;
+   }
+   100% {
+      background-color: #e0e0e0;
+   }
 }
