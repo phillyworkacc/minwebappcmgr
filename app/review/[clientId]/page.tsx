@@ -1,8 +1,8 @@
 import "@/styles/app.css"
-import { dalDbOperation, dalRequireAuth, dalRequireAuthRedirect } from "@/dal/helpers"
+import { dalDbOperation } from "@/dal/helpers"
 import { db } from "@/db";
 import { clientsTable } from "@/db/schemas";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import LoadingPage from "./loading";
 import ReviewPage from "./ReviewPage";
 
@@ -13,23 +13,18 @@ type ClientProps = {
 }
 
 export default async function Client ({ params }: ClientProps) {
-   await dalRequireAuthRedirect();
-
    const { clientId } = await params;
 
-   const clientInfo = await dalRequireAuth(user =>
-      dalDbOperation(async () => {
-         const client = await db
-            .select()
-            .from(clientsTable)
-            .where(and(
-               eq(clientsTable.userid, user.userid!),
-               eq(clientsTable.clientid, clientId)
-            )).limit(1);
+   const clientInfo = await dalDbOperation(async () => {
+      const client = await db
+         .select()
+         .from(clientsTable)
+         .where(
+            eq(clientsTable.clientid, clientId)
+         ).limit(1);
 
-         return client;
-      })
-   )
+      return client;
+   })
 
    if (clientInfo.success) {
       return <ReviewPage 
