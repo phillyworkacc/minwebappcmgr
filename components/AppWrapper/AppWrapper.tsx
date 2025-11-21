@@ -1,6 +1,6 @@
 "use client"
-import "@/styles/app.css"
 import "./AppWrapper.css"
+import "@/styles/app.css"
 import { ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'

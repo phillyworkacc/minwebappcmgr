@@ -2,8 +2,8 @@ import "@/styles/global.css";
 import type { Metadata } from "next";
 import { DMSansFont } from "@/fonts/fonts";
 import { Toaster } from "sonner";
-import SessionWrapper from "@/components/SessionWrapper/SessionWrapper";
 import { ModalProvider } from "@/components/Modal/ModalContext";
+import SessionWrapper from "@/components/SessionWrapper/SessionWrapper";
 
 export const metadata: Metadata = {
   title: "MinWeb",

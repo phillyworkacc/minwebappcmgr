@@ -240,6 +240,16 @@ export function getUniqueYearsClient (data: Client[]): string[] {
    return [...new Set(years)];
 }
 
+export function getUniqueYearsActivity (data: Activity[]): string[] {
+   const years = data.map(item => {
+      const date = new Date(parseInt(item.date));
+      return date.getFullYear().toString();
+   });
+
+   // Filter out duplicates and return the unique years
+   return [...new Set(years)];
+}
+
 type ChartHourlyData = {
    hour: string;
    totalAmount: number;

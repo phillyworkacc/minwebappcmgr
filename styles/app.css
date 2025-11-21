@@ -102,3 +102,33 @@
 @keyframes blink {
   50% { opacity: 0; }
 }
+
+.markdown-editor-class {
+   width: 100% !important;
+   height: 100%;
+   font-family: "Inter" !important;
+   outline: none;
+}
+
+.markdown-editor-contenteditable {
+   width: 100% !important;
+   min-height: 50vh !important;
+   height: fit-content !important;
+   font-family: "Inter" !important;
+   outline: none;
+}
+
+.markdown-editor-contenteditable ul {
+   margin-left: 20px !important;
+}
+
+.markdown-editor-contenteditable p,
+.markdown-editor-contenteditable ul,
+.markdown-editor-contenteditable ol,
+.markdown-editor-contenteditable h1,
+.markdown-editor-contenteditable h2,
+.markdown-editor-contenteditable h3 {
+  margin-bottom: 0.8rem; /* or whatever spacing looks good */
+}
+
+.markdown-editor-contenteditable ul li { margin-bottom: 0.5rem; }

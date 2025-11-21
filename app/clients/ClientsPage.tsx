@@ -114,10 +114,10 @@ export default function ClientsPage ({ allClients }: ClientsPageProps) {
                   onClickClient={client => router.push(`/client/${client.clientid}`)}
                />
             </>) : (<>
-               <div className="text-xxs full grey-5 text-center">No results</div>
+               <div className="text-xxs full grey-5 text-center">No clients</div>
             </>)}
          </>) : (<>
-            <div className="text-xxs full grey-5 text-center">No results</div>
+            <div className="text-xxs full grey-5 text-center">No clients</div>
          </>)}
       </AppWrapper>
    )

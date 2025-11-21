@@ -55,3 +55,22 @@ type ClientReview = {
    };
    review: string;
 }
+
+type ActivityPriority = 'high' | 'medium' | 'low'
+type Activity = {
+   id: number;
+   activityId: string;
+   userid: string;
+   clientid: string;
+   title: string;
+   priority: ActivityPriority;
+   markdownDescriptionText: string;
+   completed: boolean;
+   completeDate: string;
+   dueDate: string;
+   date: string;
+}
+
+type ActivityClient = Activity & {
+   client: Client;
+}

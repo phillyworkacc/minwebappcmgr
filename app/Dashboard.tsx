@@ -13,6 +13,8 @@ import Select from "@/components/Select/Select";
 import ClientsTable from "@/components/Table/ClientsTable";
 import PaymentsTable from "@/components/Table/PaymentsTable";
 import Card from "@/components/Card/Card";
+import ActivitiesTable from "@/components/Table/ActivitiesTable";
+import { getAllUserActivities } from "./actions/activity";
 
 export default function DashboardPage () {
    const router = useRouter();
@@ -21,6 +23,8 @@ export default function DashboardPage () {
 
    const [userClients, setUserClients] = useState<Client[] | null>(null)
    const [recentClients, setRecentClients] = useState<Client[] | null>(null)
+
+   const [allActivities, setAllActivities] = useState<ActivityClient[] | null>(null)
 
    const [totalAmount, setTotalAmount] = useState(0)
    const [chartLabelIndex, setChartLabelIndex] = useState<null | number>(null)
@@ -33,6 +37,9 @@ export default function DashboardPage () {
    const loadPageInfo = async () => {
       const queryAllClients = await getAllUserClients();
       const allClients: any[] = queryAllClients.success ? queryAllClients.data : [];
+
+      const queryAllActivities = await getAllUserActivities();
+      const allActivities: any[] = queryAllActivities.success ? queryAllActivities.data : [];
 
       const queryRecentPays = await getRecentPaymentsData();
       const recentPays: any[] = queryRecentPays.success ? queryRecentPays.data : [];
@@ -143,6 +150,13 @@ export default function DashboardPage () {
                   desktopChartSize={{ width: 950 }}
                />
             </div>
+         </div>
+
+         <div className="htv gap-10 mb-1">
+            <Card styles={cardStyles}>
+               <div className="text-xxs grey-5 full mb-1">Activities</div>
+               <ActivitiesTable activities={allActivities || []} />
+            </Card>
          </div>
 
          <div className="htv gap-10 mb-1">
