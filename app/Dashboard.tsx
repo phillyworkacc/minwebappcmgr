@@ -15,6 +15,7 @@ import PaymentsTable from "@/components/Table/PaymentsTable";
 import Card from "@/components/Card/Card";
 import ActivitiesTable from "@/components/Table/ActivitiesTable";
 import { getAllUserActivities } from "./actions/activity";
+import Spacing from "@/components/Spacing/Spacing";
 
 export default function DashboardPage () {
    const router = useRouter();
@@ -24,7 +25,7 @@ export default function DashboardPage () {
    const [userClients, setUserClients] = useState<Client[] | null>(null)
    const [recentClients, setRecentClients] = useState<Client[] | null>(null)
 
-   const [allActivities, setAllActivities] = useState<ActivityClient[] | null>(null)
+   const [allActivities, setAllActivities] = useState<ActivityClient[]>([])
 
    const [totalAmount, setTotalAmount] = useState(0)
    const [chartLabelIndex, setChartLabelIndex] = useState<null | number>(null)
@@ -56,6 +57,7 @@ export default function DashboardPage () {
       setTotalAmount(paymentsData.reduce((acc, curr) => acc + parseFloat(curr.amount), 0))
 
       setUserClients(allClients!);
+      setAllActivities(allActivities!);
       setRecentClients([ clients[0], clients[1], clients[2] ]);
       setRecentPayments(recentPays);
       setAllPayments(paymentsData);
@@ -154,8 +156,13 @@ export default function DashboardPage () {
 
          <div className="htv gap-10 mb-1">
             <Card styles={cardStyles}>
-               <div className="text-xxs grey-5 full mb-1">Activities</div>
-               <ActivitiesTable activities={allActivities || []} />
+               <div className="box full dfb align-center mb-1">
+                  <div className="text-xxs grey-5 full">Activities</div>
+                  <div className="box full dfb align-center justify-end">
+                     <div className="text-xxs visible-link fit accent-color" onClick={() => router.push("/activities")}>See all</div>
+                  </div>
+               </div>
+               <ActivitiesTable activities={allActivities} />
             </Card>
          </div>
 
@@ -243,6 +250,7 @@ export default function DashboardPage () {
                </div>
             </Card>
          </div>
+         <Spacing size={4} />
       </AppWrapper>
    )
 }
