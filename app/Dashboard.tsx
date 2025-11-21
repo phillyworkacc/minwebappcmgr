@@ -162,7 +162,7 @@ export default function DashboardPage () {
                      <div className="text-xxs visible-link fit accent-color" onClick={() => router.push("/activities")}>See all</div>
                   </div>
                </div>
-               <ActivitiesTable activities={allActivities} />
+               <ActivitiesTable activities={allActivities} onClickActivity={activity => router.push(`/activity/${activity.activityId}`)} />
             </Card>
          </div>
 

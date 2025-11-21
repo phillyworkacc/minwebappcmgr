@@ -3,7 +3,7 @@ import { dalDbOperation, dalRequireAuth } from "@/dal/helpers";
 import { db } from "@/db";
 import { activitiesTable, clientsTable } from "@/db/schemas";
 import { uuid } from "@/utils/uuid";
-import { and, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 
 
 export async function getAllUserActivities () {
@@ -38,9 +38,12 @@ export async function getAllUserActivities () {
                }
             })
             .from(activitiesTable)
-            .orderBy(desc(activitiesTable.dueDate))
+            .orderBy(asc(activitiesTable.dueDate))
             .innerJoin(clientsTable, eq(clientsTable.clientid, activitiesTable.clientid))
-            .where(eq(activitiesTable.userid, user.userid!))
+            .where(and(
+               eq(activitiesTable.userid, user.userid!),
+               eq(activitiesTable.completed, false)
+            ))
             .limit(4);
 
          return result;
