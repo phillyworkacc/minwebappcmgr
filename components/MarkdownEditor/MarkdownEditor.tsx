@@ -46,8 +46,11 @@ export default function MarkdownEditor ({ markdownInitial, activityId }: { markd
    return (
       <div className="box full df column gap-10" style={{ borderTop: "1px solid #e0e0e0", paddingTop: "20px", maxHeight: "50vh", position: "relative" }}>
          <div 
-            className="box full dfb align-center justify-end"
-            style={{ position: "absolute", top: 0, right: 0, padding: "10px" }}
+            className="box fit dfb align-center justify-end"
+            style={{
+               position: "absolute", top: 0, right: 0, padding: "0 10px",
+               background: "white", borderRadius: "5px", boxShadow: "0 2px 4px rgba(0,0,0,0.094)"
+            }}
          >
             <div className="text-xxs bold-500 fit dfb align-center gap-5">
                {saveStatus == 'loading' && (<><CustomSpinner size={18} /> Saving</>)}

@@ -38,6 +38,12 @@ export function CustomIcon ({ size, url, round }: CustomIconProps) {
    </div>
 }
 
+export function WebsiteIcon ({ size, url, round }: CustomIconProps) {
+   return <div className={`icon ${round ? 'round' : ''}`} style={{ width: `${size}px`, height: `${size}px` }}>
+      <img src={url} alt="icon" width={size} height={size} />
+   </div>
+}
+
 export function CustomUserIcon ({ size, url, round }: CustomIconProps) {
    return <div className={`icon ${round ? 'round' : ''}`} style={{ width: `${size}px`, height: `${size}px` }}>
       <img src={url} alt="icon" width={size} height={size} />

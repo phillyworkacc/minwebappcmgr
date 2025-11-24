@@ -13,6 +13,7 @@ export const clientsTable = pgTable("clients", {
    userid: text("userid"),
    clientid: text("clientid"),
    name: text("name"),
+   email: text("email"),
    description: text("description"),
    image: text("image"),
    notes: text("notes"),
@@ -29,6 +30,15 @@ export const paymentsTable = pgTable("payments", {
    clientid: text("clientid"),
    amount: text("amount"),
    text: text("text"),
+   date: text("date"),
+});
+
+export const websitesTable = pgTable("websites", {
+   id: serial("id").primaryKey(),
+   userid: text("userid"),
+   clientid: text("clientid"),
+   websiteid: text("websiteid"),
+   url: text("url"),
    date: text("date"),
 });
 

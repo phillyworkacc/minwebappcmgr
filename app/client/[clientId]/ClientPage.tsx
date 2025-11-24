@@ -18,9 +18,11 @@ import { Check, Copy, Edit, Rocket, Trash2, Wrench, X } from "lucide-react";
 import { deleteClientAccount, updateClientInfoNotes, updateClientInfoStatus } from "@/app/actions/clients";
 import { formatNumber } from "@/utils/num";
 import { useRouter } from "next/navigation";
+import WebsitesSection from "./WebsitesSection";
 
 type ClientPageProps = {
    client: Client;
+   websites: Website[];
    clientPayments: ClientPayment[];
 }
 
@@ -36,7 +38,7 @@ export function clientStatusIcon (status: ClientStatus) {
    }
 }
 
-export default function ClientPage ({ client, clientPayments }: ClientPageProps) {
+export default function ClientPage ({ client, websites, clientPayments }: ClientPageProps) {
    const { showModal, close } = useModal();
    const router = useRouter();
    const [clientInfo, setClientInfo] = useState<Client>(client);
@@ -119,6 +121,8 @@ export default function ClientPage ({ client, clientPayments }: ClientPageProps)
                <div className="text-xxs pd-05">Last updated on {formatMilliseconds(parseInt(clientInfo.latestupdate), true)}</div>
             </div>
          </div>
+
+         <WebsitesSection clientInfo={clientInfo} websites={websites} />
 
          <div className="box full pd-15">
             <Card styles={{padding: "25px", boxShadow: "0 1px 3px rgba(0,0,0,0.098)"}}>

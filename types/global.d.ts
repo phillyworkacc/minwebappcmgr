@@ -20,11 +20,16 @@ type Client = {
    status: ClientStatus;
    review: string;
    createdat: string;
+   websites: string;
    latestupdate: string;
 }
 
 type ClientChartInfo = Client & {
    amountPaid: number;
+}
+
+type ClientProfile = Client & {
+   allWebsites: Website[];
 }
 
 type Payment = {
@@ -73,4 +78,13 @@ type Activity = {
 
 type ActivityClient = Activity & {
    client: Client;
+}
+
+type Website = {
+   id: number;
+   userid: string;
+   clientid: string;
+   websiteid: string;
+   url: string;
+   date: string;
 }

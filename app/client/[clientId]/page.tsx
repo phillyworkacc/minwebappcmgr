@@ -1,6 +1,6 @@
 import { dalDbOperation, dalRequireAuth, dalRequireAuthRedirect } from "@/dal/helpers"
 import { db } from "@/db";
-import { clientsTable, paymentsTable } from "@/db/schemas";
+import { clientsTable, paymentsTable, websitesTable } from "@/db/schemas";
 import { and, eq } from "drizzle-orm";
 import LoadingPage from "./loading";
 import ClientPage from "./ClientPage";
@@ -25,6 +25,14 @@ export default async function Client ({ params }: ClientProps) {
                eq(clientsTable.userid, user.userid!),
                eq(clientsTable.clientid, clientId)
             )).limit(1);
+         
+         const websites = await db
+            .select()
+            .from(websitesTable)
+            .where(and(
+               eq(websitesTable.userid, user.userid!),
+               eq(websitesTable.clientid, clientId)
+            ));
 
          const clientPayments = await db
             .select()
@@ -36,6 +44,7 @@ export default async function Client ({ params }: ClientProps) {
 
          return {
             client,
+            websites,
             clientPayments: clientPayments.map(cp => ({
                client: {
                   clientid: client[0].clientid,
@@ -53,6 +62,7 @@ export default async function Client ({ params }: ClientProps) {
    if (clientInfo.success) {
       return <ClientPage 
          client={JSON.parse(JSON.stringify(clientInfo.data.client[0]))}
+         websites={JSON.parse(JSON.stringify(clientInfo.data.websites))}
          clientPayments={JSON.parse(JSON.stringify(clientInfo.data.clientPayments))}
       />
    } else {

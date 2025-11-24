@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation'
 import { titleCase } from '@/lib/str'
 import { CirclePlus } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { getUniqueYearsActivity } from '@/utils/chart'
 
 type ActivitiesPageProps = {
    allActivities: ActivityClient[];
@@ -22,33 +21,18 @@ export default function ActivitiesPage ({ allActivities }: ActivitiesPageProps) 
    const [chartLabelIndex, setChartLabelIndex] = useState<number>(0)
    const [searchActivities, setSearchActivities] = useState('');
    const [filterActivityPriority, setFilterActivityPriority] = useState<ActivityPriority | 'all'>('all');
-   const chartLabels = [ 'All Time', 'Last 24 hours', 'Last 7 days', 'Last 30 days', ...getUniqueYearsActivity(allActivities) ]
-
-   const filterUsingChartLabels = (index: number) => {
-      if (getUniqueYearsActivity(allActivities).includes(chartLabels[index])) {
-         return (allActivities.filter(client => (new Date(parseInt(client.date))).getFullYear() == parseInt(chartLabels[index])));
-      } else if (chartLabels[index] == "Last 30 days") {
-         return (allActivities.filter(client => (parseInt(client.date) >= (Date.now() - (30*24*60*60*1000)) )));
-      } else if (chartLabels[index] == "Last 24 hours") {
-         return (allActivities.filter(client => (parseInt(client.date) >= (Date.now() - (24*60*60*1000)) )));
-      } else if (chartLabels[index] == "All Time") {
-         return (allActivities);
-      } else {
-         return (allActivities.filter(client => (parseInt(client.date) >= (Date.now() - (7*24*60*60*1000)) )));
-      }
-   }
+   const chartLabels = [ 'All', 'Low', 'Medium', 'High' ]
 
    useEffect(() => {
-      setClients(filterUsingChartLabels(chartLabelIndex!))
       filterByPriority(filterActivityPriority)
    }, [chartLabelIndex])
 
    function filterByPriority (activityPriority: ActivityPriority | 'all') {
       setFilterActivityPriority(activityPriority)
       if (activityPriority == "all") {
-         setClients(filterUsingChartLabels(chartLabelIndex))
+         setClients(allActivities)
       } else {
-         setClients(filterUsingChartLabels(chartLabelIndex).filter(client => client.priority == activityPriority))
+         setClients(allActivities.filter(client => client.priority == activityPriority))
       }
    }
 
@@ -81,14 +65,14 @@ export default function ActivitiesPage ({ allActivities }: ActivitiesPageProps) 
                />
             </div>
             <div className="box full dfb align-center justify-end gap-10">
-               <Select
+               {/* <Select
                   options={chartLabels}
                   onSelect={(_, index) => setChartLabelIndex(index!)}
                   style={{ width: "fit-content", borderRadius: "12px", boxShadow:"0 2px 5px rgba(0, 0, 0, 0.096)" }}
                   optionStyle={{ padding:"8px 12px" }}
-               />
+               /> */}
                <Select
-                  options={["all","beginning","working","finished","failed"].map(s => titleCase(s))}
+                  options={chartLabels.map(s => titleCase(s))}
                   onSelect={option => filterByPriority(option.toLowerCase())}
                   defaultOptionIndex={0}
                   style={{ width: "fit-content", borderRadius: "12px", boxShadow:"0 2px 5px rgba(0, 0, 0, 0.096)" }}
