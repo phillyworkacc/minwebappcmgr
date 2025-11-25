@@ -75,7 +75,7 @@ export default function activityEmail (activities: ActivityClient[]) {
                               <a href="${baseurl}/activity/${activity.activityId}" target="_blank" style="color:inherit;">
                               <div class="activity-title">${activity.title}</div>
                               <div class="activity-meta">
-                                 Client: ${activity.client.name} • Due: ${formatMilliseconds(parseInt(activity.dueDate))} • Priority: ${titleCase(activity.priority)}
+                                 Client: ${activity.client.name} • Due: ${formatMilliseconds(activity.dueDate)} • Priority: ${titleCase(activity.priority)}
                               </div>
                               </a>
                            </div>

@@ -50,6 +50,7 @@ export const activitiesTable = pgTable("activities", {
    title: text("title"),
    priority: text("priority"),
    markdownDescriptionText: text("markdown_desc_text"),
+   notified: boolean("notified"),
    completed: boolean("completed"),
    completeDate: text("complete_date"),
    dueDate: bigint("due_date", { mode: "number" }),
