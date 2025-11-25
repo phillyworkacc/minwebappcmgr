@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { titleCase } from '@/lib/str'
 import { CirclePlus } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import ActivityViewer from '@/components/ActivityViewer/ActivityViewer'
 
 type ActivitiesPageProps = {
    allActivities: ActivityClient[];
@@ -105,13 +106,23 @@ export default function ActivitiesPage ({ allActivities }: ActivitiesPageProps) 
                   activity.markdownDescriptionText.toLowerCase().includes(searchActivities.toLowerCase())
                )
             ).length > 0) ? (<>
-               <ActivitiesTable
+               {activities
+                  .filter(activity => (
+                     activity.title.toLowerCase().includes(searchActivities.toLowerCase()) ||
+                     activity.markdownDescriptionText.toLowerCase().includes(searchActivities.toLowerCase())
+                  ))
+                  .map((activity, index) => (
+                     <ActivityViewer key={index} activityInfo={activity} />
+                  ))
+               }
+               <Spacing size={3} />
+               {/* <ActivitiesTable
                   activities={activities.filter(activity => (
                      activity.title.toLowerCase().includes(searchActivities.toLowerCase()) ||
                      activity.markdownDescriptionText.toLowerCase().includes(searchActivities.toLowerCase())
                   ))}
                   onClickActivity={activity => router.push(`/activity/${activity.activityId}`)}
-               />
+               /> */}
             </>) : (<>
                <div className="text-xxs full grey-5 text-center">No activities</div>
             </>)}

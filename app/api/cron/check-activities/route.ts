@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/sendEmail";
 import { db } from "@/db";
 import { activitiesTable, clientsTable } from "@/db/schemas";
-import { and, eq, lte, sql } from "drizzle-orm";
+import { and, eq, gte, lte, sql } from "drizzle-orm";
 import activityEmail from "@/emails/activityEmail";
 
 export async function GET() {
@@ -40,23 +40,24 @@ export async function GET() {
       .from(activitiesTable)
       .innerJoin(clientsTable, eq(clientsTable.clientid, activitiesTable.clientid))
       .where(and(
-         lte(sql`${activitiesTable.dueDate} - ${now}`, aDay),
+         lte(activitiesTable.dueDate, now + aDay),
+         gte(activitiesTable.dueDate, now),
          eq(activitiesTable.notified, false)
       ));
-
    
    if (tasksAwaitingFinish.length > 0) {
-      const notified = await sendEmail("ayomiposi.opadijo@gmail.com", "Activities Due Soon", activityEmail(tasksAwaitingFinish));
-      if (notified) {
-         await db
-            .update(activitiesTable)
-            .set({ notified: true })
-            .where(and(
-               lte(sql`${activitiesTable.dueDate} - ${now}`, aDay),
-               eq(activitiesTable.notified, false)
-            ));
-      }
+      console.log(tasksAwaitingFinish.length);
+      // const notified = await sendEmail("ayomiposi.opadijo@gmail.com", "Activities Due Soon", activityEmail(tasksAwaitingFinish));
+      // if (notified) {
+      //    await db
+      //       .update(activitiesTable)
+      //       .set({ notified: true })
+      //       .where(and(
+      //          lte(sql`${activitiesTable.dueDate} - ${now}`, aDay),
+      //          eq(activitiesTable.notified, false)
+      //       ));
+      // }
    }
 
-   return NextResponse.json({ ok: true });
+   return NextResponse.json({ ok: true }, { status: 200 });
 }

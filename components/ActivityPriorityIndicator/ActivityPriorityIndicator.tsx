@@ -10,7 +10,7 @@ export default function ActivityPriorityIndicator ({ priority }: { priority: Act
 
    return (
       <span 
-         className="text-xxxs bold-600 fit pd-05 pdx-1"
+         className="text-xt bold-600 fit pd-05 pdx-1"
          style={{
             background: colors[priority].bg,
             color: colors[priority].fg,

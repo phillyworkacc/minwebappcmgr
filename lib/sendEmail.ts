@@ -26,7 +26,7 @@ export async function sendEmail(to: string, subject: string, text: string) {
    
       await transporter.sendMail({
          from: `"Minweb Agency" <agencyminweb@gmail.com>`,
-         to, subject, text
+         to, subject, html: text
       });
       return true;
    } catch (e) {

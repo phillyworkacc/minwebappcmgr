@@ -2,8 +2,7 @@ import { titleCase } from "@/lib/str";
 import { formatMilliseconds } from "@/utils/date";
 
 export default function activityEmail (activities: ActivityClient[]) {
-   if (!process.env.NEXTAUTH_URL) return '';
-   const baseurl = process.env.NEXTAUTH_URL;
+   const baseurl = 'https://minwebappcmgr.vercel.app';
 
    return `
    <!doctype html>
@@ -15,7 +14,7 @@ export default function activityEmail (activities: ActivityClient[]) {
       <style>
          /* General resets */
          img {border:0; -ms-interpolation-mode:bicubic; display:block;}
-         a {color:inherit; text-decoration:none;}
+         a {color:white; text-decoration:none;}
          body {margin:0; padding:0; background-color:#f2f4f7; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;}
 
          /* Container */
@@ -23,9 +22,9 @@ export default function activityEmail (activities: ActivityClient[]) {
          .email-body {max-width:600px; margin:0 auto; background:#ffffff; border-radius:8px; overflow:hidden;}
 
          /* Header */
-         .header {padding:20px 24px; background:linear-gradient(90deg,#1121ff,#3b82f6); color:#ffffff;}
-         .brand {font-size:18px; font-weight:700;}
-         .greeting {margin-top:6px; font-size:14px; opacity:0.95;}
+         .header {padding:20px 24px; background:linear-gradient(90deg,#1121ff,#3b82f6); color:#ffffff !important;}
+         .brand {font-size:18px; font-weight:700; color:#ffffff !important;}
+         .greeting {margin-top:6px; font-size:14px; opacity:0.95; color:#ffffff !important;}
 
          /* Content */
          .content {padding:20px 24px; color:#0f172a;}
@@ -57,14 +56,13 @@ export default function activityEmail (activities: ActivityClient[]) {
             <!-- Header -->
             <div class="header">
                <div class="brand">MinWeb</div>
-               <div class="greeting">Hi Philip — activities due tomorrow (<strong>${formatMilliseconds(Date.now(), true)}</strong>)</div>
+               <div class="greeting">Hi Philip — activities due (<strong>${formatMilliseconds(Date.now(), true)}</strong>)</div>
             </div>
 
             <!-- Content -->
             <div class="content">
                <p class="intro">Here are the activities due tomorrow. Click an activity or the button to open it in your CMS.</p>
 
-               <!-- Activities table: repeat the <tr class="activity-row"> block for each activity -->
                <table class="activity-list" role="list">
                   ${
                   activities.map(activity => (`
@@ -79,19 +77,16 @@ export default function activityEmail (activities: ActivityClient[]) {
                               </div>
                               </a>
                            </div>
-                           <div style="white-space:nowrap;">
-                              <a href="${baseurl}/activity/${activity.activityId}" target="_blank" class="activity-action">Open</a>
-                           </div>
                         </div>
                         </td>
                      </tr>
-                  `))
+                  `)).join("")
                   }
                </table>
 
                <!-- Summary CTA -->
                <p style="margin-top:18px;">
-                  <a href="${baseurl}/activities" target="_blank" style="display:inline-block; padding:10px 14px; border-radius:8px; background:#1121ff; color:#fff; font-weight:600;">
+                  <a href="${baseurl}/activities" target="_blank" style="display:inline-block; padding:10px 14px; border-radius:8px; background:#1121ff !important; color:#fff; font-weight:600;">
                      Open dashboard
                   </a>
                </p>

@@ -104,7 +104,7 @@ export async function addActivity (title: string, priority: ActivityPriority, du
                activityId, userid: user.userid!, clientid,
                title, priority, markdownDescriptionText: "",
                completed: false, completeDate: "", dueDate: parseInt(dueDate),
-               date: now
+               date: now, notified: false
             })
          return (res.rowCount > 0);
       })
@@ -115,7 +115,7 @@ export async function addActivity (title: string, priority: ActivityPriority, du
          id: 0, activityId, userid: '', clientid,
          title, priority, markdownDescriptionText: "",
          completed: false, completeDate: "", dueDate: parseInt(dueDate),
-         date: now
+         date: now, notified: false
       };
       const client = await dalRequireAuth(user => 
          dalDbOperation(async () => {

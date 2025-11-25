@@ -74,6 +74,7 @@ type Activity = {
    completed: boolean;
    completeDate: string;
    dueDate: number;
+   notified: boolean;
    date: string;
 }
 

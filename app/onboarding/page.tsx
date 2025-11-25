@@ -1,7 +1,14 @@
-import React from 'react'
+'use client'
 
 export default function Onboarding() {
+
+   const sendEmails = () => {
+      fetch("/api/cron/check-activities");
+   }
+
    return (
-      <div>Onboarding</div>
+      <div>
+         <button onClick={sendEmails}>test email</button>
+      </div>
    )
 }
