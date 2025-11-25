@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/sendEmail";
 import { db } from "@/db";
 import { activitiesTable, clientsTable } from "@/db/schemas";
-import { and, eq, gte, lte, sql } from "drizzle-orm";
+import { and, eq, gte, lte } from "drizzle-orm";
 import activityEmail from "@/emails/activityEmail";
 
 export async function GET() {
    const now = Date.now();
-   const aDay = 1000 * 60 * 60 * 60 * 24;
+   const oneDay = 24 * 60 * 60 * 1000;
 
    const tasksAwaitingFinish: any[] = await db
       .select({
@@ -40,23 +40,25 @@ export async function GET() {
       .from(activitiesTable)
       .innerJoin(clientsTable, eq(clientsTable.clientid, activitiesTable.clientid))
       .where(and(
-         lte(activitiesTable.dueDate, now + aDay),
+         lte(activitiesTable.dueDate, now + oneDay),
          gte(activitiesTable.dueDate, now),
-         eq(activitiesTable.notified, false)
+         eq(activitiesTable.notified, false),
+         eq(activitiesTable.completed, false)
       ));
    
    if (tasksAwaitingFinish.length > 0) {
-      console.log(tasksAwaitingFinish.length);
-      // const notified = await sendEmail("ayomiposi.opadijo@gmail.com", "Activities Due Soon", activityEmail(tasksAwaitingFinish));
-      // if (notified) {
-      //    await db
-      //       .update(activitiesTable)
-      //       .set({ notified: true })
-      //       .where(and(
-      //          lte(sql`${activitiesTable.dueDate} - ${now}`, aDay),
-      //          eq(activitiesTable.notified, false)
-      //       ));
-      // }
+      const notified = await sendEmail("ayomiposi.opadijo@gmail.com", "Activities Due Soon", activityEmail(tasksAwaitingFinish));
+      if (notified) {
+         await db
+            .update(activitiesTable)
+            .set({ notified: true })
+            .where(and(
+               lte(activitiesTable.dueDate, now + oneDay),
+               gte(activitiesTable.dueDate, now),
+               eq(activitiesTable.notified, false),
+               eq(activitiesTable.completed, false)
+            ));
+      }
    }
 
    return NextResponse.json({ ok: true }, { status: 200 });
