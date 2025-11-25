@@ -73,7 +73,7 @@ type Activity = {
    markdownDescriptionText: string;
    completed: boolean;
    completeDate: string;
-   dueDate: string;
+   dueDate: number;
    date: string;
 }
 

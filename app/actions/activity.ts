@@ -78,8 +78,8 @@ export async function addActivityToGoogleCalendar (activity: Activity, client: C
             summary: activity.title,
             description: `This activity is for ${client.name}`,
             colorId: googleColorMap[activity.priority],
-            start: { dateTime: new Date(parseInt(activity.dueDate)).toISOString() },
-            end: { dateTime: new Date(parseInt(activity.dueDate) + 10*60*1000).toISOString() },
+            start: { dateTime: new Date(activity.dueDate).toISOString() },
+            end: { dateTime: new Date(activity.dueDate + 10*60*1000).toISOString() },
             reminders: {
                useDefault: false,
                overrides: [
@@ -103,7 +103,7 @@ export async function addActivity (title: string, priority: ActivityPriority, du
             .values({
                activityId, userid: user.userid!, clientid,
                title, priority, markdownDescriptionText: "",
-               completed: false, completeDate: "", dueDate,
+               completed: false, completeDate: "", dueDate: parseInt(dueDate),
                date: now
             })
          return (res.rowCount > 0);
@@ -114,7 +114,7 @@ export async function addActivity (title: string, priority: ActivityPriority, du
       const activity: Activity = {
          id: 0, activityId, userid: '', clientid,
          title, priority, markdownDescriptionText: "",
-         completed: false, completeDate: "", dueDate,
+         completed: false, completeDate: "", dueDate: parseInt(dueDate),
          date: now
       };
       const client = await dalRequireAuth(user => 

@@ -1,4 +1,4 @@
-import { boolean, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { bigint, boolean, integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
    id: serial("id").primaryKey(),
@@ -52,6 +52,6 @@ export const activitiesTable = pgTable("activities", {
    markdownDescriptionText: text("markdown_desc_text"),
    completed: boolean("completed"),
    completeDate: text("complete_date"),
-   dueDate: text("due_date"),
+   dueDate: bigint("due_date", { mode: "number" }),
    date: text("date"),
 });

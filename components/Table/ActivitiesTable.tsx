@@ -53,7 +53,7 @@ export default function ActivitiesTable ({ activities, onClickActivity }: Activi
                               <div className="text-xxs fit">{activity.client.name}</div>
                            </div>
                         </td>
-                        <td style={{textAlign:"center"}}>{formatMilliseconds(parseInt(activity.dueDate), true, true)}</td>
+                        <td style={{textAlign:"center"}}>{formatMilliseconds(activity.dueDate, true, true)}</td>
                         <td style={{textAlign:"center"}}>
                            <CompletionIndicator complete={activity.completed} />
                         </td>
