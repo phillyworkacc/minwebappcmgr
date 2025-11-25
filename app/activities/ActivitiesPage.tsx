@@ -15,7 +15,7 @@ type ActivitiesPageProps = {
 
 export default function ActivitiesPage ({ allActivities }: ActivitiesPageProps) {
    const router = useRouter();
-   const [activities, setClients] = useState<ActivityClient[]>(allActivities);
+   const [activities, setActivities] = useState<ActivityClient[]>(allActivities);
 
    // filter states
    const [chartLabelIndex, setChartLabelIndex] = useState<number>(0)
@@ -30,9 +30,20 @@ export default function ActivitiesPage ({ allActivities }: ActivitiesPageProps) 
    function filterByPriority (activityPriority: ActivityPriority | 'all') {
       setFilterActivityPriority(activityPriority)
       if (activityPriority == "all") {
-         setClients(allActivities)
+         setActivities(allActivities)
       } else {
-         setClients(allActivities.filter(client => client.priority == activityPriority))
+         setActivities(allActivities.filter(client => client.priority == activityPriority))
+      }
+   }
+   
+
+   function filterByCompleted (completeFilter: string) {
+      if (completeFilter == "all") {
+         filterByPriority("all")
+      } else if (completeFilter == "completed") {
+         setActivities(activities.filter(a => (a.completed === true)));
+      } else {
+         setActivities(activities.filter(a => (a.completed === false)));
       }
    }
 
@@ -65,15 +76,19 @@ export default function ActivitiesPage ({ allActivities }: ActivitiesPageProps) 
                />
             </div>
             <div className="box full dfb align-center justify-end gap-10">
-               {/* <Select
-                  options={chartLabels}
-                  onSelect={(_, index) => setChartLabelIndex(index!)}
-                  style={{ width: "fit-content", borderRadius: "12px", boxShadow:"0 2px 5px rgba(0, 0, 0, 0.096)" }}
-                  optionStyle={{ padding:"8px 12px" }}
-               /> */}
                <Select
                   options={chartLabels.map(s => titleCase(s))}
-                  onSelect={option => filterByPriority(option.toLowerCase())}
+                  onSelect={(option, index) => {
+                     filterByPriority(option.toLowerCase())
+                     setChartLabelIndex(index!);
+                  }}
+                  defaultOptionIndex={0}
+                  style={{ width: "fit-content", borderRadius: "12px", boxShadow:"0 2px 5px rgba(0, 0, 0, 0.096)" }}
+                  optionStyle={{ padding:"8px 12px" }}
+               />
+               <Select
+                  options={['All','Completed','Incomplete']}
+                  onSelect={option => filterByCompleted(option.toLowerCase())}
                   defaultOptionIndex={0}
                   style={{ width: "fit-content", borderRadius: "12px", boxShadow:"0 2px 5px rgba(0, 0, 0, 0.096)" }}
                   optionStyle={{ padding:"8px 12px" }}

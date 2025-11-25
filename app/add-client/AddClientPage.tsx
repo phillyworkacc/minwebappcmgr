@@ -13,11 +13,12 @@ export default function AddClientPage () {
 
    const [name, setName] = useState("")
    const [description, setDescription] = useState("")
+   const [email, setEmail] = useState("")
    const [image, setImage] = useState("")
 
    const addClientButton = async (callback: Function) => {
       const defaultClientImage = "https://minwebappcmgr.vercel.app/clientdefault.jpg";
-      const result = await createUserClient(name, description, `${(image == "") ? defaultClientImage : image}`);
+      const result = await createUserClient(name, email, description, `${(image == "") ? defaultClientImage : image}`);
       if (result) {
          toast.success(name + " (Client) has been added");
          router.push("/clients");
@@ -48,6 +49,15 @@ export default function AddClientPage () {
                   placeholder="Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+               />
+            </div>
+            <div className="box full pd-1">
+               <input
+                  type="email"
+                  className="xxs pd-12 pdx-15 full" 
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                />
             </div>
             <div className="box full pd-1">

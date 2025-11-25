@@ -51,14 +51,14 @@ export async function sendReviewForClient (clientId: string, review: string) {
    return result;
 }
 
-export async function createUserClient (name: string, description: string, image: string) {
+export async function createUserClient (name: string, email: string, description: string, image: string) {
    const now = `${Date.now()}`;
    const clientid = uuid().replaceAll("-","");
    const inserted = await dalRequireAuth(user =>
       dalDbOperation(async () => {
          const res = await db.insert(clientsTable).values({
-            userid: user.userid, clientid,
-            name, description, image,
+            userid: user.userid, clientid, email,
+            name, description, image, websites: "",
             notes: "", status: "beginning", review: "",
             latestupdate: now, createdat: now
          });
@@ -111,6 +111,27 @@ export async function updateClientInfoStatus (clientId: string, newStatus: Clien
             .where(and(
                eq(clientsTable.userid, user.userid!),
                eq(clientsTable.clientid, clientId)
+            ));
+         return (res.rowCount > 0);
+      })
+   )
+   return result
+}
+
+export async function editClientProfile (
+   clientid: string,
+   newInfo: { name: string, desc: string, email: string, image: string }
+) {
+   const result = await dalRequireAuth(user =>
+      dalDbOperation(async () => {
+         const res = await db.update(clientsTable)
+            .set({
+               name: newInfo.name, description: newInfo.desc,
+               email: newInfo.email, image: newInfo.image
+            })
+            .where(and(
+               eq(clientsTable.userid, user.userid!),
+               eq(clientsTable.clientid, clientid)
             ));
          return (res.rowCount > 0);
       })

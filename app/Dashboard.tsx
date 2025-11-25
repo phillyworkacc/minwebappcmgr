@@ -168,11 +168,21 @@ export default function DashboardPage () {
 
          <div className="htv gap-10 mb-1">
             <Card styles={cardStyles}>
-               <div className="text-xxs grey-5 full mb-1">Recent Payments</div>
+               <div className="box full dfb align-center mb-1">
+                  <div className="text-xxs grey-5 full">Recent Payments</div>
+                  <div className="box full dfb align-center justify-end">
+                     <div className="text-xxs visible-link fit accent-color" onClick={() => router.push("/payments")}>See all</div>
+                  </div>
+               </div>
                <PaymentsTable userClients={userClients} payments={recentPayments} />
             </Card>
             <Card styles={cardStyles}>
-               <div className="text-xxs full mb-1">Recent Clients</div>
+               <div className="box full dfb align-center mb-1">
+                  <div className="text-xxs grey-5 full">Recent Clients</div>
+                  <div className="box full dfb align-center justify-end">
+                     <div className="text-xxs visible-link fit accent-color" onClick={() => router.push("/clients")}>See all</div>
+                  </div>
+               </div>
                <ClientsTable clients={recentClients} />
             </Card>
          </div>

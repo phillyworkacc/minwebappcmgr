@@ -10,8 +10,7 @@ import {
 } from '@mdxeditor/editor'
 import { useEffect, useRef, useState } from 'react';
 import { updateActivityMarkdown } from '@/app/actions/activity';
-import { CustomSpinner } from '../Spinner/Spinner';
-import { CircleCheck, CircleX } from 'lucide-react';
+import { CloudAlert, CloudCheck, Cloudy } from 'lucide-react';
 
 
 function useDebouncedEffect(callback: Function, delay: number, deps: any[]) {
@@ -44,18 +43,16 @@ export default function MarkdownEditor ({ markdownInitial, activityId }: { markd
    }, 2000, [markdown]);
 
    return (
-      <div className="box full df column gap-10" style={{ borderTop: "1px solid #e0e0e0", paddingTop: "20px", maxHeight: "50vh", position: "relative" }}>
-         <div 
-            className="box fit dfb align-center justify-end"
-            style={{
-               position: "absolute", top: 0, right: 0, padding: "0 10px",
-               background: "white", borderRadius: "5px", boxShadow: "0 2px 4px rgba(0,0,0,0.094)"
-            }}
-         >
-            <div className="text-xxs bold-500 fit dfb align-center gap-5">
-               {saveStatus == 'loading' && (<><CustomSpinner size={18} /> Saving</>)}
-               {saveStatus === false && (<><CircleX size={25} color='white' fill='#ff0000' /> Saving</>)}
-               {saveStatus === true && (<><CircleCheck size={25} color='white' fill='#008000' /> Saved</>)}
+      <div className="box full df column gap-10" style={{ borderTop: "1px solid #ebe8e8", maxHeight: "60vh", position: "relative" }}>
+         <div className="box full pd-2">
+            <div className="text-xs bold-500 fit dfb align-center gap-5">
+               {saveStatus == 'loading' && (<><Cloudy size={25} /> Saving</>)}
+               {saveStatus === false && (<>
+                  <CloudAlert size={25} color='#ff0000' /> <span style={{color:"#ff0000"}}>Failed to Save</span>
+               </>)}
+               {saveStatus === true && (<>
+                  <CloudCheck size={25} color='#008000' /> <span style={{color:"#008000"}}>Saved</span>
+               </>)}
             </div>
          </div>
          <MDXEditor 

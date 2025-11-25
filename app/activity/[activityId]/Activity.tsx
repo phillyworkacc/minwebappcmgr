@@ -3,7 +3,7 @@ import AppWrapper from "@/components/AppWrapper/AppWrapper";
 import MarkdownEditor from "@/components/MarkdownEditor/MarkdownEditor";
 import Spacing from "@/components/Spacing/Spacing";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import AwaitButton from "@/components/AwaitButton/AwaitButton";
+import MultiActionDropdown from "@/components/MultiActionDropdown/MultiActionDropdown";
 import { CustomUserIcon } from "@/components/Icons/Icon";
 import { CircleCheck, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -19,7 +19,7 @@ export default function ActivityPage ({ activityInfo }: ActivityPageProps) {
    const [activity, setActivity] = useState<ActivityClient>(activityInfo);
    const router = useRouter();
 
-   const markAsComplete = async (callback: Function) => {
+   const markAsComplete = async () => {
       setActivity(prev => ({ ...prev, completed: true, completeDate: `${Date.now()}` }));
       const marked = await updateActivityCompletion(activity.activityId, true);
       if (marked) {
@@ -28,11 +28,10 @@ export default function ActivityPage ({ activityInfo }: ActivityPageProps) {
          toast.error("Failed to mark activity as completed");
          setActivity(prev => ({ ...prev, completed: false, completeDate: '' }));
       }
-      callback();
    }
 
 
-   const markAsIncomplete = async (callback: Function) => {
+   const markAsIncomplete = async () => {
       setActivity(prev => ({ ...prev, completed: false }));
       const marked = await updateActivityCompletion(activity.activityId, false);
       if (marked) {
@@ -41,7 +40,6 @@ export default function ActivityPage ({ activityInfo }: ActivityPageProps) {
          toast.error("Failed to mark activity as incomplete");
          setActivity(prev => ({ ...prev, completed: true, completeDate: activityInfo.completeDate }));
       }
-      callback();
    }
 
    const deleteCurrentActivity = async () => {
@@ -66,29 +64,31 @@ export default function ActivityPage ({ activityInfo }: ActivityPageProps) {
          />
          <Spacing size={1} />
 
-         <div className="text-xl full bold-700 pd-1">{activity.title}</div>
-
-         <div className="box full dfb align-center justify-end gap-30">
+         <div className="box full dfb align-center">
             <div className="box fit dfb align-center justify-center gap-10">
                <CustomUserIcon url={activity.client.image} size={25} round />
-               <div className="text-xxs fit">{activity.client.name}</div>
+               <div className="text-xxs fit whitespace-nowrap">{activity.client.name}</div>
             </div>
-            <div className="box fit dfb align-center gap-10">
-               {activity.completed ? (<>
-                  <AwaitButton className="xxs pd-1 pdx-15 tiny-shadow grey whitespace-nowrap" blackSpinner onClick={markAsIncomplete}>
-                     <CircleCheck size={15} /> Mark as incomplete
-                  </AwaitButton>
-               </>) : (<>
-                  <AwaitButton className="xxs pd-1 pdx-15 tiny-shadow green whitespace-nowrap" onClick={markAsComplete}>
-                     <CircleCheck size={15} /> Mark as complete
-                  </AwaitButton>
-               </>)}
-               <AwaitButton className="xxs pd-1 pdx-15 tiny-shadow delete whitespace-nowrap" onClick={deleteCurrentActivity}>
-                  <Trash2 size={15} /> Delete Activity
-               </AwaitButton>
+            <div className="box full dfb align-center justify-end">
+               <MultiActionDropdown
+                  actions={[
+                     activity.completed
+                        ? { action: markAsIncomplete, label: <><CircleCheck size={15} /> Mark as incomplete</>, appearance: 'normal' }
+                        : { action: markAsComplete, label: <><CircleCheck size={15} /> Mark as complete</>, appearance: 'success' },
+                     { action: deleteCurrentActivity, label: <><Trash2 size={15} /> Delete Activity</>, appearance: 'delete' },
+                  ]}
+               />
             </div>
          </div>
+         <div className="box full mt-1">
+            <div className="text-xxs full bold-600">
+               {activity.completed ? <span style={{color:"green"}}>Activity Completed</span> : <span style={{color:"grey"}}>Incomplete Activity</span>}
+            </div>
+         </div>
+         <div className="text-xl full bold-700 pd-1">{activity.title}</div>
+
          <Spacing size={1} />
+
          <MarkdownEditor markdownInitial={activity.markdownDescriptionText} activityId={activity.activityId} />
       </AppWrapper>
    )

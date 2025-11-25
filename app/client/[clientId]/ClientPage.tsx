@@ -6,6 +6,8 @@ import Card from "@/components/Card/Card";
 import AwaitButton from "@/components/AwaitButton/AwaitButton";
 import AllPaymentsTable from "@/components/Table/AllPaymentsTable";
 import Spacing from "@/components/Spacing/Spacing";
+import WebsitesSection from "./WebsitesSection";
+import EditProfile from "./EditProfile";
 import { useState } from "react";
 import { useModal } from "@/components/Modal/ModalContext";
 import { formatMilliseconds } from "@/utils/date";
@@ -14,11 +16,11 @@ import { copyToClipboard, titleCase } from "@/lib/str";
 import { CustomUserIcon } from "@/components/Icons/Icon";
 import { ClientStatusIndicatorFit } from "@/components/ClientStatusIndicator/ClientStatusIndicator";
 import { clientStatusInfo } from "@/utils/funcs";
-import { Check, Copy, Edit, Rocket, Trash2, Wrench, X } from "lucide-react";
+import { Check, Copy, Edit, Mail, Rocket, Trash2, Wrench, X } from "lucide-react";
 import { deleteClientAccount, updateClientInfoNotes, updateClientInfoStatus } from "@/app/actions/clients";
 import { formatNumber } from "@/utils/num";
 import { useRouter } from "next/navigation";
-import WebsitesSection from "./WebsitesSection";
+import Link from "next/link";
 
 type ClientPageProps = {
    client: Client;
@@ -119,6 +121,14 @@ export default function ClientPage ({ client, websites, clientPayments }: Client
                <div className="text-xxs pd-05 full">{clientInfo.description}</div>
                <div className="text-xxs pd-05">Started working with {clientInfo.name} on {formatMilliseconds(parseInt(clientInfo.createdat), true)}</div>
                <div className="text-xxs pd-05">Last updated on {formatMilliseconds(parseInt(clientInfo.latestupdate), true)}</div>
+               <div className="box pd-05 dfb align-center gap-10">
+                  {(clientInfo.email !== '') && (<Link href={`mailto:${clientInfo.email}`}>
+                     <button className="xxxs fit pd-1 pdx-15 tiny-shadow">
+                        <Mail size={17} /> Email {clientInfo.name}
+                     </button>
+                  </Link>)}
+                  <EditProfile clientInfo={clientInfo} setClientInfo={setClientInfo} />
+               </div>
             </div>
          </div>
 

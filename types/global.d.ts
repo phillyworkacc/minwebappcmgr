@@ -14,6 +14,7 @@ type Client = {
    userid: string;
    clientid: string;
    name: string;
+   email: string;
    description: string;
    image: string;
    notes: string;
