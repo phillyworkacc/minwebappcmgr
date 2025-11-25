@@ -309,6 +309,9 @@ button {
 button.tiny-shadow {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.096);
 }
+button.no-shadow {
+  box-shadow: none;
+}
 
 button:hover { scale: 1.03; }
 button:active { scale: 0.94; }

@@ -27,7 +27,7 @@ export default function ActivityViewer ({ activityInfo }: { activityInfo: Activi
       <div className="box full mb-1">
          <Card 
             className="activity-view-card" 
-            styles={{ padding: "15px", cursor: "pointer", boxShadow: "none" }} 
+            styles={{ padding: "20px", cursor: "pointer", boxShadow: "none" }} 
             cursor onClick={() => router.push(`/activity/${activityInfo.activityId}`)}
          >
             <div className="text-sm full bold-600 mb-05">{activityInfo.title}</div>

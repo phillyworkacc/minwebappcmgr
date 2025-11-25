@@ -70,7 +70,7 @@ export default function ActivitiesPage ({ allActivities }: ActivitiesPageProps) 
                <input 
                   type="text" 
                   className="xxs pd-11 pdx-15"
-                  placeholder="Search Clients"
+                  placeholder="Search Activities"
                   style={{ width: "100%", maxWidth: "400px" }}
                   value={searchActivities}
                   onChange={(e) => setSearchActivities(e.target.value)}

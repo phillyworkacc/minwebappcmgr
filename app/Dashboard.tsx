@@ -5,7 +5,8 @@ import { getUniqueYears, chartGroupByMonth, chartCurrentMonth, chartLast7Days, c
 import { getAllUserClients } from "./actions/clients";
 import { getRecentPaymentsData, getAllTimePaymentsData } from "./actions/payments";
 import { formatNumber } from "@/utils/num";
-import { ChevronRight, CircleUserRound, PoundSterling, TrendingUp, UserStar } from "lucide-react";
+import { ChevronRight, CircleUserRound, Globe2, ListTodo, PoundSterling, TrendingUp, UserStar } from "lucide-react";
+import { getAllUserActivities } from "./actions/activity";
 import AppWrapper from "@/components/AppWrapper/AppWrapper";
 import Chart from "@/components/Chart/Chart";
 import LoadingPageComponent from "@/components/LoadingPageComp/LoadingPageComp";
@@ -14,18 +15,19 @@ import ClientsTable from "@/components/Table/ClientsTable";
 import PaymentsTable from "@/components/Table/PaymentsTable";
 import Card from "@/components/Card/Card";
 import ActivitiesTable from "@/components/Table/ActivitiesTable";
-import { getAllUserActivities } from "./actions/activity";
 import Spacing from "@/components/Spacing/Spacing";
 
-export default function DashboardPage () {
+type DashboardPageProps = {
+   allClients: Client[],
+   allActivities: ActivityClient[],
+   allPayments: Payment[]
+}
+
+export default function DashboardPage ({ allActivities, allClients, allPayments }: DashboardPageProps) {
    const router = useRouter();
-   const [recentPayments, setRecentPayments] = useState<Payment[] | null>(null)
-   const [allPayments, setAllPayments] = useState<Payment[] | null>(null)
-
-   const [userClients, setUserClients] = useState<Client[] | null>(null)
-   const [recentClients, setRecentClients] = useState<Client[] | null>(null)
-
-   const [allActivities, setAllActivities] = useState<ActivityClient[]>([])
+   const [recentPayments, setRecentPayments] = useState<Payment[]>(allPayments.slice(0,3))
+   const [userClients, setUserClients] = useState<Client[]>(allClients)
+   const [recentClients, setRecentClients] = useState<Client[]>(allClients.sort((a, b) => parseInt(b.latestupdate) - parseInt(a.latestupdate)).slice(0,3))
 
    const [totalAmount, setTotalAmount] = useState(0)
    const [chartLabelIndex, setChartLabelIndex] = useState<null | number>(null)
@@ -36,34 +38,10 @@ export default function DashboardPage () {
    const [chartXAxisInterval, setChartXAxisInterval] = useState<number>(0)
    
    const loadPageInfo = async () => {
-      const queryAllClients = await getAllUserClients();
-      const allClients: any[] = queryAllClients.success ? queryAllClients.data : [];
-
-      const queryAllActivities = await getAllUserActivities();
-      const allActivities: any[] = queryAllActivities.success ? queryAllActivities.data : [];
-
-      const queryRecentPays = await getRecentPaymentsData();
-      const recentPays: any[] = queryRecentPays.success ? queryRecentPays.data : [];
-      
-      const queryPaymentsData = await getAllTimePaymentsData();
-      const paymentsData: any[] = queryPaymentsData.success ? queryPaymentsData.data : [];
-
-      if (!allClients) return;
-      if (!recentPays) return;
-      if (!paymentsData) return;
-
-
-      const clients = allClients.sort((a, b) => parseInt(b.latestupdate) - parseInt(a.latestupdate))
-      setTotalAmount(paymentsData.reduce((acc, curr) => acc + parseFloat(curr.amount), 0))
-
-      setUserClients(allClients!);
-      setAllActivities(allActivities!);
-      setRecentClients([ clients[0], clients[1], clients[2] ]);
-      setRecentPayments(recentPays);
-      setAllPayments(paymentsData);
-      setChartLabels((prev) => [ 'Today', 'Last 7 days', 'Last 30 days', 'This Month', ...getUniqueYears(paymentsData) ]);
+      setTotalAmount(allPayments.reduce((acc, curr) => acc + parseFloat(curr.amount), 0));
+      setChartLabels((prev) => [ 'Today', 'Last 7 days', 'Last 30 days', 'This Month', ...getUniqueYears(allPayments) ]);
       setChartLabelIndex(0);
-      setChartData(chartTodayHourly(paymentsData!, allClients))
+      setChartData(chartTodayHourly(allPayments!, allClients))
       setChartDataXAxis("hour")
       setChartXAxisInterval(2)
    }
@@ -174,7 +152,7 @@ export default function DashboardPage () {
                      <div className="text-xxs visible-link fit accent-color" onClick={() => router.push("/payments")}>See all</div>
                   </div>
                </div>
-               <PaymentsTable userClients={userClients} payments={recentPayments} />
+               <PaymentsTable userClients={allClients} payments={recentPayments} />
             </Card>
             <Card styles={cardStyles}>
                <div className="box full dfb align-center mb-1">
@@ -224,7 +202,7 @@ export default function DashboardPage () {
             </Card>
          </div>
 
-         <div className="htv gap-10">
+         <div className="htv gap-10 mb-1">
             <Card styles={{...cardStyles, cursor:"pointer", padding: "15px" }} onClick={() => router.push("/revenue")}>
                <div className="box full dfb align-center gap-10">
                   <div 
@@ -256,6 +234,43 @@ export default function DashboardPage () {
                         <ChevronRight size={15} />
                      </div>
                      <div className="text-t grey-4">View all reviews from clients</div>
+                  </div>
+               </div>
+            </Card>
+         </div>
+
+         <div className="htv gap-10">
+            <Card styles={{...cardStyles, cursor:"pointer", padding: "15px" }} onClick={() => router.push("/activities")}>
+               <div className="box full dfb align-center gap-10">
+                  <div 
+                     className="box fit h-fit pd-1 pdx-1 dfb align-center justify-center"
+                     style={{ aspectRatio: '1', borderRadius: "100%", background: "#000875", color: "white" }}
+                  >
+                     <ListTodo size={17} />
+                  </div>
+                  <div className="box full dfb column">
+                     <div className="box full dfb align-center gap-5">
+                        <div className="text-xxs bold-600 fit">Activities</div>
+                        <ChevronRight size={15} />
+                     </div>
+                     <div className="text-t grey-4">View all tasks that need to be done</div>
+                  </div>
+               </div>
+            </Card>
+            <Card styles={{...cardStyles, cursor:"pointer", padding: "15px" }} onClick={() => router.push("/websites")}>
+               <div className="box full dfb align-center gap-10">
+                  <div 
+                     className="box fit h-fit pd-1 pdx-1 dfb align-center justify-center"
+                     style={{ aspectRatio: '1', borderRadius: "100%", background: "#93c900", color: "white" }}
+                  >
+                     <Globe2 size={17} />
+                  </div>
+                  <div className="box full dfb column">
+                     <div className="box full dfb align-center gap-5">
+                        <div className="text-xxs bold-600 fit">Websites</div>
+                        <ChevronRight size={15} />
+                     </div>
+                     <div className="text-t grey-4">View all clients' websites</div>
                   </div>
                </div>
             </Card>

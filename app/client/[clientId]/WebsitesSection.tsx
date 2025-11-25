@@ -77,9 +77,11 @@ export default function WebsitesSection({ clientInfo, websites }: { clientInfo: 
                </div>
             </div>
             {clientWebsites.length == 0 && (<>No website found for {clientInfo.name}</>)}
-            {clientWebsites.map((clientWebsite, index) => (
-               <WebsiteCard key={index} website={clientWebsite} clientInfo={clientInfo} removeWebsite={removeWebsite} />
-            ))}
+            <div className="box full dfb column gap-10">
+               {clientWebsites.map((clientWebsite, index) => (
+                  <WebsiteCard key={index} website={clientWebsite} clientInfo={clientInfo} removeWebsite={removeWebsite} />
+               ))}
+            </div>
          </Card>
       </div>
    )
