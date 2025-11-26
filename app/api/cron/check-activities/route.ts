@@ -53,6 +53,8 @@ export async function GET() {
          const transporter = nodemailer.createTransport({
             service: "gmail",
             secure: true,
+            host: "smtp.gmail.com",
+            port: 465,
             auth: {
                user: 'agencyminweb@gmail.com',
                pass: process.env.GOOGLE_APP_PASSWORD!
