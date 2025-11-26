@@ -80,7 +80,7 @@ export async function GET() {
          
          return NextResponse.json({ ok: "Sent email successfully" }, { status: 200 });
       } catch (e) {
-         return NextResponse.json({ res: "Failed to send email or update db" }, { status: 500 });
+         return NextResponse.json({ res: `Failed to send email or update db: ${e}` }, { status: 500 });
       }
    }
 }
