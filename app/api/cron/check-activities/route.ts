@@ -5,6 +5,8 @@ import { and, eq, gte, lte } from "drizzle-orm";
 import activityEmail from "@/emails/activityEmail";
 import nodemailer from "nodemailer";
 
+export const runtime = 'nodejs';
+
 export async function GET() {
    const now = Date.now();
    const oneDay = 24 * 60 * 60 * 1000;
@@ -50,6 +52,7 @@ export async function GET() {
       try {
          const transporter = nodemailer.createTransport({
             service: "gmail",
+            secure: true,
             auth: {
                user: 'agencyminweb@gmail.com',
                pass: process.env.GOOGLE_APP_PASSWORD!
