@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { sendEmail } from "@/lib/sendEmail";
 import { db } from "@/db";
 import { activitiesTable, clientsTable } from "@/db/schemas";
 import { and, eq, gte, lte } from "drizzle-orm";
 import activityEmail from "@/emails/activityEmail";
+import nodemailer from "nodemailer";
 
 export async function GET() {
    const now = Date.now();
@@ -47,8 +47,22 @@ export async function GET() {
       ));
    
    if (tasksAwaitingFinish.length > 0) {
-      const notified = await sendEmail("ayomiposi.opadijo@gmail.com", "Activities Due Soon", activityEmail(tasksAwaitingFinish));
-      if (notified) {
+      try {
+         const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+               user: 'agencyminweb@gmail.com',
+               pass: process.env.GOOGLE_APP_PASSWORD!
+            },
+         });
+      
+         await transporter.sendMail({
+            from: `"Minweb Agency" <agencyminweb@gmail.com>`,
+            to: "ayomiposi.opadijo@gmail.com",
+            subject: "Activities Due Soon",
+            html: activityEmail(tasksAwaitingFinish)
+         });
+
          await db
             .update(activitiesTable)
             .set({ notified: true })
@@ -58,8 +72,10 @@ export async function GET() {
                eq(activitiesTable.notified, false),
                eq(activitiesTable.completed, false)
             ));
+         
+         return NextResponse.json({ ok: "Sent email successfully" }, { status: 200 });
+      } catch (e) {
+         return NextResponse.json({ res: "Failed to send email or update db" }, { status: 500 });
       }
    }
-
-   return NextResponse.json({ ok: tasksAwaitingFinish }, { status: 200 });
 }
