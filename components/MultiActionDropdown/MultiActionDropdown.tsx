@@ -46,7 +46,7 @@ export default function MultiActionDropdown ({ actions }: MultiActionDropdownPro
                      action.action();
                      setShowDropdown(false);
                   }}>
-                     <div className="text-xxxs full bold-500 dfb align-center gap-5">
+                     <div className="text-xxxs full bold-500 dfb align-center gap-5 whitespace-nowrap">
                         {action.label}
                      </div>
                   </div>

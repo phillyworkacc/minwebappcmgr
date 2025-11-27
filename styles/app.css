@@ -110,6 +110,14 @@
    outline: none;
 }
 
+.markdown-editor-class .markdown-editor-contenteditable img {
+   width: 100%;
+   max-width: 500px;
+   height: auto;
+   border-radius: 12px;
+   object-fit: cover;
+}
+
 .markdown-editor-contenteditable {
    width: 100% !important;
    min-height: 50vh !important;

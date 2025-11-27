@@ -2,11 +2,10 @@
 import { useRouter } from "next/navigation";
 import { CSSProperties, useEffect, useState } from "react";
 import { getUniqueYears, chartGroupByMonth, chartCurrentMonth, chartLast7Days, chartTodayHourly, chartLast30Days } from "@/utils/chart";
-import { getAllUserClients } from "./actions/clients";
-import { getRecentPaymentsData, getAllTimePaymentsData } from "./actions/payments";
 import { formatNumber } from "@/utils/num";
-import { BookCopy, ChevronRight, CircleUserRound, Globe2, ListTodo, PoundSterling, TrendingUp, UserStar } from "lucide-react";
-import { getAllUserActivities } from "./actions/activity";
+import { BookCopy, ChevronRight, CircleUserRound, Copy, Globe2, ListTodo, PoundSterling, TrendingUp, UserStar } from "lucide-react";
+import { copyToClipboard } from "@/lib/str";
+import { toast } from "sonner";
 import AppWrapper from "@/components/AppWrapper/AppWrapper";
 import Chart from "@/components/Chart/Chart";
 import LoadingPageComponent from "@/components/LoadingPageComp/LoadingPageComp";
@@ -16,6 +15,7 @@ import PaymentsTable from "@/components/Table/PaymentsTable";
 import Card from "@/components/Card/Card";
 import ActivitiesTable from "@/components/Table/ActivitiesTable";
 import Spacing from "@/components/Spacing/Spacing";
+import MultiActionDropdown from "@/components/MultiActionDropdown/MultiActionDropdown";
 
 type DashboardPageProps = {
    allClients: Client[],
@@ -157,8 +157,18 @@ export default function DashboardPage ({ allActivities, allClients, allPayments 
             <Card styles={cardStyles}>
                <div className="box full dfb align-center mb-1">
                   <div className="text-xxs grey-5 full">Recent Clients</div>
-                  <div className="box full dfb align-center justify-end">
+                  <div className="box full dfb align-center justify-end gap-20">
                      <div className="text-xxs visible-link fit accent-color" onClick={() => router.push("/clients")}>See all</div>
+                     <div className="box fit">
+                        <MultiActionDropdown actions={[{
+                           label: <><Copy size={15} /> Copy Onboarding Link</>,
+                           action: () => {
+                              copyToClipboard(`https://minwebappcmgr.vercel.app/onboarding`);
+                              toast.success("Copied");
+                           },
+                           appearance: "normal"
+                        }]} />
+                     </div>
                   </div>
                </div>
                <ClientsTable clients={recentClients} />

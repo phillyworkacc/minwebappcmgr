@@ -59,7 +59,7 @@ export default function MarkdownEditor ({ markdownInitial, activityId }: { markd
             markdown={markdown}
             onChange={(md) => setMarkdown(md)}
             plugins={[
-               headingsPlugin(), 
+               headingsPlugin(),
                listsPlugin(), 
                quotePlugin(), 
                markdownShortcutPlugin(), 

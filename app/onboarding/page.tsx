@@ -10,21 +10,21 @@ import Selections from "@/components/Selections/Selections";
 import Spacing from "@/components/Spacing/Spacing";
 import AwaitButton from "@/components/AwaitButton/AwaitButton";
 import { onboardingFormConfig } from "@/utils/onboardingFormConfig";
-import { ArrowLeft, ArrowRight, Asterisk } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowLeft, ArrowRight, Asterisk, TriangleAlert } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { createClientForm } from "../actions/clientForm";
 
 export default function Onboarding() {
    const [formStage, setFormStage] = useState(0);
    const [clientForm, setClientForm] = useState<ClientForm>({
-      niche: { niche: undefined },
+      niche: { niche: '' },
       your_information: {
          first_name: undefined,
          last_name: undefined,
          email: undefined,
          phone: undefined,
-         preferred_contact: undefined,
+         preferred_contact: '',
       },
       business_information: {
          business_name: undefined,
@@ -36,7 +36,7 @@ export default function Onboarding() {
          required_pages: undefined,
       },
       branding_assets: {
-         logo: undefined,
+         logo: '',
       },
       social_media: { show_social_media: false },
       website_delivery: {
@@ -58,7 +58,10 @@ export default function Onboarding() {
 
    function nextButton () {
       const formStageRequiredKeys = Object.keys(clientForm[onboardingFormConfig[formStage].id]);
-      if (formStageRequiredKeys.map(fsRk => clientForm[onboardingFormConfig[formStage].id][fsRk]).some(v => v==undefined)) {
+      if (formStageRequiredKeys
+            .map(fsRk => clientForm[onboardingFormConfig[formStage].id][fsRk])
+            .some(v => (v==undefined || v==='' || v.length < 1))
+      ) {
          toast.error("Please fill all the required fields");
          return;
       }
@@ -98,6 +101,19 @@ export default function Onboarding() {
                </AwaitButton>
             </div>
          </>) : (<>
+            <div 
+               className="box full pd-1 pdx-1"
+               style={{
+                  background: "#ffef95ff", color: "#664e00ff",
+                  border: "1px solid #efcd00", borderRadius: "12px"
+               }}
+            >
+               <div className="text-xxs dfb align-center gap-5 bold-600">
+                  <TriangleAlert size={17} /> Please do not leave this page while filling this form.
+               </div>
+            </div>
+            <Spacing size={1} />
+
             <div className="text-ml full bold-600">{onboardingFormConfig[formStage].title}</div>
             <div className="text-xs pd-1 full">{onboardingFormConfig[formStage].description}</div>
             <Spacing size={1} />
@@ -135,8 +151,9 @@ export default function Onboarding() {
                               style={{ width: "100%", maxWidth: "400px" }}
                               selectedOptionStyle={{ padding: "12px 0" }}
                               defaultOptionIndex={
-                                 [ formItem.placeholder, ...formItem.value as string[] ].indexOf((clientForm as any)[onboardingFormConfig[formStage].id][formItem.id])!
-                                 || 0   
+                                 (clientForm as any)[onboardingFormConfig[formStage].id][formItem.id] !== ''
+                                 ? [ formItem.placeholder, ...formItem.value as string[] ].indexOf((clientForm as any)[onboardingFormConfig[formStage].id][formItem.id])
+                                 : 0   
                               }
                            />
                         </div>
@@ -220,7 +237,11 @@ export default function Onboarding() {
                            <Selections 
                               selections={formItem.value as string[]}
                               onSelect={options => updateClientForm(formItem, options.map(o => (formItem.value as any)[o]))}
-                              defaultSelectionIndexes={(clientForm as any)[onboardingFormConfig[formStage].id][formItem.id].map((i: any) => (formItem.value as string[]).indexOf(i)!)}
+                              defaultSelectionIndexes={
+                                 (clientForm as any)[onboardingFormConfig[formStage].id][formItem.id]
+                                 ? (clientForm as any)[onboardingFormConfig[formStage].id][formItem.id].map((i: any) => (formItem.value as string[]).indexOf(i)!)
+                                 : []
+                              }
                            />
                         </div>
                      </div>
