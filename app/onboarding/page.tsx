@@ -46,20 +46,6 @@ export default function Onboarding() {
    });
    const [showSuccess, setShowSuccess] = useState(false);
 
-   useEffect(() => {
-      localStorage.setItem("minweb_agency_onboarding_form", JSON.stringify(clientForm));
-      localStorage.setItem("minweb_agency_onboarding_form_stage", `${formStage}`);
-   }, [clientForm, formStage]);
-
-   useEffect(() => {
-      if (localStorage?.getItem("minweb_agency_onboarding_form_stage")) {
-         setFormStage(parseInt(localStorage?.getItem("minweb_agency_onboarding_form_stage")!));
-      }
-      if (localStorage.getItem("minweb_agency_onboarding_form")) {
-         setClientForm(JSON.parse(localStorage?.getItem("minweb_agency_onboarding_form")!));
-      }
-   }, [])
-
    function updateClientForm (formItem: FormItem, value: any) {
       setClientForm(cf => ({
          ...cf, 
@@ -145,7 +131,7 @@ export default function Onboarding() {
                         <div className="box full pd-05">
                            <Select
                               options={[ formItem.placeholder, ...formItem.value as string[] ]}
-                              onSelect={option => { if (option !== formItem.placeholder) updateClientForm(formItem, option); }}
+                              onSelect={option => { updateClientForm(formItem, (option == formItem.placeholder) ? undefined : option); }}
                               style={{ width: "100%", maxWidth: "400px" }}
                               selectedOptionStyle={{ padding: "12px 0" }}
                               defaultOptionIndex={
