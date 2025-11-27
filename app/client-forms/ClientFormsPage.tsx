@@ -85,10 +85,10 @@ export default function ClientFormsPage ({ clientFormsSubmissions }: ClientForms
                }
                <Spacing size={3} />
             </>) : (<>
-               <div className="text-xxs full grey-5 text-center">No activities</div>
+               <div className="text-xxs full grey-5 text-center">No client forms</div>
             </>)}
          </>) : (<>
-            <div className="text-xxs full grey-5 text-center">No activities</div>
+            <div className="text-xxs full grey-5 text-center">No client forms</div>
          </>)}
       </AppWrapper>
    )
