@@ -16,8 +16,8 @@ import { toast } from "sonner";
 import { createClientForm } from "../actions/clientForm";
 
 export default function Onboarding() {
-   const [formStage, setFormStage] = useState(parseInt(localStorage?.getItem("minweb_agency_onboarding_form_stage")!) || 0);
-   const [clientForm, setClientForm] = useState<ClientForm>(JSON.parse(localStorage?.getItem("minweb_agency_onboarding_form")!) || {
+   const [formStage, setFormStage] = useState(0);
+   const [clientForm, setClientForm] = useState<ClientForm>({
       niche: { niche: undefined },
       your_information: {
          first_name: undefined,
@@ -50,6 +50,15 @@ export default function Onboarding() {
       localStorage.setItem("minweb_agency_onboarding_form", JSON.stringify(clientForm));
       localStorage.setItem("minweb_agency_onboarding_form_stage", `${formStage}`);
    }, [clientForm, formStage]);
+
+   useEffect(() => {
+      if (localStorage?.getItem("minweb_agency_onboarding_form_stage")) {
+         setFormStage(parseInt(localStorage?.getItem("minweb_agency_onboarding_form_stage")!));
+      }
+      if (localStorage.getItem("minweb_agency_onboarding_form")) {
+         setClientForm(JSON.parse(localStorage?.getItem("minweb_agency_onboarding_form")!));
+      }
+   }, [])
 
    function updateClientForm (formItem: FormItem, value: any) {
       setClientForm(cf => ({
