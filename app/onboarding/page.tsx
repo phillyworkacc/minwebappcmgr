@@ -150,7 +150,7 @@ export default function Onboarding() {
                               selectedOptionStyle={{ padding: "12px 0" }}
                               defaultOptionIndex={
                                  [ formItem.placeholder, ...formItem.value as string[] ].indexOf((clientForm as any)[onboardingFormConfig[formStage].id][formItem.id])!
-                                 || undefined   
+                                 || 0   
                               }
                            />
                         </div>
