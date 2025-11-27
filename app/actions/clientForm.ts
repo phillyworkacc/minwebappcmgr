@@ -188,3 +188,19 @@ export async function addActivityFromClientForm (title: string, clientEmail: str
       return false;
    }
 }
+
+export async function deleteClientForm (clientFormId: string) {
+   const updated = await dalRequireAuth(user => 
+      dalDbOperation(async () => {
+         const res = await db
+            .delete(clientFormsTable)
+            .where(eq(clientFormsTable.clientFormId, clientFormId));
+         return (res.rowCount > 0);
+      })
+   )
+   if (updated.success) {
+      return updated.data;
+   } else {
+      return updated.success;
+   }
+}

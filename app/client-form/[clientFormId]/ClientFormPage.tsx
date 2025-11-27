@@ -8,14 +8,31 @@ import AdminClientForm from "@/components/ClientForm/AdminClientForm";
 import { CustomUserIcon } from "@/components/Icons/Icon";
 import { Trash2 } from "lucide-react";
 import { formatMilliseconds } from "@/utils/date";
+import { deleteClientForm } from "@/app/actions/clientForm";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type ClientFormIndividualPageProps = {
    cfSubmission: ClientFormSubmission;
 }
 
 export default function ClientFormIndividualPage ({ cfSubmission }: ClientFormIndividualPageProps) {
+   const router = useRouter();
+
    function getClientForm (): ClientForm {
       return JSON.parse(cfSubmission.clientFormJson) as ClientForm;
+   }
+   
+   const deleteCurrentClientForm = async () => {
+      if (confirm("Are you sure you want to delete this client form ?")) {
+         const deleted = await deleteClientForm(cfSubmission.clientFormId);
+         if (deleted) {
+            toast.success("Deleted Client Form");
+            router.push('/client-forms');
+         } else {
+            toast.error("Failed to delete this client form");
+         }
+      }
    }
 
    return (
@@ -39,7 +56,7 @@ export default function ClientFormIndividualPage ({ cfSubmission }: ClientFormIn
             <div className="box full dfb align-center justify-end">
                <MultiActionDropdown
                   actions={[
-                     { action: () => {}, label: <><Trash2 size={15} /> Delete Client Form</>, appearance: 'delete' },
+                     { action: deleteCurrentClientForm, label: <><Trash2 size={15} /> Delete Client Form</>, appearance: 'delete' },
                   ]}
                />
             </div>
