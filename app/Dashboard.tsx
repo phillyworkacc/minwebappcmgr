@@ -5,7 +5,7 @@ import { getUniqueYears, chartGroupByMonth, chartCurrentMonth, chartLast7Days, c
 import { getAllUserClients } from "./actions/clients";
 import { getRecentPaymentsData, getAllTimePaymentsData } from "./actions/payments";
 import { formatNumber } from "@/utils/num";
-import { ChevronRight, CircleUserRound, Globe2, ListTodo, PoundSterling, TrendingUp, UserStar } from "lucide-react";
+import { BookCopy, ChevronRight, CircleUserRound, Globe2, ListTodo, PoundSterling, TrendingUp, UserStar } from "lucide-react";
 import { getAllUserActivities } from "./actions/activity";
 import AppWrapper from "@/components/AppWrapper/AppWrapper";
 import Chart from "@/components/Chart/Chart";
@@ -162,6 +162,26 @@ export default function DashboardPage ({ allActivities, allClients, allPayments 
                   </div>
                </div>
                <ClientsTable clients={recentClients} />
+            </Card>
+         </div>
+         
+         <div className="htv gap-10 mb-1">
+            <Card styles={{...cardStyles, cursor:"pointer", padding: "15px" }} onClick={() => router.push("/client-forms")}>
+               <div className="box full dfb align-center gap-10">
+                  <div 
+                     className="box fit h-fit pd-1 pdx-1 dfb align-center justify-center"
+                     style={{ aspectRatio: '1', borderRadius: "100%", background: "#da6f45", color: "white" }}
+                  >
+                     <BookCopy size={17} />
+                  </div>
+                  <div className="box full dfb column">
+                     <div className="box full dfb align-center gap-5">
+                        <div className="text-xxs bold-600 fit">Client Forms</div>
+                        <ChevronRight size={15} />
+                     </div>
+                     <div className="text-t grey-4">View all forms submitted by potential client who want websites</div>
+                  </div>
+               </div>
             </Card>
          </div>
 

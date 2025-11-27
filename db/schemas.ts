@@ -24,6 +24,13 @@ export const clientsTable = pgTable("clients", {
    createdat: text("createdat"),
 });
 
+export const clientFormsTable = pgTable("client_forms", {
+   id: serial("id").primaryKey(),
+   clientFormId: text("client_form_id"),
+   clientFormJson: text("client_form_json"),
+   date: bigint("date", { mode: "number" }),
+});
+
 export const paymentsTable = pgTable("payments", {
    id: serial("id").primaryKey(),
    userid: text("userid"),

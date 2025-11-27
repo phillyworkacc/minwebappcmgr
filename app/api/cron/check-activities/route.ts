@@ -5,8 +5,6 @@ import { and, eq, gte, lte } from "drizzle-orm";
 import activityEmail from "@/emails/activityEmail";
 import nodemailer from "nodemailer";
 
-export const runtime = 'nodejs';
-
 export async function GET() {
    const now = Date.now();
    const oneDay = 24 * 60 * 60 * 1000;

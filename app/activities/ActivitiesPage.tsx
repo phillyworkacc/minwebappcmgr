@@ -116,13 +116,6 @@ export default function ActivitiesPage ({ allActivities }: ActivitiesPageProps) 
                   ))
                }
                <Spacing size={3} />
-               {/* <ActivitiesTable
-                  activities={activities.filter(activity => (
-                     activity.title.toLowerCase().includes(searchActivities.toLowerCase()) ||
-                     activity.markdownDescriptionText.toLowerCase().includes(searchActivities.toLowerCase())
-                  ))}
-                  onClickActivity={activity => router.push(`/activity/${activity.activityId}`)}
-               /> */}
             </>) : (<>
                <div className="text-xxs full grey-5 text-center">No activities</div>
             </>)}

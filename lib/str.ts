@@ -33,8 +33,8 @@ function fallbackCopy(text: string) {
 }
 
 export function titleCase (str: string): string {
-   if (str.includes(" ")) {
-      return str.split(" ").map(strBreak => titleCase(strBreak)).join(" ");
+   if (str.replaceAll("_"," ").includes(" ")) {
+      return str.replaceAll("_"," ").split(" ").map(strBreak => titleCase(strBreak)).join(" ");
    }
    return `${str[0].toUpperCase()}${str.substring(1).toLowerCase()}`;
 }

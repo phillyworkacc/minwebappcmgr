@@ -4,16 +4,21 @@ import { useState } from 'react';
 
 type SelectProps = {
    selections: any[];
-   onSelect: (optionIndex: number) => void;
-   defaultInitialIndex?: number;
+   onSelect: (options: number[]) => void;
+   defaultSelectionIndexes?: number[];
 }
 
-export default function Selections ({ selections, onSelect, defaultInitialIndex }: SelectProps) {
-   const [optionSelected, setOptionSelected] = useState<number>(defaultInitialIndex || 0);
+export default function Selections ({ selections, onSelect, defaultSelectionIndexes }: SelectProps) {
+   const [optionSelected, setOptionSelected] = useState<number[]>(defaultSelectionIndexes ? [...defaultSelectionIndexes] : []);
 
-   const selectOption = (index: number) => {
-      setOptionSelected(index);
-      onSelect(index);
+   const toggleSelectOption = (index: number) => {
+      if (optionSelected.includes(index)) {
+         setOptionSelected(p => ([...p.filter(i => i !== index)]));
+         onSelect([...optionSelected.filter(i => i !== index)]);
+      } else {
+         setOptionSelected(p => ([...p, index]));
+         onSelect([...optionSelected, index]);
+      }
    }
 
    return (
@@ -21,10 +26,10 @@ export default function Selections ({ selections, onSelect, defaultInitialIndex 
          {selections.map((option, index) => (
             <div 
                key={index}
-               className={`selection ${(optionSelected == index) && 'selected'}`}
-               onClick={() => selectOption(index)}
+               className={`selection ${(optionSelected.includes(index)) && 'selected'}`}
+               onClick={() => toggleSelectOption(index)}
             >
-               <span className="text-xxxs">{option}</span>
+               <span className="text-xxs">{option}</span>
             </div>
          ))}
       </div>

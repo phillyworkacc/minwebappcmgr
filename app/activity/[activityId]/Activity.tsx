@@ -80,6 +80,7 @@ export default function ActivityPage ({ activityInfo }: ActivityPageProps) {
                />
             </div>
          </div>
+         
          <div className="box full mt-1">
             <div className="text-xxs full bold-600">
                {activity.completed ? <span style={{color:"green"}}>Activity Completed</span> : <span style={{color:"grey"}}>Incomplete Activity</span>}

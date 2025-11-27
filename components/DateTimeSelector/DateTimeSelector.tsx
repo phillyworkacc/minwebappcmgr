@@ -3,11 +3,18 @@ import './DateTimeSelector.css'
 import { useState } from 'react';
 
 type DateTimeSelectorProps = {
+   defaultTime?: string;
    onSelect: (ms: string) => void;
 }
 
-export default function DateTimeSelector({ onSelect }: DateTimeSelectorProps) {
-   const [value, setValue] = useState('');
+function msToDateTimeLocal(ms: number) {
+   const d = new Date(ms);
+   const pad = (n: number) => String(n).padStart(2, "0");
+   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+export default function DateTimeSelector({ onSelect, defaultTime }: DateTimeSelectorProps) {
+   const [value, setValue] = useState(defaultTime ? msToDateTimeLocal(parseInt(defaultTime)) : '');
 
    function handleSet(dt: any) {
       setValue(dt)

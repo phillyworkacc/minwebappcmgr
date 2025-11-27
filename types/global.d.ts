@@ -90,3 +90,44 @@ type Website = {
    url: string;
    date: string;
 }
+
+type ClientFormSubmission = {
+   id: number;
+   clientFormId: string;
+   clientFormJson: string;
+   date: number;
+}
+
+type FormValueItem = {
+   text: string;
+   email: string;
+   textarea: string;
+   number: number;
+   select: string[];
+   colours: string;
+   multipleChoices: string[];
+   checkbox: boolean;
+   image: File;
+   date: Date;
+}
+
+type FormItem<T extends keyof FormValueItem = keyof FormValueItem> = {
+   id: string;
+   title: string;
+   description?: string;
+   placeholder: string;
+   type: T;
+   value: FormValueItem[T];
+   notRequired?: true;
+}
+
+type Form = {
+   id: "niche" | "your_information" | "business_information" | "website_information" | "branding_assets" | "social_media" | "website_delivery";
+   title: string;
+   description?: string;
+   formContent: FormItem[]
+};
+type OnboardingForm = Form[];
+type ClientForm = {
+   [K in Form["id"]]: any;
+}
