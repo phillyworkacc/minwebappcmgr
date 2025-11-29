@@ -11,6 +11,12 @@ type ClientProps = {
    }>
 }
 
+export async function generateMetadata() {
+   return {
+      title: `Minweb - Client Page`
+   };
+}
+
 export default async function Client ({ params }: ClientProps) {
    await dalRequireAuthRedirect();
 

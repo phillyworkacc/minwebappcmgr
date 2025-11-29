@@ -1,7 +1,7 @@
 import juice from "juice";
 
 export default function clientFormSubmissionEmail (clientFormId: string, clientName: string, clientEmail: string, clientPhone: string, clientPCM: string) {
-   const baseurl = 'https://minwebappcmgr.vercel.app';
+   const baseurl = 'https://app.minwebagency.com';
    const emailHtml =  `
    <!doctype html>
    <html>

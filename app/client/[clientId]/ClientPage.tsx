@@ -97,7 +97,7 @@ export default function ClientPage ({ client, websites, clientPayments }: Client
    }
 
    const copyReviewLink = () => {
-      copyToClipboard(`https://minwebappcmgr.vercel.app/review/${clientInfo.clientid}`);
+      copyToClipboard(`https://app.minwebagency.com/review/${clientInfo.clientid}`);
       toast.success("Copied");
    }
 

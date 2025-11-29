@@ -5,6 +5,12 @@ import { eq } from "drizzle-orm";
 import ReviewsPage from "./ReviewsPage";
 import LoadingPage from "./loading";
 
+export async function generateMetadata() {
+   return {
+      title: `Minweb - Reviews`
+   };
+}
+
 export default async function Reviews () {
    await dalRequireAuthRedirect();
 

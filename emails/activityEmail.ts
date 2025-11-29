@@ -3,7 +3,7 @@ import { formatMilliseconds } from "@/utils/date";
 import juice from "juice";
 
 export default function activityEmail (activities: ActivityClient[]) {
-   const baseurl = 'https://minwebappcmgr.vercel.app';
+   const baseurl = 'https://app.minwebagency.com';
    const emailHtml =  `
    <!doctype html>
    <html>

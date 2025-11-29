@@ -5,6 +5,12 @@ import { desc } from "drizzle-orm";
 import LoadingPage from "./loading";
 import ClientFormsPage from "./ClientFormsPage";
 
+export async function generateMetadata() {
+   return {
+      title: `Minweb - Client Forms`
+   };
+}
+
 export default async function ClientForms () {
    const clientForms = await dalRequireAuth(user =>
       dalDbOperation(async () => {

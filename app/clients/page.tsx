@@ -5,6 +5,13 @@ import { desc, eq } from "drizzle-orm";
 import ClientsPage from "./ClientsPage";
 import LoadingPage from "../loading";
 
+
+export async function generateMetadata() {
+   return {
+      title: `Minweb - Clients`
+   };
+}
+
 export default async function Clients () {
    await dalRequireAuthRedirect();
 

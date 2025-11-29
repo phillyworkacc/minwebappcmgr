@@ -5,6 +5,12 @@ import { desc, eq } from "drizzle-orm";
 import LoadingPage from "./loading";
 import Websites from "./Websites";
 
+export async function generateMetadata() {
+   return {
+      title: `Minweb - Client Websites`
+   };
+}
+
 export default async function Dashboard () {
    await dalRequireAuthRedirect();
 
