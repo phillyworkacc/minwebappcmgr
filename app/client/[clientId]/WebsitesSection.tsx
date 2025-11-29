@@ -140,8 +140,8 @@ function WebsiteCard ({ website, clientInfo, removeWebsite }: { website: Website
             </div>
             <div className="box full dfb column">
                <div className="text-xxs full bold-600">{metadata.websiteTitle}</div>
-               <div className="text-xxxs full grey-5">{website.url}</div>
-               <div className="box full dfb align-center wrap gap-20">
+               <div className="text-xxxs full grey-5 pd-05">{website.url}</div>
+               <div className="box full dfb align-center wrap gap-10">
                   <Link className="text-xxxs fit grey-4 visible-link dfb align-center gap-5" href={`https://${website.url}`} target="_blank">
                      Visit Website <SquareArrowOutUpRight size={13} />
                   </Link>

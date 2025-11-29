@@ -57,7 +57,7 @@ export default function ClientFormsPage ({ clientFormsSubmissions }: ClientForms
                <input 
                   type="text" 
                   className="xxs pd-11 pdx-15"
-                  placeholder="Search Activities"
+                  placeholder="Search Client Forms"
                   style={{ width: "100%", maxWidth: "400px" }}
                   value={searchCfSubs}
                   onChange={(e) => setSearchCfSubs(e.target.value)}

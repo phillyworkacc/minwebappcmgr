@@ -108,6 +108,8 @@ ${safeMd(required_pages.join(", "))}
 ${safeMd(clientForm.website_information['current_website'])}
 ### What ${first_name} ${last_name} dislikes about the current website?
 ${safeMd(clientForm.website_information['current_website_dislikes'])}
+${clientForm.website_information['integrations'] && (`### Integrations Requested
+${safeMd(clientForm.website_information['integrations'].join(", "))}`)}
 
 ## Branding Assets
 ### Logo

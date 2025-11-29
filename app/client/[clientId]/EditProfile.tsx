@@ -106,7 +106,7 @@ export default function EditProfile ({ clientInfo, setClientInfo }: { clientInfo
    }
 
    return (
-      <button className="xxxs grey tiny-shadow pd-1 pdx-15" onClick={editProfileModal}>
+      <button className="xxxs grey tiny-shadow pd-1 pdx-15 whitespace-nowrap" onClick={editProfileModal}>
          <Edit size={17} /> Edit {clientInfo.name}'s Profile
       </button>
    )

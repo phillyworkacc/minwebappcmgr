@@ -106,15 +106,17 @@ export default function ActivitiesPage ({ allActivities }: ActivitiesPageProps) 
                   activity.markdownDescriptionText.toLowerCase().includes(searchActivities.toLowerCase())
                )
             ).length > 0) ? (<>
-               {activities
-                  .filter(activity => (
-                     activity.title.toLowerCase().includes(searchActivities.toLowerCase()) ||
-                     activity.markdownDescriptionText.toLowerCase().includes(searchActivities.toLowerCase())
-                  ))
-                  .map((activity, index) => (
-                     <ActivityViewer key={index} activityInfo={activity} />
-                  ))
-               }
+               <div className="box full dfb wrap gap-10" style={{ alignItems: "stretch" }}>
+                  {activities
+                     .filter(activity => (
+                        activity.title.toLowerCase().includes(searchActivities.toLowerCase()) ||
+                        activity.markdownDescriptionText.toLowerCase().includes(searchActivities.toLowerCase())
+                     ))
+                     .map((activity, index) => (
+                        <ActivityViewer key={index} activityInfo={activity} />
+                     ))
+                  }
+               </div>
                <Spacing size={3} />
             </>) : (<>
                <div className="text-xxs full grey-5 text-center">No activities</div>

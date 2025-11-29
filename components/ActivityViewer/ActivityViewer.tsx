@@ -24,7 +24,7 @@ export default function ActivityViewer ({ activityInfo }: { activityInfo: Activi
    const router = useRouter();
 
    return (
-      <div className="box full mb-1">
+      <div className="box full dfb mb-1" style={{ maxWidth: "480px" }}>
          <Card 
             className="activity-view-card" 
             styles={{ padding: "20px", cursor: "pointer", boxShadow: "none" }} 

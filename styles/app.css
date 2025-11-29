@@ -54,6 +54,13 @@
    justify-content: center;
 }
 
+.htv.align-start { align-items: start; }
+.htv.align-center { align-items: center; }
+.htv.align-end { align-items: end; }
+.htv.justify-start { justify-content: start; }
+.htv.justify-center { justify-content: center; }
+.htv.justify-end { justify-content: end; }
+
 @media screen and (max-width: 1000px) {
    .htv {
       width: 100%;

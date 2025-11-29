@@ -122,6 +122,15 @@ export const onboardingFormConfig: OnboardingForm = [
             placeholder: "",
             value: ["Home", "About", "Services", "Contact", "Team", "Reviews"]
          },
+         {
+            id: "integrations",
+            title: "What integrations would you like with your website ?",
+            description: "Select all that apply",
+            type: "multipleChoices",
+            placeholder: "",
+            value: ["Email Marketing", "Payment Processing", "AI Chat Bot", "Quote Generator", "Website Analytics", "Google Reviews"],
+            notRequired: true
+         },
       ]
    },
    {
