@@ -12,17 +12,14 @@ import sendMail from "@/lib/sendMail";
 export async function createClientForm (clientForm: ClientForm) {
    const now = Date.now();
    const clientFormId = uuid().replaceAll("-","");
-   const inserted = await dalRequireAuth(user =>
-      dalDbOperation(async () => {
-         const res = await db.insert(clientFormsTable).values({
-            clientFormId,
-            clientFormJson: JSON.stringify(clientForm),
-            date: now
-         });
-         return (res.rowCount > 0);
-      })
-   );
-   if (inserted.success) {
+   const inserted = await db
+      .insert(clientFormsTable)
+      .values({
+         clientFormId,
+         clientFormJson: JSON.stringify(clientForm),
+         date: now
+      });
+   if (inserted.rowCount > 0) {
       const sentMail = await sendMail(
          'ayomiposi.opadijo@gmail.com', 'Client Form Submission',
          clientFormSubmissionEmail(
@@ -31,8 +28,8 @@ export async function createClientForm (clientForm: ClientForm) {
             clientForm.your_information.email, clientForm.your_information.phone,
             clientForm.your_information.preferred_contact
          )
-      )
-      return (inserted.data && sentMail);
+      );
+      return ((inserted.rowCount > 0) && sentMail);
    } else {
       return false;
    }
