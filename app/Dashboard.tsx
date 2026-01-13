@@ -132,7 +132,7 @@ export default function DashboardPage ({ allActivities, allClients, allPayments 
             </div>
          </div>
 
-         <div className="htv gap-10 mb-1">
+         {(allActivities.length > 0) && (<div className="htv gap-10 mb-1">
             <Card styles={cardStyles}>
                <div className="box full dfb align-center mb-1">
                   <div className="text-xxs grey-5 full">Activities</div>
@@ -142,7 +142,7 @@ export default function DashboardPage ({ allActivities, allClients, allPayments 
                </div>
                <ActivitiesTable activities={allActivities} onClickActivity={activity => router.push(`/activity/${activity.activityId}`)} />
             </Card>
-         </div>
+         </div>)}
 
          <div className="htv gap-10 mb-1">
             <Card styles={cardStyles}>
@@ -163,7 +163,7 @@ export default function DashboardPage ({ allActivities, allClients, allPayments 
                         <MultiActionDropdown actions={[{
                            label: <><Copy size={15} /> Copy Onboarding Link</>,
                            action: () => {
-                              copyToClipboard(`https://minwebappcmgr.vercel.app/onboarding`);
+                              copyToClipboard(`https://app.minwebagency.com/onboarding`);
                               toast.success("Copied");
                            },
                            appearance: "normal"
@@ -172,137 +172,6 @@ export default function DashboardPage ({ allActivities, allClients, allPayments 
                   </div>
                </div>
                <ClientsTable clients={recentClients} />
-            </Card>
-         </div>
-         
-         <div className="htv gap-10 mb-1">
-            <Card styles={{...cardStyles, cursor:"pointer", padding: "15px" }} onClick={() => router.push("/client-forms")}>
-               <div className="box full dfb align-center gap-10">
-                  <div 
-                     className="box fit h-fit pd-1 pdx-1 dfb align-center justify-center"
-                     style={{ aspectRatio: '1', borderRadius: "100%", background: "#da6f45", color: "white" }}
-                  >
-                     <BookCopy size={17} />
-                  </div>
-                  <div className="box full dfb column">
-                     <div className="box full dfb align-center gap-5">
-                        <div className="text-xxs bold-600 fit">Client Forms</div>
-                        <ChevronRight size={15} />
-                     </div>
-                     <div className="text-t grey-4">View all forms submitted by potential client who want websites</div>
-                  </div>
-               </div>
-            </Card>
-         </div>
-
-         <div className="htv gap-10 mb-1">
-            <Card styles={{...cardStyles, cursor:"pointer", padding: "15px" }} onClick={() => router.push("/payments")}>
-               <div className="box full dfb align-center gap-10">
-                  <div 
-                     className="box fit h-fit pd-1 pdx-1 dfb align-center justify-center"
-                     style={{ aspectRatio: '1', borderRadius: "100%", background: "#028802", color: "white" }}
-                  >
-                     <PoundSterling size={17} />
-                  </div>
-                  <div className="box full dfb column">
-                     <div className="box full dfb align-center gap-5">
-                        <div className="text-xxs bold-600 fit">Payments</div>
-                        <ChevronRight size={15} />
-                     </div>
-                     <div className="text-t grey-4">View all payments</div>
-                  </div>
-               </div>
-            </Card>
-            <Card styles={{...cardStyles, cursor:"pointer", padding: "15px" }} onClick={() => router.push("/clients")}>
-               <div className="box full dfb align-center gap-10">
-                  <div 
-                     className="box fit h-fit pd-1 pdx-1 dfb align-center justify-center"
-                     style={{ aspectRatio: '1', borderRadius: "100%", background: "#880224", color: "white" }}
-                  >
-                     <CircleUserRound size={17} />
-                  </div>
-                  <div className="box full dfb column">
-                     <div className="box full dfb align-center gap-5">
-                        <div className="text-xxs bold-600 fit">Clients</div>
-                        <ChevronRight size={15} />
-                     </div>
-                     <div className="text-t grey-4">View all clients</div>
-                  </div>
-               </div>
-            </Card>
-         </div>
-
-         <div className="htv gap-10 mb-1">
-            <Card styles={{...cardStyles, cursor:"pointer", padding: "15px" }} onClick={() => router.push("/revenue")}>
-               <div className="box full dfb align-center gap-10">
-                  <div 
-                     className="box fit h-fit pd-1 pdx-1 dfb align-center justify-center"
-                     style={{ aspectRatio: '1', borderRadius: "100%", background: "#8704a8", color: "white" }}
-                  >
-                     <TrendingUp size={17} />
-                  </div>
-                  <div className="box full dfb column">
-                     <div className="box full dfb align-center gap-5">
-                        <div className="text-xxs bold-600 fit">Revenue Insights</div>
-                        <ChevronRight size={15} />
-                     </div>
-                     <div className="text-t grey-4">View revenue stats</div>
-                  </div>
-               </div>
-            </Card>
-            <Card styles={{...cardStyles, cursor:"pointer", padding: "15px" }} onClick={() => router.push("/reviews")}>
-               <div className="box full dfb align-center gap-10">
-                  <div 
-                     className="box fit h-fit pd-1 pdx-1 dfb align-center justify-center"
-                     style={{ aspectRatio: '1', borderRadius: "100%", background: "#c27400", color: "white" }}
-                  >
-                     <UserStar size={17} />
-                  </div>
-                  <div className="box full dfb column">
-                     <div className="box full dfb align-center gap-5">
-                        <div className="text-xxs bold-600 fit">Reviews</div>
-                        <ChevronRight size={15} />
-                     </div>
-                     <div className="text-t grey-4">View all reviews from clients</div>
-                  </div>
-               </div>
-            </Card>
-         </div>
-
-         <div className="htv gap-10">
-            <Card styles={{...cardStyles, cursor:"pointer", padding: "15px" }} onClick={() => router.push("/activities")}>
-               <div className="box full dfb align-center gap-10">
-                  <div 
-                     className="box fit h-fit pd-1 pdx-1 dfb align-center justify-center"
-                     style={{ aspectRatio: '1', borderRadius: "100%", background: "#000875", color: "white" }}
-                  >
-                     <ListTodo size={17} />
-                  </div>
-                  <div className="box full dfb column">
-                     <div className="box full dfb align-center gap-5">
-                        <div className="text-xxs bold-600 fit">Activities</div>
-                        <ChevronRight size={15} />
-                     </div>
-                     <div className="text-t grey-4">View all tasks that need to be done</div>
-                  </div>
-               </div>
-            </Card>
-            <Card styles={{...cardStyles, cursor:"pointer", padding: "15px" }} onClick={() => router.push("/websites")}>
-               <div className="box full dfb align-center gap-10">
-                  <div 
-                     className="box fit h-fit pd-1 pdx-1 dfb align-center justify-center"
-                     style={{ aspectRatio: '1', borderRadius: "100%", background: "#93c900", color: "white" }}
-                  >
-                     <Globe2 size={17} />
-                  </div>
-                  <div className="box full dfb column">
-                     <div className="box full dfb align-center gap-5">
-                        <div className="text-xxs bold-600 fit">Websites</div>
-                        <ChevronRight size={15} />
-                     </div>
-                     <div className="text-t grey-4">View all clients' websites</div>
-                  </div>
-               </div>
             </Card>
          </div>
          <Spacing size={4} />

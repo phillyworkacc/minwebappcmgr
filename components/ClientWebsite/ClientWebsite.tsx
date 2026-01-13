@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { CustomUserIcon, WebsiteIcon } from "../Icons/Icon";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Card from "../Card/Card";
 import DefaultWebsiteIcon from "@/public/loading-site.png";
 
 type ClientWebsiteProps = {
@@ -30,10 +29,7 @@ export default function ClientWebsite ({ website, clientInfo }: ClientWebsitePro
    }, [])
 
    return (
-      <Card styles={{
-         padding: "20px", borderRadius: "15px",
-         boxShadow: "none", cursor: "default"
-      }}>
+      <>
          <div className="box full dfb align-center gap-10">
             <div className="box h-full fit">
                <WebsiteIcon url={metadata.icon} size={40} round />
@@ -53,6 +49,6 @@ export default function ClientWebsite ({ website, clientInfo }: ClientWebsitePro
                </button>
             </Link>
          </div>
-      </Card>
+      </>
    )
 }

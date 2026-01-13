@@ -68,7 +68,7 @@ export default function ReviewPage({ client }: ReviewPageProps) {
                      <div className="text-l bold-600 full text-center">Review Sent</div>
                      <div className="text-xs grey-5 text-center pd-1">Your feedback has been submitted successfully — we really appreciate your time and support.</div>
                      <div className="box full dfb column gap-10">
-                        <button className="xxs pd-12 full" onClick={() => router.push('https://minweb.freevar.com')}>Visit our website</button>
+                        <button className="xxs pd-12 full" onClick={() => router.push('https://minwebagency.com')}>Visit our website</button>
                         <button className='xxs pd-12 full outline-black tiny-shadow' onClick={() => setPageDisplay("main")}>Write another review</button>
                      </div>
                   </>)}

@@ -2,6 +2,7 @@
 import AppWrapper from "@/components/AppWrapper/AppWrapper";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import ClientWebsite from "@/components/ClientWebsite/ClientWebsite";
+import ListView from "@/components/ListView/ListView";
 import Spacing from "@/components/Spacing/Spacing";
 import { useState } from "react";
 
@@ -43,11 +44,16 @@ export default function Websites ({ clientWebsites }: WebsitesPageProps) {
          </div>
 
          <div className="box full dfb column gap-10">
-            {clientWebsites
-            .filter(cw => (cw.url.toLowerCase().includes(searchWebsites.toLowerCase()) || cw.client.name.toLowerCase().includes(searchWebsites.toLowerCase()) ))
-            .map((cWebsite, index) => (
-               <ClientWebsite key={index} clientInfo={cWebsite.client} website={cWebsite} />
-            ))}
+            <ListView 
+               items={
+                  clientWebsites.filter(cw => 
+                     (cw.url.toLowerCase().includes(searchWebsites.toLowerCase()) || cw.client.name.toLowerCase().includes(searchWebsites.toLowerCase()) )
+                  )
+               }
+               itemDisplayComponent={(item: Website & { client: Client; }) => (
+                  <ClientWebsite clientInfo={item.client} website={item} />
+               )}
+            />
          </div>
 
          <Spacing size={3} />

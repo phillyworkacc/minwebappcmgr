@@ -22,10 +22,9 @@
 .select .selected-option .content {
    width: 100%;
    height: 100%;
-   padding: 8px 14px;
+   padding: 8px 15px;
    display: flex;
    align-items: center;
-   gap: 5px;
    background-color: transparent;
 }
 

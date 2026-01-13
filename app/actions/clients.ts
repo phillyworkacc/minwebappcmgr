@@ -51,14 +51,15 @@ export async function sendReviewForClient (clientId: string, review: string) {
    return result;
 }
 
-export async function createUserClient (name: string, email: string, description: string, image: string) {
+export async function createUserClient (name: string, email: string, phoneNumber: string, description: string, image: string, websiteBuildType: string) {
    const now = `${Date.now()}`;
    const clientid = uuid().replaceAll("-","");
    const inserted = await dalRequireAuth(user =>
       dalDbOperation(async () => {
          const res = await db.insert(clientsTable).values({
             userid: user.userid, clientid, email,
-            name, description, image, websites: "",
+            name, description, image, phoneNumber,
+            twilioPhoneNumber: "", websites: "", websiteBuildType,
             notes: "", status: "beginning", review: "",
             latestupdate: now, createdat: now
          });

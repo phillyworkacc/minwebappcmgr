@@ -2,6 +2,7 @@
 import AppWrapper from "@/components/AppWrapper/AppWrapper"
 import AwaitButton from "@/components/AwaitButton/AwaitButton";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
+import Select from "@/components/Select/Select";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createUserClient } from "../actions/clients";
@@ -14,11 +15,18 @@ export default function AddClientPage () {
    const [name, setName] = useState("")
    const [description, setDescription] = useState("")
    const [email, setEmail] = useState("")
+   const [phoneNumber, setPhoneNumber] = useState("")
+   const [clientWebsiteType, setClientWebsiteType] = useState("");
    const [image, setImage] = useState("")
 
    const addClientButton = async (callback: Function) => {
+      if (name == "") {
+         toast.error("Please enter a name for this client.");
+         callback();
+         return;
+      }
       const defaultClientImage = "https://minwebappcmgr.vercel.app/clientdefault.jpg";
-      const result = await createUserClient(name, email, description, `${(image == "") ? defaultClientImage : image}`);
+      const result = await createUserClient(name, email, phoneNumber, description, `${(image == "") ? defaultClientImage : image}`, clientWebsiteType);
       if (result) {
          toast.success(name + " (Client) has been added");
          router.push("/clients");
@@ -61,6 +69,15 @@ export default function AddClientPage () {
                />
             </div>
             <div className="box full pd-1">
+               <input
+                  type="text"
+                  className="xxs pd-12 pdx-15 full" 
+                  placeholder="Phone Number"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+               />
+            </div>
+            <div className="box full pd-1">
                <textarea 
                   id="description" 
                   name="description" 
@@ -78,6 +95,18 @@ export default function AddClientPage () {
                   placeholder="Image URL" 
                   value={image} 
                   onChange={(e) => setImage(e.target.value)} 
+               />
+            </div>
+            <div className="box full pd-1">
+               <Select 
+                  style={{ width: "100%", borderRadius:"12px", textAlign: "left" }}
+                  optionStyle={{ width: "100%", textAlign: "left", padding: "8px 15px" }}
+                  selectedOptionStyle={{
+                     width: "100%", padding: "10px 15px",
+                     display: "flex", alignItems: "center", justifyContent: "start"
+                  }}
+                  options={[ "Custom Build", "Contractor Template Site" ]}
+                  onSelect={type => setClientWebsiteType(type.toLowerCase().replaceAll(" ","-"))}
                />
             </div>
             <div className="box full pd-1">

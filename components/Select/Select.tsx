@@ -33,7 +33,11 @@ export default function Select ({ options, defaultOptionIndex, onSelect, style, 
    return (
       <div className="select" style={style}>
          <div className="selected-option" onClick={() => setShowDropdown(prev => !prev)}>
-            <div className="content" style={selectedOptionStyle}>{options[initialOption]}</div>
+            <div className="content">
+               <div style={selectedOptionStyle}>
+                  {options[initialOption]}
+               </div>
+            </div>
             <div className="arrow"><ChevronDown size={18} /></div>
          </div>
          {showDropdown && <motion.div 

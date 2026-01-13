@@ -4,11 +4,15 @@ import Breadcrumb from '@/components/Breadcrumb/Breadcrumb'
 import Select from '@/components/Select/Select'
 import ActivitiesTable from '@/components/Table/ActivitiesTable'
 import Spacing from '@/components/Spacing/Spacing'
+import ActivityViewer, { CompletionIndicator } from '@/components/ActivityViewer/ActivityViewer'
+import ListView from '@/components/ListView/ListView'
+import ActivityPriorityIndicator from '@/components/ActivityPriorityIndicator/ActivityPriorityIndicator'
 import { useRouter } from 'next/navigation'
 import { titleCase } from '@/lib/str'
 import { CirclePlus } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import ActivityViewer from '@/components/ActivityViewer/ActivityViewer'
+import { CustomUserIcon } from '@/components/Icons/Icon'
+import { formatMilliseconds } from '@/utils/date'
 
 type ActivitiesPageProps = {
    allActivities: ActivityClient[];
@@ -106,17 +110,34 @@ export default function ActivitiesPage ({ allActivities }: ActivitiesPageProps) 
                   activity.markdownDescriptionText.toLowerCase().includes(searchActivities.toLowerCase())
                )
             ).length > 0) ? (<>
-               <div className="box full dfb wrap gap-10" style={{ alignItems: "stretch" }}>
-                  {activities
-                     .filter(activity => (
+               <ListView
+                  items={
+                     activities.filter(activity => (
                         activity.title.toLowerCase().includes(searchActivities.toLowerCase()) ||
                         activity.markdownDescriptionText.toLowerCase().includes(searchActivities.toLowerCase())
                      ))
-                     .map((activity, index) => (
-                        <ActivityViewer key={index} activityInfo={activity} />
-                     ))
                   }
-               </div>
+                  itemDisplayComponent={(item: ActivityClient) => (
+                     <div className="box full dfb column pd-1 pdx-2">
+                        <div className="text-xs bold-600 full mb-05">{item.title}</div>
+                        <div className="box full dfb gap-10 wrap pd-05 mb-05">
+                           <div className="box fit dfb align-center justify-center gap-5">
+                              <CustomUserIcon url={item.client.image} size={20} round />
+                              <div className="text-xxxs fit">{item.client.name}</div>
+                           </div>
+                           <div className="box fit dfb align-center gap-10">
+                              <ActivityPriorityIndicator priority={item.priority} />
+                              <CompletionIndicator complete={item.completed} />
+                           </div>
+                        </div>
+                        {item.completed ? (<>
+                           <div className="text-xxs full grey-5">Completed on {formatMilliseconds(parseInt(item.completeDate), true, true)}</div>
+                        </>) : (<>
+                           <div className="text-xxs full grey-5">Due on {formatMilliseconds(item.dueDate, true, true)}</div>
+                        </>)}
+                     </div>
+                  )}
+               />
                <Spacing size={3} />
             </>) : (<>
                <div className="text-xxs full grey-5 text-center">No activities</div>

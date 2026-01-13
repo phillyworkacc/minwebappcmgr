@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { CustomUserIcon } from "../Icons/Icon";
 import { formatMilliseconds } from "@/utils/date";
 
-function CompletionIndicator ({ complete }: { complete: boolean }) {
+export function CompletionIndicator ({ complete }: { complete: boolean }) {
    return (
       <span 
          className="text-xt bold-600 fit pd-05 pdx-1"
