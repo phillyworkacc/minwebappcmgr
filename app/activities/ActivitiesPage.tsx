@@ -118,7 +118,7 @@ export default function ActivitiesPage ({ allActivities }: ActivitiesPageProps) 
                      ))
                   }
                   itemDisplayComponent={(item: ActivityClient) => (
-                     <div className="box full dfb column pd-1 pdx-2">
+                     <div className="box full dfb column pd-1 pdx-2" onClick={() => router.push(`/activity/${item.activityId}`)}>
                         <div className="text-xs bold-600 full mb-05">{item.title}</div>
                         <div className="box full dfb gap-10 wrap pd-05 mb-05">
                            <div className="box fit dfb align-center justify-center gap-5">
