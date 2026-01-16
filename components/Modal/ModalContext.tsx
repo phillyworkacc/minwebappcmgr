@@ -2,6 +2,7 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import { Modal } from "./Modal";
 import Spacing from "../Spacing/Spacing";
+import { AnimatePresence, motion } from "framer-motion";
 
 type ModalConfig = {
 	id: string;
@@ -11,7 +12,6 @@ type ModalConfig = {
 
 type ModalContextType = {
 	showModal: (config: Omit<ModalConfig, "id">) => void;
-	closeModal: (id: string) => void;
 	close: () => void;
 };
 
@@ -34,34 +34,30 @@ function generateUUIDv4() {
 
 
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
-  	const [modals, setModals] = useState<ModalConfig[]>([]);
+  	const [modal, setModal] = useState<ModalConfig | null>(null);
 
 	const showModal = useCallback((config: Omit<ModalConfig, "id">) => {
 		const id = generateUUIDv4();
-		setModals((prev) => [...prev, { ...config, id }]);
+		setModal({ ...config, id });
 	}, []);
 
-	const close =  useCallback(() => {
-		setModals((prev) => {
-			if (prev.length === 0) return prev;
-			const lastModal = prev[prev.length - 1];
-			if (lastModal.onClose) lastModal.onClose();
-			return prev.slice(0, -1);
-		});
-  }, []);
-
-	const closeModal = useCallback((id: string) => {
-		setModals((prev) => prev.filter((m) => m.id !== id));
-	}, []);
+	const close =  useCallback(() => setModal(null), []);
 
 	return (
-		<ModalContext.Provider value={{ showModal, closeModal, close }}>
+		<ModalContext.Provider value={{ showModal, close }}>
 			{children}
-			{modals.map((modal, index) => {
-				return <Modal key={index}>
-					{modal.content}
-				</Modal>
-			})}
+			<AnimatePresence>
+				{modal !== null && (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 0.2, ease: "easeIn" }}
+					>
+						<Modal onClose={close}>{modal.content}</Modal>
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</ModalContext.Provider>
 	);
 };

@@ -5,7 +5,7 @@ import { ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { CustomIcon, MinwebLogo } from '../Icons/Icon'
-import { BookCopy, ChevronRight, CircleUserRound, Globe2, ListTodo, Menu, PoundSterling, TrendingUp, UserStar } from "lucide-react"
+import { BookCopy, ChevronRight, CircleUserRound, Globe2, ListTodo, Menu, PoundSterling, TrendingUp, UserRoundCheck, UserStar } from "lucide-react"
 import { useModal } from "../Modal/ModalContext"
 import userDefaultImage from "@/public/clientdefault.jpg"
 
@@ -16,6 +16,7 @@ export default function AppWrapper ({ children }: { children: ReactNode }) {
    const { showModal, close } = useModal();
    const links = [
       { name: "Clients", href: "/clients", icon: <CircleUserRound size={17} />, color: "#880224" },
+      { name: "TWS Clients", href: "/clients-tws", icon: <UserRoundCheck size={17} />, color: "#00408a" },
       { name: "Payments", href: "/payments", icon: <PoundSterling size={17} />, color: "#028802" },
       { name: "Client Forms", href: "/client-forms", icon: <BookCopy size={17} />, color: "#da6f45" },
       { name: "Revenue Insights", href: "/revenue", icon: <TrendingUp size={17} />, color: "#8704a8" },

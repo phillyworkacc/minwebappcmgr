@@ -15,14 +15,18 @@ type Client = {
    clientid: string;
    name: string;
    email: string;
+   websiteBuildType: string;
+   phoneNumber: string;
+   twilioPhoneNumber: string;
    description: string;
+   businessName: string;
    image: string;
    notes: string;
    status: ClientStatus;
-   review: string;
-   createdat: string;
    websites: string;
+   review: string;
    latestupdate: string;
+   createdat: string;
 }
 
 type ClientChartInfo = Client & {

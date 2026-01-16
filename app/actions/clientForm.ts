@@ -35,7 +35,7 @@ export async function createClientForm (clientForm: ClientForm) {
    }
 }
 
-export async function createClientUsingForm (name: string, email: string, notes: string, image: string, niche: string) {
+export async function createClientUsingForm (name: string, email: string, notes: string, image: string, niche: string, phoneNumber: string, websiteBuildType: string) {
    const now = `${Date.now()}`;
    const clientid = uuid().replaceAll("-","");
 
@@ -70,7 +70,8 @@ export async function createClientUsingForm (name: string, email: string, notes:
       dalDbOperation(async () => {
          const res = await db.insert(clientsTable).values({
             userid: user.userid, clientid, email,
-            name, description: niche, image, websites: "",
+            name, description: niche, image, phoneNumber,
+            twilioPhoneNumber: "", websites: "", websiteBuildType,
             notes, status: "working", review: "",
             latestupdate: now, createdat: now
          });

@@ -62,8 +62,8 @@ export default function AdminClientForm ({ clientForm }: AdminClientFormProps) {
       const notes = `Business Name: ${business_name}
 Business Email: ${business_email}
 Business Phone: ${business_phone}`;
-      const { first_name, last_name, email, profile_image } = clientForm.your_information;
-      const createClient = await createClientUsingForm(`${first_name} ${last_name}`, email, notes, profile_image, niche);
+      const { first_name, last_name, email, profile_image, phone } = clientForm.your_information;
+      const createClient = await createClientUsingForm(`${first_name} ${last_name}`, email, notes, profile_image, niche, phone, "template-build-site");
       if (createClient.success) {
          toast.success("Created Client Account");
       } else {

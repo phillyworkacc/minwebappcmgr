@@ -21,6 +21,7 @@ import { deleteClientAccount, updateClientInfoNotes, updateClientInfoStatus } fr
 import { formatNumber } from "@/utils/num";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import ListView from "@/components/ListView/ListView";
 
 type ClientPageProps = {
    client: Client;
@@ -202,19 +203,24 @@ export default function ClientPage ({ client, websites, clientPayments }: Client
          <div className="box full pd-15">
             <div className="text-ml full bold-700">Reviews</div>
             {(clientReviews.length > 0) ? (<>
-               {clientReviews.map((review, index) => (
-                  <div key={index} className="box full dfb align-center gap-10 h-fit pd-1">
-                     <div className="box full dfb column">
-                        <div className="box full dfb align-center gap-10">
-                           <div className="box fit h-full">
-                              <CustomUserIcon size={30} url={clientInfo.image} round />
+               <div className="box full pd-1">
+                  <ListView 
+                     items={clientReviews}
+                     itemDisplayComponent={(review: string) => (
+                        <div className="box full dfb column pd-05 pdx-1">
+                           <div className="box full dfb align-center gap-10">
+                              <div className="box fit dfb align-center gap-10">
+                                 <div className="box fit h-full">
+                                    <CustomUserIcon size={25} url={clientInfo.image} round />
+                                 </div>
+                                 <div className="text-xs full bold-600">{clientInfo.name}</div>
+                              </div>
                            </div>
-                           <div className="text-s full"><b>{clientInfo.name}</b> left a review</div>
+                           <div className="text-xxs full mt-1">{review}</div>
                         </div>
-                        <div className="text-xxs full mt-05">{review}</div>
-                     </div>
-                  </div>
-               ))}
+                     )}
+                  />
+               </div>
             </>) : (<>No Reviews from {clientInfo.name}</>)}
             <div className="box full pd-05">
                <button className="xxxs pd-1 pdx-15 grey tiny-shadow" onClick={copyReviewLink}>

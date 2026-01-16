@@ -10,7 +10,6 @@
    justify-content: center;
    padding: 0 20px;
    background-color: rgba(0, 0, 0, 0.4);
-   backdrop-filter: blur(5px);
 }
 
 .modal .modal-box {
@@ -19,12 +18,28 @@
    height: fit-content;
    max-height: 60vh;
    background-color: white;
-   padding: 40px;
+   padding: 25px;
    border: 1px solid #efefef;
    border-radius: 15px;
    position: relative;
    line-height: 1.8rem;
    overflow-y: scroll;
    overflow-x: hidden;
+   user-select: none;
    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.098);
+}
+
+.modal .modal-box .modal-close {
+   position: absolute;
+   top: 10px;
+   right: 10px;
+   background-color: #e4e4e4;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 100%;
+   color: black;
+   cursor: pointer;
+   padding: 5px;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.098);
 }
