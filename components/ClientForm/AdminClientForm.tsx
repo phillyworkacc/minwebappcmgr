@@ -59,11 +59,13 @@ export default function AdminClientForm ({ clientForm }: AdminClientFormProps) {
    const createClientAccount = async (callback: Function) => {
       const { business_name, email: business_email, phone: business_phone } = clientForm.business_information;
       const { niche } = clientForm.niche;
+      const { logo } = clientForm.branding_assets;
       const notes = `Business Name: ${business_name}
 Business Email: ${business_email}
 Business Phone: ${business_phone}`;
       const { first_name, last_name, email, profile_image, phone } = clientForm.your_information;
-      const createClient = await createClientUsingForm(`${first_name} ${last_name}`, email, notes, profile_image, niche, phone, "template-build-site");
+      const clientImage = profile_image || logo || "https://minwebappcmgr.vercel.app/clientdefault.jpg";
+      const createClient = await createClientUsingForm(`${first_name} ${last_name}`, email, notes, clientImage, niche, phone, "template-build-site");
       if (createClient.success) {
          toast.success("Created Client Account");
       } else {

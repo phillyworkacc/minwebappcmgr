@@ -21,7 +21,7 @@ function ImageUrlViewer ({ imageUrl }: { imageUrl: string }) {
          <input 
             type="text" className="xxs full pd-15 pdx-2"
             id="client-profile-edit-image"
-            placeholder="Client Name" autoComplete="off"
+            placeholder="Client Image Url" autoComplete="off"
             value={imageLink} onChange={e => setImageLink(e.target.value)}
          />
       </div>
