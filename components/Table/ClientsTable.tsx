@@ -40,3 +40,38 @@ export default function ClientsTable ({ clients, onClickClient }: ClientsTablePr
       </div>
    )
 }
+
+
+export function ClientsTwsTable ({ clients, onClickClient }: ClientsTableProps) {
+   return (
+      <div className="video-ideas-manage">
+         <div className="table-container">
+            <table className="video-idea-table">
+               <thead>
+                  <tr id='head-row'>
+                     <th>Name</th>
+                     <th style={{textAlign:"center"}}>Business Name</th>
+                     <th style={{textAlign:"center"}}>Phone</th>
+                     <th style={{textAlign:"center"}}>Date</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {clients.map((client, index) => (
+                     <tr key={index} onClick={() => { if (onClickClient) onClickClient(client); }}>
+                        <td className='name'>
+                           <div className="box fit dfb align-center gap-10">
+                              <CustomUserIcon url={client.image} size={25} round />
+                              {client.name}
+                           </div>
+                        </td>
+                        <td style={{textAlign:"center"}}>{client.businessName}</td>
+                        <td style={{textAlign:"center"}}>{client.phoneNumber}</td>
+                        <td style={{textAlign:"center"}}>{formatMilliseconds(parseInt(client.createdat), true, true)}</td>
+                     </tr>
+                  ))}
+               </tbody>
+            </table>
+         </div>
+      </div>
+   )
+}

@@ -29,7 +29,11 @@ export default function AddClientPage () {
       const result = await createUserClient(name, email, phoneNumber, description, `${(image == "") ? defaultClientImage : image}`, clientWebsiteType);
       if (result) {
          toast.success(name + " (Client) has been added");
-         router.push("/clients");
+         if (clientWebsiteType == "custom-build") {
+            router.push("/clients");
+         } else {
+            router.push("/clients-tws");
+         }
       } else {
          toast.error("Failed to add client. Please try again.");
       }
@@ -102,7 +106,7 @@ export default function AddClientPage () {
                   style={{ width: "100%", borderRadius:"12px", textAlign: "left" }}
                   optionStyle={{ width: "100%", textAlign: "left", padding: "8px 15px" }}
                   selectedOptionStyle={{
-                     width: "100%", padding: "10px 15px",
+                     width: "100%", padding: "5px",
                      display: "flex", alignItems: "center", justifyContent: "start"
                   }}
                   options={[ "Custom Build", "Contractor Template Site" ]}

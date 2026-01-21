@@ -51,9 +51,10 @@ export async function sendReviewForClient (clientId: string, review: string) {
    return result;
 }
 
-export async function createUserClient (name: string, email: string, phoneNumber: string, description: string, image: string, websiteBuildType: string) {
+export async function createUserClient (name: string, email: string, phoneNumber: string, description: string, image: string, wbt: string) {
    const now = `${Date.now()}`;
    const clientid = uuid().replaceAll("-","");
+   const websiteBuildType = wbt == "custom-build" ? wbt : "template-build-site";
    const inserted = await dalRequireAuth(user =>
       dalDbOperation(async () => {
          const res = await db.insert(clientsTable).values({

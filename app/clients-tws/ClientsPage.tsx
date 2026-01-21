@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { getUniqueYearsClient } from "@/utils/chart";
 import { pluralSuffixer, titleCase } from "@/lib/str";
 import { CirclePlus } from "lucide-react";
+import { ClientsTwsTable } from "@/components/Table/ClientsTable";
 import AppWrapper from "@/components/AppWrapper/AppWrapper"
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Select from "@/components/Select/Select";
-import ClientsTable from "@/components/Table/ClientsTable";
 
 type ClientsPageProps = {
    allClients: Client[];
@@ -55,15 +55,15 @@ export default function ClientsPage ({ allClients }: ClientsPageProps) {
       <AppWrapper>
          <Breadcrumb 
             pages={[
-               { href: "/clients", label: "Clients" }
+               { href: "/clients", label: "TWS Clients" }
             ]}
          />
 
          <div className="box full dfb align-center">
-            <div className="text-m full bold-600 mt-15">All Clients</div>
+            <div className="text-m full bold-600 mt-15">All TWS Clients</div>
             <div className="box full dfb align-center justify-end">
                <button className="xxxs outline-black tiny-shadow pd-1 pdx-15" onClick={() => router.push("/add-client")}>
-                  <CirclePlus size={17} /> Add Client
+                  <CirclePlus size={17} /> Add TWS Client
                </button>
             </div>
          </div>
@@ -106,12 +106,12 @@ export default function ClientsPage ({ allClients }: ClientsPageProps) {
          
          {(clients.length > 0) ? (<>
             {(clients.filter(client => client.name.toLowerCase().includes(searchClients.toLowerCase())).length > 0) ? (<>
-               <ClientsTable 
+               <ClientsTwsTable 
                   clients={
                      clients
                      .filter(client => client.name.toLowerCase().includes(searchClients.toLowerCase()))
                   }
-                  onClickClient={client => router.push(`/client/${client.clientid}`)}
+                  onClickClient={client => router.push(`/client-tws/${client.clientid}`)}
                />
             </>) : (<>
                <div className="text-xxs full grey-5 text-center">No clients</div>

@@ -1,0 +1,127 @@
+.conversation-box {
+   width: 100%;
+   height: 100%;
+   max-height: 65vh;
+   border: 1px solid #ededed;
+   border-radius: 15px;
+   display: flex;
+   justify-content: center;
+}
+
+.conversation-box .profile-icon {
+   height: 35px;
+   aspect-ratio: 1;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 100%;
+   font-weight: 700;
+   padding: 6px;
+}
+
+.conversation-box .contact-list {
+   width: 100%;
+   max-width: 300px;
+   border-right: 1px solid #ededed;
+   overflow-y: scroll;
+   overflow-x: hidden;
+   display: flex;
+   flex-direction: column;
+   gap: 5px;
+   padding: 5px;
+}
+
+.conversation-box .contact-list .contact {
+   width: 100%;
+   padding: 7px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   border-radius: 15px;
+   cursor: pointer;
+}
+
+.conversation-box .contact-list .contact:hover {
+   background-color: #f1f1f1;
+}
+
+.conversation-box .contact-messages {
+   width: 100%;
+   overflow: hidden;
+   display: flex;
+   flex-direction: column;
+}
+
+.conversation-box .contact-messages > .contact-info {
+   width: 100%;
+   padding: 10px 20px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   border-bottom: 1px solid #ededed;
+}
+
+.conversation-box .contact-messages > .messages-container {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+   gap: 2px;
+   padding: 20px;
+   overflow-y: scroll;
+   overflow-x: hidden;
+}
+
+.conversation-box .contact-messages > .messages-container > .message-in {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: start;
+   justify-content: center;
+}
+
+.conversation-box .contact-messages > .messages-container > .message-out {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: end;
+   justify-content: center;
+}
+
+.conversation-box .contact-messages > .messages-container > .message-in > .message {
+   width: fit-content;
+   max-width: 400px;
+   background-color: #d6d6d6;
+   border-radius: 12px 12px 12px 0;
+   color: black;
+   padding: 8px;
+}
+
+.conversation-box .contact-messages > .messages-container > .message-out > .message {
+   width: fit-content;
+   max-width: 400px;
+   background-color: #2937ff;
+   text-align: right;
+   border-radius: 12px 12px 0 12px;
+   color: white;
+   padding: 8px;
+}
+
+.conversation-box .contact-messages > .send-message-container {
+   width: 100%;
+   padding: 10px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 10px;
+   border-top: 1px solid #ededed;
+}
+
+.conversation-box .contact-messages > .send-message-container > input {
+   border-radius: 20px;
+}
+
+.conversation-box .contact-messages > .send-message-container > button.send-button {
+   border-radius: 100%;
+   padding: 15px;
+}

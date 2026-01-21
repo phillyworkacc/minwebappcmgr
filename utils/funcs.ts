@@ -48,3 +48,29 @@ export const clientStatusInfo = (status: ClientStatus) => {
       }
    }
 }
+
+export function getInitialBgColor(name: string) {
+   if (!name) return {
+      backgroundColor: "#9e9e9e",
+      textColor: "#fff"
+   };
+
+   // Simple string hash
+   let hash = 0;
+   for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+   }
+
+   // Map hash to hue (0–359)
+   const hue = Math.abs(hash) % 360;
+
+   // Fixed saturation & lightness for consistency
+   
+   const lightness = Number(`hsl(${hue}, 65%, 55%)`.match(/(\d+)%\)$/)![1]);
+   const textColor = lightness > 50 ? "#000" : "#fff";
+
+   return {
+      backgroundColor: `hsl(${hue}, 65%, 55%)`,
+      textColor
+   }
+}

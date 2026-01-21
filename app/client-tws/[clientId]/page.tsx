@@ -4,7 +4,6 @@ import { clientsTable, paymentsTable, websitesTable } from "@/db/schemas";
 import { and, eq } from "drizzle-orm";
 import LoadingPage from "./loading";
 import ClientPage from "./ClientPage";
-import { redirect } from "next/navigation";
 
 type ClientProps = {
    params: Promise<{
@@ -67,15 +66,11 @@ export default async function Client ({ params }: ClientProps) {
    )
 
    if (clientInfo.success) {
-      if (clientInfo.data.client[0].websiteBuildType == "template-build-site") {
-         redirect(`/client-tws/${clientId}`);
-      } else {
-         return <ClientPage 
-            client={JSON.parse(JSON.stringify(clientInfo.data.client[0]))}
-            websites={JSON.parse(JSON.stringify(clientInfo.data.websites))}
-            clientPayments={JSON.parse(JSON.stringify(clientInfo.data.clientPayments))}
-         />
-      }
+      return <ClientPage 
+         client={JSON.parse(JSON.stringify(clientInfo.data.client[0]))}
+         websites={JSON.parse(JSON.stringify(clientInfo.data.websites))}
+         clientPayments={JSON.parse(JSON.stringify(clientInfo.data.clientPayments))}
+      />
    } else {
       return <LoadingPage />;
    }

@@ -1,7 +1,7 @@
 import { dalDbOperation, dalRequireAuth, dalRequireAuthRedirect } from "@/dal/helpers"
 import { db } from "@/db";
 import { clientsTable } from "@/db/schemas";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import ClientsPage from "./ClientsPage";
 import LoadingPage from "../loading";
 
@@ -17,11 +17,15 @@ export default async function Clients () {
 
    const allClients = await dalRequireAuth(user =>
       dalDbOperation(async () => {
+         const customBuildWebsiteType = "custom-build";
          const result = await db
             .select()
             .from(clientsTable)
             .orderBy(desc(clientsTable.createdat))
-            .where(eq(clientsTable.userid, user.userid!));
+            .where(and(
+               eq(clientsTable.userid, user.userid!),
+               eq(clientsTable.websiteBuildType, customBuildWebsiteType)
+            ));
 
          return result;
       })
