@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
    // TODO: lookup client by Twilio number
    // Example:
    const client = {
-      phoneNumber: "+447599899541", // client's real phone
+      phoneNumber: "07599899541", // client's real phone
    };
 
    const twiml = new twilio.twiml.VoiceResponse();
@@ -21,7 +21,9 @@ export async function POST(req: NextRequest) {
    twiml.dial(
       {
          timeout: 20,
-         statusCallback: `${process.env.NEXTAUTH_URL}/api/twilio/voice/status`,
+         record: "do-not-record",
+         callerId: "+447727653159",
+         statusCallback: `https://app.minwebagency.com/api/twilio/voice/status`,
          statusCallbackEvent: ["completed"],
          statusCallbackMethod: "POST",
       } as any,
