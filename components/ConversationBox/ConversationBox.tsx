@@ -2,9 +2,21 @@
 import "./ConversationBox.css"
 import { getInitialBgColor } from "@/utils/funcs"
 import { formatMilliseconds } from "@/utils/date";
-import { SendHorizontal } from "lucide-react";
+import { ChevronLeft, SendHorizontal } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function ConversationBox () {
+   const [deviceType, setDeviceType] = useState<"desktop" | "mobile">("desktop");
+   const mobileThreshold = 750;
+   const [openedConversation, setOpenedConversation] = useState<string | null>(null);
+
+
+   useEffect(() => {
+      setDeviceType(window.innerWidth >= mobileThreshold ? 'desktop' : 'mobile');
+      window.addEventListener('resize', () => setDeviceType(window.innerWidth >= mobileThreshold ? 'desktop' : 'mobile'));
+   }, [])
+
+
    const messages = [
       {
          body: "Hey, are we still on for today?",
@@ -89,13 +101,22 @@ export default function ConversationBox () {
       }
    ];
 
-
    return (
       <div className="conversation-box">
-         <div className="contact-list">
+         {(deviceType == "desktop" || (deviceType == "mobile" && openedConversation == null)) && (<div 
+            className="contact-list"
+            style={{
+               maxWidth: (deviceType == "desktop") ? "300px" : "100%",
+               borderRight: (deviceType == "desktop") ? "1px solid #ededed" : "none",
+            }}
+         >
             <div className="text-m full bold-600 pdx-1 mt-1 mb-05">Contacts</div>
             {contacts.map(contact => (
-               <div key={contact.name.replaceAll(" ", "-").toLowerCase()} className="contact">
+               <div 
+                  key={contact.name.replaceAll(" ", "-").toLowerCase()}
+                  className={`contact ${contact.name == openedConversation ? 'selected' : ''}`} 
+                  onClick={() => setOpenedConversation(contact.name)}
+               >
                   <div className="icon">
                      <div className="profile-icon" style={{
                         background: getInitialBgColor(contact.name).backgroundColor, 
@@ -104,34 +125,48 @@ export default function ConversationBox () {
                   </div>
                   <div className="box full dfb column">
                      <div className="text-xs bold-600 full">{contact.name}</div>
-                     <div className="text-xxxs grey-4 full">{contact.lastMessage.body.substring(0, 30)}{contact.lastMessage.body.length > 30 && '...'}</div>
+                     <div className="text-xxxs grey-4 full">{contact.lastMessage.body.substring(0, 25)}{contact.lastMessage.body.length > 30 && '...'}</div>
                   </div>
                </div>
             ))}
-         </div>
-         <div className="contact-messages">
-            <div className="contact-info">
-               <div className="profile-icon" style={{
-                  background: getInitialBgColor("Jake Parker").backgroundColor, 
-                  color: getInitialBgColor("Jake Parker").textColor 
-               }}>J</div>
-               <div className="text-xs bold-600 fit">Jake Parker</div>
-            </div>
-            <div className="messages-container">
-               {messages.map(message => (
-                  <div key={message.date} className={`message-${message.direction}`}>
-                     <div className="message">{message.body}</div>
-                     <div className="text-xt grey-4 fit pd-05">Sent at {formatMilliseconds(message.date, true, true)}</div>
+         </div>)}
+         {(deviceType == "desktop" || (deviceType == "mobile" && openedConversation !== null)) && (<div className="contact-messages">
+            {(openedConversation == null) ? (<>
+               <div className="box full h-full dfb align-center justify-center column gap-10">
+                  <div className="text-ml bold-600 grey-4 full text-center">
+                     No Conversation Selected
                   </div>
-               ))}
-            </div>
-            <div className="send-message-container">
-               <input type="text" className="xxs pd-13 pdx-15 full" placeholder="Message" />
-               <button className="send-button">
-                  <SendHorizontal size={17} />
-               </button>
-            </div>
-         </div>
+                  <div className="text-xxs grey-4 full text-center">
+                     Choose a contact to start chatting
+                  </div>
+               </div>
+            </>) : (<>            
+               <div className="contact-info">
+                  <div className="box fit h-full dfb align-center justify-center cursor-pointer" onClick={() => setOpenedConversation(null)}>
+                     <ChevronLeft size={20} />
+                  </div>
+                  <div className="profile-icon" style={{
+                     background: getInitialBgColor("Jake Parker").backgroundColor, 
+                     color: getInitialBgColor("Jake Parker").textColor 
+                  }}>J</div>
+                  <div className="text-xs bold-600 fit">Jake Parker</div>
+               </div>
+               <div className="messages-container">
+                  {messages.map(message => (
+                     <div key={message.date} className={`message-${message.direction}`}>
+                        <div className="message">{message.body}</div>
+                        <div className="text-xt grey-4 fit pd-05">Sent at {formatMilliseconds(message.date, true, true)}</div>
+                     </div>
+                  ))}
+               </div>
+               <div className="send-message-container">
+                  <input type="text" className="xxs pd-13 pdx-15 full" placeholder="Message" />
+                  <button className="send-button">
+                     <SendHorizontal size={17} />
+                  </button>
+               </div>
+            </>)}
+         </div>)}
       </div>
    )
 }
