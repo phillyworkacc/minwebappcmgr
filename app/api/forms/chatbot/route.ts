@@ -1,42 +1,58 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import twilio from "twilio";
-
-export const runtime = "nodejs";
 
 const twilioClient = twilio(
   process.env.TWILIO_ACCOUNT_SID!,
   process.env.TWILIO_AUTH_TOKEN!
 );
 
-export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { twilioPhoneNumber, customerPhone, message } = body;
+const getCORSHeaders = () => {
+   const headers = new Headers();
+   headers.set('Access-Control-Allow-Origin', '*');
+   headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+   headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+   return headers;
+};
 
-  // TODO: lookup client by twilioPhoneNumber
-  const client = {
-    businessName: "Prime Driveways"
-  };
+export async function OPTIONS() {
+   return new NextResponse(null, {
+      status: 204,
+      headers: getCORSHeaders(),
+   });
+}
 
-  // Send message into client SMS inbox
-  await twilioClient.messages.create({
-    from: twilioPhoneNumber,
-    to: twilioPhoneNumber,
-    body: `Website chat 💬
-From: ${customerPhone}
-Message: "${message}"`
-  });
+export async function POST (req: NextRequest) {
+	const body = await req.json();
+	console.log(body)
+	const { phoneNumber, message } = body;
 
-  // Bot reply to customer
-  await twilioClient.messages.create({
-    from: twilioPhoneNumber,
-    to: customerPhone,
-    body: `Thanks for messaging ${client.businessName}! A member of our team will text you shortly.`
-  });
+	const twilioPhoneNumber = "+447727653159";
 
-  // TODO:
-  // - create/find conversation
-  // - log messages
-  // - mark source = chatbot
+	// TODO: lookup client by twilioPhoneNumber
+	const client = {
+		businessName: "Prime Driveways"
+	};
 
-  return new Response("OK", { status: 200 });
+  	// Send message into client SMS inbox
+	// await twilioClient.messages.create({
+	// 	from: twilioPhoneNumber,
+	// 	to: twilioPhoneNumber,
+	// 	body: `Website chat 💬
+	// From: ${customerPhone}
+	// Message: "${message}"`
+	// });
+
+	// Bot reply to customer
+	await twilioClient.messages.create({
+      from: twilioPhoneNumber,
+      to: phoneNumber,
+      body: `Thanks for messaging ${client.businessName}! We will text you shortly.`
+	});
+
+	// TODO:
+	// - create/find conversation
+	// - log messages
+	// - mark source = chatbot
+
+	return NextResponse.json("OK", { status: 200, headers: getCORSHeaders() });
 }
