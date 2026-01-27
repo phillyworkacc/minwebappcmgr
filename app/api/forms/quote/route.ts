@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import twilio from "twilio";
 
 export const runtime = "nodejs";
@@ -8,7 +8,15 @@ const twilioClient = twilio(
   process.env.TWILIO_AUTH_TOKEN!
 );
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest, res: NextResponse) {
+	res.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
+	res.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+	res.headers.set("Access-Control-Allow-Headers", "Content-Type");
+
+	if (req.method === "OPTIONS") {
+		return new Response("OK", { status: 200 });
+	}
+
 	const body = await req.json();
 
 	const { clientId, name, phone, service, message } = body;
@@ -16,7 +24,7 @@ export async function POST(req: NextRequest) {
 	// TODO: lookup client by clientId
 	const client = {
 		businessName: "Joe's Plumbing",
-		twilioPhoneNumber: "+447480000001"
+		twilioPhoneNumber: "+447727653159"
 	};
 
 	const smsBody = `New quote request 🔔
