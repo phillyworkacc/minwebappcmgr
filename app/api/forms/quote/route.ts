@@ -8,15 +8,20 @@ const twilioClient = twilio(
   process.env.TWILIO_AUTH_TOKEN!
 );
 
-export async function POST(req: NextRequest, res: NextResponse) {
-	res.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
-	res.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
-	res.headers.set("Access-Control-Allow-Headers", "Content-Type");
+const corsHeaders = {
+	"Access-Control-Allow-Origin": "http://localhost:3000",
+	"Access-Control-Allow-Methods": "POST, OPTIONS",
+	"Access-Control-Allow-Headers": "Content-Type",
+};
 
-	if (req.method === "OPTIONS") {
-		return new Response("OK", { status: 200 });
-	}
+export async function OPTIONS() {
+	return new NextResponse(null, {
+		status: 200,
+		headers: corsHeaders,
+	});
+}
 
+export async function POST(req: NextRequest) {
 	const body = await req.json();
 
 	const { clientId, name, phone, service, message } = body;
@@ -51,5 +56,5 @@ export async function POST(req: NextRequest, res: NextResponse) {
 	// - insert lead
 	// - insert message
 
-	return new Response("OK", { status: 200 });
+	return new Response("OK", { status: 200, headers: corsHeaders });
 }
