@@ -2,10 +2,10 @@ import { NextRequest } from "next/server";
 import twilio from "twilio";
 
 export async function POST (req: NextRequest) {
-   // const formData = await req.formData();
+   const formData = await req.formData();
 
-   // const to = formData.get("To") as string;     // Twilio number
-   // const from = formData.get("From") as string; // Customer number
+   const to = formData.get("To") as string;     // Twilio number
+   const from = formData.get("From") as string; // Customer number
 
    // TODO: lookup client by Twilio number
    // Example:
@@ -33,7 +33,7 @@ export async function POST (req: NextRequest) {
 
    dial.number(
       {
-         statusCallback: `https://app.minwebagency.com/api/twilio/voice/status`,
+         statusCallback: `https://app.minwebagency.com/api/twilio/voice/status?customer=${encodeURIComponent(from)}`,
          statusCallbackEvent: ["completed"],
          statusCallbackMethod: "POST",
       },
