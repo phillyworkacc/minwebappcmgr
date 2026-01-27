@@ -8,23 +8,27 @@ const twilioClient = twilio(
   process.env.TWILIO_AUTH_TOKEN!
 );
 
-const corsHeaders = {
-	"Access-Control-Allow-Origin": "http://localhost:3000",
-	"Access-Control-Allow-Methods": "POST, OPTIONS",
-	"Access-Control-Allow-Headers": "Content-Type",
+const getCORSHeaders = () => {
+   const headers = new Headers();
+   headers.set('Access-Control-Allow-Origin', '*');
+   headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+   headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+   return headers;
 };
 
 export async function OPTIONS() {
-	return new NextResponse(null, {
-		status: 200,
-		headers: corsHeaders,
-	});
+   return new NextResponse(null, {
+      status: 204,
+      headers: getCORSHeaders(),
+   });
 }
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
 
-	const { clientId, name, phone, service, message } = body;
+	console.log(body);
+
+	const { clientId, name, phoneNumber, service, message } = body;
 
 	// TODO: lookup client by clientId
 	const client = {
@@ -34,7 +38,7 @@ export async function POST(req: NextRequest) {
 
 	const smsBody = `New quote request 🔔
 	Name: ${name}
-	Phone: ${phone}
+	Phone: ${phoneNumber}
 	Service: ${service}
 	Message: "${message}"`;
 
@@ -47,7 +51,7 @@ export async function POST(req: NextRequest) {
 	// Optional auto-reply to customer
 	await twilioClient.messages.create({
 		from: client.twilioPhoneNumber,
-		to: phone,
+		to: phoneNumber,
 		body: `Thanks for contacting ${client.businessName}! We'll text you shortly.`
 	});
 
@@ -55,6 +59,7 @@ export async function POST(req: NextRequest) {
 	// - upsert conversation
 	// - insert lead
 	// - insert message
-
-	return new Response("OK", { status: 200, headers: corsHeaders });
+	return NextResponse.json("OK", {
+		status: 200, headers: getCORSHeaders()
+	})
 }
