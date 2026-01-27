@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       // TODO: lookup client by Twilio number
       const clientData = {
          businessName: "Joe's Plumbing",
-         twilioPhoneNumber: to,
+         twilioPhoneNumber: "+447727653159",
       };
 
       await client.messages.create({
