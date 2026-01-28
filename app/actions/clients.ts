@@ -145,6 +145,22 @@ export async function deleteClientAccount (clientId: string) {
    return deleted;
 }
 
+export async function changeClientPassword (clientId: string, newPassword: string) {
+   const hashedPassword = hashPwd(newPassword);
+   const changed = await dalRequireAuth(user =>
+      dalDbOperation(async () => {
+         const res = await db.update(clientsTable)
+            .set({ password: hashedPassword })
+            .where(and(
+               eq(clientsTable.userid, user.userid!),
+               eq(clientsTable.clientid, clientId)
+            ));
+         return (res.rowCount > 0);
+      })
+   )
+   return changed
+}
+
 export async function updateClientInfoStatus (clientId: string, newStatus: ClientStatus) {
    const now = `${Date.now()}`;
    const result = await dalRequireAuth(user =>

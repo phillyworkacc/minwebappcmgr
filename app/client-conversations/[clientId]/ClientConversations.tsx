@@ -14,8 +14,9 @@ export default function ClientConversations ({ clientInfo, clientConversations }
          <Breadcrumb 
             pages={[
                { href: `/client-tws/${clientInfo.clientid}`, label: clientInfo.name },
-               { href: "/client-conversations", label: `${clientInfo.name}'s Conversations` },
+               { href: "/client-conversations", label: `Conversations` },
             ]}
+            hideDashboardLink
          />
          <div className="box full dfb column pd-1">
             <div className="text-l full bold-700">{clientInfo.name}'s Conversations</div>

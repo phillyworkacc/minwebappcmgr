@@ -23,6 +23,7 @@ import { Check, Copy, Edit, Mail, MessageCircle, Rocket, Trash2, Wrench, X } fro
 import { deleteClientAccount, updateClientInfoNotes, updateClientInfoStatus } from "@/app/actions/clients";
 import { formatNumber } from "@/utils/num";
 import { useRouter } from "next/navigation";
+import ChangePassword from "./ChangePassword";
 
 type ClientPageProps = {
    client: Client;
@@ -131,6 +132,7 @@ export default function ClientPage ({ client, websites, clientPayments, clientAu
                      </button>
                   </Link>)}
                   <EditProfile clientInfo={clientInfo} setClientInfo={setClientInfo} />
+                  <ChangePassword clientInfo={clientInfo} />
                   <Link href={`/client-conversations/${clientInfo.clientid}`}>
                      <button className="xxxs fit pd-1 pdx-15 tiny-shadow whitespace-nowrap">
                         <MessageCircle size={17} /> Customer Conversations

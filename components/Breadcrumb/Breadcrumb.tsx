@@ -6,17 +6,18 @@ type BreadcrumbProps = {
       href: string;
       label: string;
    }[]
+   hideDashboardLink?: boolean;
 }
 
-export default function Breadcrumb({ pages }: BreadcrumbProps) {
+export default function Breadcrumb({ pages, hideDashboardLink }: BreadcrumbProps) {
    const router = useRouter();
 
    return (
       <div className="box full dfb align-center gap-10">
-         <div className="box fit dfb align-center gap-10">
+         {(!hideDashboardLink) && (<div className="box fit dfb align-center gap-10">
             <div className="text-xxs visible-link" onClick={() => router.push('/')}>Dashboard</div>
             <div className="text-xxs">/</div>
-         </div>
+         </div>)}
          {pages.map((page, index) => (
             <div className="box fit dfb align-center gap-10" key={index}>
                <div 

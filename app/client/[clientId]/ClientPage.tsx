@@ -22,6 +22,7 @@ import { formatNumber } from "@/utils/num";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ListView from "@/components/ListView/ListView";
+import ChangePassword from "./ChangePassword";
 
 type ClientPageProps = {
    client: Client;
@@ -129,6 +130,7 @@ export default function ClientPage ({ client, websites, clientPayments }: Client
                      </button>
                   </Link>)}
                   <EditProfile clientInfo={clientInfo} setClientInfo={setClientInfo} />
+                  <ChangePassword clientInfo={clientInfo} />
                </div>
             </div>
          </div>
