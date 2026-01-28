@@ -36,7 +36,4 @@ export default async function Clients () {
    } else {
       return <LoadingPage />;
    }
-
-   return <ClientsPage allClients={JSON.parse(JSON.stringify(allTWSClients))} />
-
 }

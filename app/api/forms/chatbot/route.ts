@@ -1,3 +1,7 @@
+import { db } from "@/db";
+import { clientsTable, conversationsTable, messagesTable } from "@/db/schemas";
+import { uuid } from "@/utils/uuid";
+import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import twilio from "twilio";
 
@@ -23,36 +27,77 @@ export async function OPTIONS() {
 
 export async function POST (req: NextRequest) {
 	const body = await req.json();
-	console.log(body)
-	const { phoneNumber, message } = body;
+	const {
+		name, phoneNumber, message,
+		minwebBusinessId: clientId
+	} = body;
+	
+	
+	if (clientId == "" || name == "" || phoneNumber == "" || message == "") {
+		return NextResponse.json(JSON.stringify({ success: false }), { status: 200, headers: getCORSHeaders() })
+	}
 
-	const twilioPhoneNumber = "+447727653159";
+	try {
+		const resClients = await db
+			.select().from(clientsTable)
+			.where(eq(clientsTable.clientid, clientId)).limit(1);
+		const client = resClients[0];
 
-	// TODO: lookup client by twilioPhoneNumber
-	const client = {
-		businessName: "Prime Driveways"
-	};
+		// First Check if this Lead is in the Client's Conversations
+		const oldLead = await db.select().from(conversationsTable)
+			.where(and(
+				eq(conversationsTable.clientId, clientId),
+				eq(conversationsTable.customerPhone, phoneNumber)
+			)).limit(1);
 
-  	// Send message into client SMS inbox
-	// await twilioClient.messages.create({
-	// 	from: twilioPhoneNumber,
-	// 	to: twilioPhoneNumber,
-	// 	body: `Website chat 💬
-	// From: ${customerPhone}
-	// Message: "${message}"`
-	// });
+		if (oldLead.length > 0) {
+			// Add Message to Conversation
+			const now = `${Date.now()}`;
+			const messageId = uuid().replaceAll('-','_');
+			const messageBody = `Website Chat 💬
+	Name: ${name}
+	Phone: ${phoneNumber}
+	Message: "${message}"`;
+			await db.insert(messagesTable).values({
+				messageId, conversationId: oldLead[0].conversationId,
+				body: messageBody, direction: 'in',
+				date: now
+			});
+		} else {
+			// Create Conversation (Lead) for Client
+			const conversationId = uuid();
+			const messageId = uuid().replaceAll('-','_');
+			await db.insert(conversationsTable).values({
+				conversationId, clientId,
+				customerName: name,
+				customerPhone: phoneNumber,
+				lastMessageId: messageId,
+			});
 
-	// Bot reply to customer
-	await twilioClient.messages.create({
-      from: twilioPhoneNumber,
-      to: phoneNumber,
-      body: `Thanks for messaging ${client.businessName}! We will text you shortly.`
-	});
+			// Add Message to Conversation
+			const now = `${Date.now()}`;
+			const messageBody = `Website Chat 💬
+Name: ${name}
+Phone: ${phoneNumber}
+Message: "${message}"`;
+			await db.insert(messagesTable).values({
+				messageId, conversationId,
+				body: messageBody, direction: 'in',
+				date: now
+			});
+		}
 
-	// TODO:
-	// - create/find conversation
-	// - log messages
-	// - mark source = chatbot
+		// Auto-reply to customer
+		await twilioClient.messages.create({
+			from: client.twilioPhoneNumber!,
+			to: phoneNumber,
+			body: `Hi ${name}! Thanks for your message to ${client.businessName}!
+We've got your question and will get back to you shortly..`
+		});
 
-	return NextResponse.json("OK", { status: 200, headers: getCORSHeaders() });
+		return NextResponse.json(JSON.stringify({ success: true }), { status: 200, headers: getCORSHeaders() });
+	} catch (e) {
+		console.log(e);
+		return NextResponse.json(JSON.stringify({ success: false }), { status: 200, headers: getCORSHeaders() });
+	}
 }

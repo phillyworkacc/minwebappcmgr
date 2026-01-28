@@ -1,3 +1,7 @@
+import { db } from "@/db";
+import { clientsTable, conversationsTable, messagesTable } from "@/db/schemas";
+import { uuid } from "@/utils/uuid";
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import twilio from "twilio";
 
@@ -25,41 +29,53 @@ export async function OPTIONS() {
 
 export async function POST(req: NextRequest) {
 	const body = await req.json();
+	const {
+		minwebBusinessId: clientId, name, phoneNumber, message
+	} = body;
 
-	console.log(body);
+	if (clientId == "" || name == "" || phoneNumber == "" || message == "") {
+		return NextResponse.json(JSON.stringify({ success: false }), { status: 200, headers: getCORSHeaders() })
+	}
 
-	const { clientId, name, phoneNumber, service, message } = body;
+	try {
+		const resClients = await db
+			.select().from(clientsTable)
+			.where(eq(clientsTable.clientid, clientId)).limit(1);
+		const client = resClients[0];
 
-	// TODO: lookup client by clientId
-	const client = {
-		businessName: "Joe's Plumbing",
-		twilioPhoneNumber: "+447727653159"
-	};
+		// Create Conversation (Lead) for Client
+		const conversationId = uuid();
+		const messageId = uuid().replaceAll('-','_');
+		await db.insert(conversationsTable).values({
+			conversationId, clientId,
+			customerName: name,
+			customerPhone: phoneNumber,
+			lastMessageId: messageId,
+		});
+		
+		// Add Message to Conversation
+		const now = `${Date.now()}`;
+		const messageBody = `New Quote Request 🔔
+Name: ${name}
+Phone: ${phoneNumber}
+Message: "${message}"`;
+		await db.insert(messagesTable).values({
+			messageId, conversationId,
+			body: messageBody, direction: 'in',
+			date: now
+		});
 
-	const smsBody = `New quote request 🔔
-	Name: ${name}
-	Phone: ${phoneNumber}
-	Service: ${service}
-	Message: "${message}"`;
-
-	// await twilioClient.messages.create({
-	//   from: client.twilioPhoneNumber,
-	//   to: client.twilioPhoneNumber, // goes into SMS inbox
-	//   body: smsBody
-	// });
-
-	// Optional auto-reply to customer
-	await twilioClient.messages.create({
-		from: client.twilioPhoneNumber,
-		to: phoneNumber,
-		body: `Thanks for contacting ${client.businessName}! We'll text you shortly.`
-	});
-
-	// TODO:
-	// - upsert conversation
-	// - insert lead
-	// - insert message
-	return NextResponse.json("OK", {
-		status: 200, headers: getCORSHeaders()
-	})
+		// Auto-reply to customer
+		await twilioClient.messages.create({
+			from: client.twilioPhoneNumber!,
+			to: phoneNumber,
+			body: `Hi ${name} thanks for reaching out to ${client.businessName}!
+We've received your request and will be in touch shortly.`
+		});
+		
+		return NextResponse.json(JSON.stringify({ success: true }), { status: 200, headers: getCORSHeaders() })
+	} catch (e) {
+		console.log(e);
+		return NextResponse.json(JSON.stringify({ success: false }), { status: 200, headers: getCORSHeaders() })
+	}
 }

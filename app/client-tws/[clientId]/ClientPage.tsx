@@ -10,6 +10,7 @@ import WebsitesSection from "./WebsitesSection";
 import EditProfile from "./EditProfile";
 import Link from "next/link";
 import ListView from "@/components/ListView/ListView";
+import AutomationsSection from "./AutomationsSection";
 import { useState } from "react";
 import { useModal } from "@/components/Modal/ModalContext";
 import { formatMilliseconds } from "@/utils/date";
@@ -22,12 +23,12 @@ import { Check, Copy, Edit, Mail, MessageCircle, Rocket, Trash2, Wrench, X } fro
 import { deleteClientAccount, updateClientInfoNotes, updateClientInfoStatus } from "@/app/actions/clients";
 import { formatNumber } from "@/utils/num";
 import { useRouter } from "next/navigation";
-import AutomationsSection from "./AutomationsSection";
 
 type ClientPageProps = {
    client: Client;
    websites: Website[];
    clientPayments: ClientPayment[];
+   clientAutomations: Automation[];
 }
 
 export function clientStatusIcon (status: ClientStatus) {
@@ -42,7 +43,7 @@ export function clientStatusIcon (status: ClientStatus) {
    }
 }
 
-export default function ClientPage ({ client, websites, clientPayments }: ClientPageProps) {
+export default function ClientPage ({ client, websites, clientPayments, clientAutomations }: ClientPageProps) {
    const { showModal, close } = useModal();
    const router = useRouter();
    const [clientInfo, setClientInfo] = useState<Client>(client);
@@ -76,7 +77,7 @@ export default function ClientPage ({ client, websites, clientPayments }: Client
       const deleteAccountBtn = async (callback: Function) => {
          const deleted = await deleteClientAccount(clientInfo.clientid);
          if (deleted) {
-            router.push('/clients');
+            router.push('/clients-tws');
             callback();
             close();
          } else {
@@ -107,7 +108,7 @@ export default function ClientPage ({ client, websites, clientPayments }: Client
       <AppWrapper>
          <Breadcrumb 
             pages={[
-               { href: "/clients", label: "Clients" },
+               { href: "/clients-tws", label: "TWS Clients" },
                { href: "/client/clientId", label: `${client.name}` },
             ]}
          />
@@ -141,7 +142,7 @@ export default function ClientPage ({ client, websites, clientPayments }: Client
 
          <WebsitesSection clientInfo={clientInfo} websites={websites} />
 
-         <AutomationsSection />
+         <AutomationsSection clientInfo={clientInfo} automations={clientAutomations} />
 
          <div className="box full pd-15">
             <Card styles={{padding: "25px", boxShadow: "0 1px 3px rgba(0,0,0,0.098)"}}>

@@ -66,6 +66,63 @@ type ClientReview = {
    review: string;
 }
 
+type Automation = {
+   id: number;
+   automationId: string;
+   clientId: string;
+   type: "review" | "referral";
+   message: string;
+   delay: number;
+   enabled: boolean;
+}
+
+type AutomationRun = {
+   id: number;
+   automationId: string;
+   clientId: string;
+   customerPhone: string;
+   status: boolean;
+   runAt: number;
+}
+
+type Conversation = {
+   id: number;
+   conversationId: string;
+   clientId: string;
+   customerName: string;
+   customerPhone: string;
+   lastMessageId: string;
+}
+
+type ConversationList = {
+   conversationId: string;
+   clientId: string;
+   customerName: string;
+   customerPhone: string;
+   lastMessage: {
+      body: string;
+      direction: string;
+      date: string;
+   };
+}
+
+type Message = {
+   id: number;
+   messageId: string;
+   conversationId: string;
+   body: string;
+   direction: string;
+   date: string;
+}
+
+type Jobs = {
+   id: number;
+   conversationId: string;
+   clientId: string;
+   serviceType: string;
+   completedAt: string;
+}
+
 type ActivityPriority = 'high' | 'medium' | 'low'
 type Activity = {
    id: number;

@@ -1,11 +1,12 @@
 'use client'
 import AwaitButton from "@/components/AwaitButton/AwaitButton";
-import { editClientProfile } from "@/app/actions/clients";
+import { editClientTWSProfile } from "@/app/actions/clients";
 import { CustomUserIcon } from "@/components/Icons/Icon";
 import { useModal } from "@/components/Modal/ModalContext";
 import { Edit } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { isValidUKMobile } from "@/utils/funcs";
 
 function ImageUrlViewer ({ imageUrl }: { imageUrl: string }) {
    const [imageLink, setImageLink] = useState(imageUrl);
@@ -33,29 +34,51 @@ export default function EditProfile ({ clientInfo, setClientInfo }: { clientInfo
 
    
    const editProfileModal = () => {
-      const addWebsiteBtn = async (callback: Function) => {
+      const saveChangesBtn = async (callback: Function) => {
          const clientImageInputBox: any = document.querySelector("#client-profile-edit-image");
          const clientNameInputBox: any = document.querySelector("#client-profile-edit-name");
          const clientEmailInputBox: any = document.querySelector("#client-profile-edit-email");
          const clientDescriptionInputBox: any = document.querySelector("#client-profile-edit-desc");
+         const clientTwilioPhoneNumberInputBox: any = document.querySelector("#client-profile-edit-twilio-pn");
+         const clientBusinessNameInputBox: any = document.querySelector("#client-profile-edit-business-name");
+         const clientBusinessPhoneNumberInputBox: any = document.querySelector("#client-profile-edit-business-pn");
 
          const name = clientNameInputBox.value;
          const desc = clientDescriptionInputBox.value;
          const email = clientEmailInputBox.value;
          const image = clientImageInputBox.value;
+         const twilioPhoneNumber = clientTwilioPhoneNumberInputBox.value;
+         const businessName = clientBusinessNameInputBox.value;
+         const businessPhoneNumber = clientBusinessPhoneNumberInputBox.value;
 
-         if (name == "" || desc == "" || email == "" || image == "") {
+         if (
+            name == "" || desc == "" || email == "" || image == "" ||
+            twilioPhoneNumber == "" || businessPhoneNumber == "" || businessName == ""
+         ) {
             toast.error("Please fill in all the fields");
             callback();
             return;
          }
 
-         const edited = await editClientProfile(clientInfo.clientid, { name, desc, email, image });
+         if (!isValidUKMobile(businessPhoneNumber)) {
+            toast.error("Please enter a valid business phone number");
+            callback();
+            return;
+         }
+
+         if (!isValidUKMobile(twilioPhoneNumber)) {
+            toast.error("Please enter a valid twilio phone number");
+            callback();
+            return;
+         }
+
+         const edited = await editClientTWSProfile(clientInfo.clientid, { name, desc, email, image, twilioPhoneNumber, businessPhoneNumber, businessName });
          if (edited) {
             toast.success(`Updated ${name}'s Profile Successfully`);
             setClientInfo({
                ...clientInfo,
-               name: name, description: desc, email, image
+               name: name, description: desc, email, image,
+               twilioPhoneNumber, businessPhoneNumber, businessName
             });
             close();
          } else {
@@ -95,9 +118,36 @@ export default function EditProfile ({ clientInfo, setClientInfo }: { clientInfo
                   autoComplete="off" defaultValue={clientInfo.description}
                />
             </div>
+            <div className="box full pd-2">
+               <div className="text-xs full mb-05 grey-5">Twilio Phone Number</div>
+               <input 
+                  type="text" className="xxs full pd-15 pdx-2"
+                  id="client-profile-edit-twilio-pn"
+                  placeholder="Twilio Phone Number"
+                  autoComplete="off" defaultValue={clientInfo.twilioPhoneNumber}
+               />
+            </div>
+            <div className="box full pd-2">
+               <div className="text-xs full mb-05 grey-5">Business Name</div>
+               <input 
+                  type="text" className="xxs full pd-15 pdx-2"
+                  id="client-profile-edit-business-name"
+                  placeholder="Business Name"
+                  autoComplete="off" defaultValue={clientInfo.businessName}
+               />
+            </div>
+            <div className="box full pd-2">
+               <div className="text-xs full mb-05 grey-5">Business Phone Number</div>
+               <input 
+                  type="text" className="xxs full pd-15 pdx-2"
+                  id="client-profile-edit-business-pn"
+                  placeholder="Business Phone Number"
+                  autoComplete="off" defaultValue={clientInfo.phoneNumber}
+               />
+            </div>
             <div className="htv gap-10 mt-1">
                <button className="xxs full outline-black tiny-shadow pd-13" onClick={()=>close()}>Cancel</button>
-               <AwaitButton className="xxs full tiny-shadow pd-13" onClick={addWebsiteBtn}>
+               <AwaitButton className="xxs full tiny-shadow pd-13" onClick={saveChangesBtn}>
                   Save Changes
                </AwaitButton>
             </div>

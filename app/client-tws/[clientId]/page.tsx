@@ -1,6 +1,6 @@
 import { dalDbOperation, dalRequireAuth, dalRequireAuthRedirect } from "@/dal/helpers"
 import { db } from "@/db";
-import { clientsTable, paymentsTable, websitesTable } from "@/db/schemas";
+import { automationsTable, clientsTable, paymentsTable, websitesTable } from "@/db/schemas";
 import { and, eq } from "drizzle-orm";
 import LoadingPage from "./loading";
 import ClientPage from "./ClientPage";
@@ -48,9 +48,15 @@ export default async function Client ({ params }: ClientProps) {
                eq(paymentsTable.clientid, clientId)
             ));
 
+         const clientAutomations = await db
+            .select()
+            .from(automationsTable)
+            .where(eq(automationsTable.clientId, clientId));
+
          return {
             client,
             websites,
+            clientAutomations,
             clientPayments: clientPayments.map(cp => ({
                client: {
                   clientid: client[0].clientid,
@@ -70,6 +76,7 @@ export default async function Client ({ params }: ClientProps) {
          client={JSON.parse(JSON.stringify(clientInfo.data.client[0]))}
          websites={JSON.parse(JSON.stringify(clientInfo.data.websites))}
          clientPayments={JSON.parse(JSON.stringify(clientInfo.data.clientPayments))}
+         clientAutomations={JSON.parse(JSON.stringify(clientInfo.data.clientAutomations))}
       />
    } else {
       return <LoadingPage />;

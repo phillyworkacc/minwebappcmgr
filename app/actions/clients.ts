@@ -1,9 +1,9 @@
 "use server"
 import { dalDbOperation, dalRequireAuth } from "@/dal/helpers";
 import { db } from "@/db";
-import { clientsTable } from "@/db/schemas";
+import { automationsTable, clientsTable } from "@/db/schemas";
 import { and, eq } from "drizzle-orm";
-import { uuid } from "@/utils/uuid";
+import { hashPwd, uuid } from "@/utils/uuid";
 
 export async function getAllUserClients () {
    const clients = await dalRequireAuth(user =>
@@ -51,10 +51,10 @@ export async function sendReviewForClient (clientId: string, review: string) {
    return result;
 }
 
-export async function createUserClient (name: string, email: string, phoneNumber: string, description: string, image: string, wbt: string) {
+export async function createUserClient (name: string, email: string, phoneNumber: string, description: string, image: string) {
    const now = `${Date.now()}`;
    const clientid = uuid().replaceAll("-","");
-   const websiteBuildType = wbt == "custom-build" ? wbt : "template-build-site";
+   const websiteBuildType = "custom-build";
    const inserted = await dalRequireAuth(user =>
       dalDbOperation(async () => {
          const res = await db.insert(clientsTable).values({
@@ -65,6 +65,50 @@ export async function createUserClient (name: string, email: string, phoneNumber
             latestupdate: now, createdat: now
          });
          return (res.rowCount > 0);
+      })
+   )
+   return inserted
+}
+
+export async function createUserClientTws (
+   name: string, email: string, phoneNumber: string, description: string, image: string,
+   businessName: string, twilioPhoneNumber: string, password: string
+) {
+   const now = `${Date.now()}`;
+   const clientid = uuid().replaceAll("-","");
+   const websiteBuildType = "template-build-site";
+   const hashedPassword = hashPwd(password)
+
+   const inserted = await dalRequireAuth(user =>
+      dalDbOperation(async () => {
+         const res = await db.insert(clientsTable).values({
+            userid: user.userid, 
+            clientid, email, name, description, image, phoneNumber,
+            twilioPhoneNumber, websites: "", websiteBuildType, businessName,
+            password: hashedPassword, notes: "", status: "beginning", review: "",
+            latestupdate: now, createdat: now
+         });
+
+         const automationId1 = uuid();
+         const automationId2 = uuid();
+         const reviewMessage = `Hi {{customer_name}}, thanks for choosing {{business_name}}!
+If you have 30 seconds, we'd really appreciate a quick review: {{review_link}}
+— {{business_name}}`;
+         const referralMessage = `Hi {{customer_name}}, hope you're doing well!
+If you know anyone who could use {{business_name}}, we offer {{referral_reward}} as a thank you for referrals.
+Just have them mention your name 😊`;
+
+         const res2 = await db.insert(automationsTable).values([
+            {
+               automationId: automationId1, clientId: clientid, type: "review",
+               message: reviewMessage, delay: 1800000, enabled: false
+            },
+            {
+               automationId: automationId2, clientId: clientid, type: "referral",
+               message: referralMessage, delay: 1800000, enabled: false
+            }
+         ])
+         return (res.rowCount > 0 && res2.rowCount > 0);
       })
    )
    return inserted
@@ -130,6 +174,33 @@ export async function editClientProfile (
             .set({
                name: newInfo.name, description: newInfo.desc,
                email: newInfo.email, image: newInfo.image
+            })
+            .where(and(
+               eq(clientsTable.userid, user.userid!),
+               eq(clientsTable.clientid, clientid)
+            ));
+         return (res.rowCount > 0);
+      })
+   )
+   return result
+}
+
+export async function editClientTWSProfile (
+   clientid: string,
+   newInfo: {
+      name: string, desc: string, email: string, image: string,
+      twilioPhoneNumber: string, businessPhoneNumber: string, businessName: string
+   }
+) {
+   const result = await dalRequireAuth(user =>
+      dalDbOperation(async () => {
+         const res = await db.update(clientsTable)
+            .set({
+               name: newInfo.name, description: newInfo.desc,
+               email: newInfo.email, image: newInfo.image,
+               twilioPhoneNumber: newInfo.twilioPhoneNumber,
+               phoneNumber: newInfo.businessPhoneNumber,
+               businessName: newInfo.businessName
             })
             .where(and(
                eq(clientsTable.userid, user.userid!),

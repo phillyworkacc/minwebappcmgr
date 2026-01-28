@@ -55,14 +55,14 @@ export default function ClientsPage ({ allClients }: ClientsPageProps) {
       <AppWrapper>
          <Breadcrumb 
             pages={[
-               { href: "/clients", label: "TWS Clients" }
+               { href: "/clients-tws", label: "TWS Clients" }
             ]}
          />
 
          <div className="box full dfb align-center">
             <div className="text-m full bold-600 mt-15">All TWS Clients</div>
             <div className="box full dfb align-center justify-end">
-               <button className="xxxs outline-black tiny-shadow pd-1 pdx-15" onClick={() => router.push("/add-client")}>
+               <button className="xxxs outline-black tiny-shadow pd-1 pdx-15" onClick={() => router.push("/add-client-tws")}>
                   <CirclePlus size={17} /> Add TWS Client
                </button>
             </div>

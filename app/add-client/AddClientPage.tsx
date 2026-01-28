@@ -2,7 +2,6 @@
 import AppWrapper from "@/components/AppWrapper/AppWrapper"
 import AwaitButton from "@/components/AwaitButton/AwaitButton";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import Select from "@/components/Select/Select";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createUserClient } from "../actions/clients";
@@ -16,7 +15,6 @@ export default function AddClientPage () {
    const [description, setDescription] = useState("")
    const [email, setEmail] = useState("")
    const [phoneNumber, setPhoneNumber] = useState("")
-   const [clientWebsiteType, setClientWebsiteType] = useState("");
    const [image, setImage] = useState("")
 
    const addClientButton = async (callback: Function) => {
@@ -26,14 +24,10 @@ export default function AddClientPage () {
          return;
       }
       const defaultClientImage = "https://minwebappcmgr.vercel.app/clientdefault.jpg";
-      const result = await createUserClient(name, email, phoneNumber, description, `${(image == "") ? defaultClientImage : image}`, clientWebsiteType);
+      const result = await createUserClient(name, email, phoneNumber, description, `${(image == "") ? defaultClientImage : image}`);
       if (result) {
          toast.success(name + " (Client) has been added");
-         if (clientWebsiteType == "custom-build") {
-            router.push("/clients");
-         } else {
-            router.push("/clients-tws");
-         }
+         router.push("/clients");
       } else {
          toast.error("Failed to add client. Please try again.");
       }
@@ -99,18 +93,6 @@ export default function AddClientPage () {
                   placeholder="Image URL" 
                   value={image} 
                   onChange={(e) => setImage(e.target.value)} 
-               />
-            </div>
-            <div className="box full pd-1">
-               <Select 
-                  style={{ width: "100%", borderRadius:"12px", textAlign: "left" }}
-                  optionStyle={{ width: "100%", textAlign: "left", padding: "8px 15px" }}
-                  selectedOptionStyle={{
-                     width: "100%", padding: "5px",
-                     display: "flex", alignItems: "center", justifyContent: "start"
-                  }}
-                  options={[ "Custom Build", "Contractor Template Site" ]}
-                  onSelect={type => setClientWebsiteType(type.toLowerCase().replaceAll(" ","-"))}
                />
             </div>
             <div className="box full pd-1">

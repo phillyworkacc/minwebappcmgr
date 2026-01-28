@@ -74,3 +74,8 @@ export function getInitialBgColor(name: string) {
       textColor
    }
 }
+
+export function isValidUKMobile(number: string) {
+   const cleaned = number.replace(/[\s-]/g, '');
+   return /^(?:\+44|0)7\d{9}$/.test(cleaned);
+}
