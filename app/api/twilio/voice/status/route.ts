@@ -1,3 +1,5 @@
+import { getClientFromTwilioPhone } from "@/app/actions/clients";
+import { createNewMessageUpsertConversation } from "@/app/actions/twilio-sms";
 import { NextRequest } from "next/server";
 import twilio from "twilio";
 
@@ -18,19 +20,21 @@ export async function POST (req: NextRequest) {
    if (dialStatus !== "completed") {
       // TODO: rate-limit (one SMS per X mins per number)
 
-      // TODO: lookup client by Twilio number
-      const clientData = {
-         businessName: "Joe's Plumbing",
-         twilioPhoneNumber: "+447727653159",
-      };
+      // lookup client by Twilio number
+      const clientData = await getClientFromTwilioPhone(to);
+      if (!clientData) return new Response("No client", { status: 500 });
+
+      const message = `Sorry we missed your call to ${clientData.businessName!}. How can we help?`;
 
       await client.messages.create({
          from: from,
          to: customer!,
-         body: `Sorry we missed your call to ${clientData.businessName}. How can we help?`,
+         body: message,
       });
 
-      // TODO: log message + conversation
+      const createMsgConvo = await createNewMessageUpsertConversation(clientData.clientid!, message, {
+         customerName: `Unknown (${from.slice(-4)})`, customerPhone: from
+      }, "out");
    }
 
    return new Response("OK", { status: 200 });

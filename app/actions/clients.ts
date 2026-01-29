@@ -18,6 +18,30 @@ export async function getAllUserClients () {
    return clients;
 }
 
+export async function getClientFromTwilioPhone (twilioPhoneNumber: string) {
+   try {
+      const res = await db.select()
+         .from(clientsTable)
+         .where(eq(clientsTable.twilioPhoneNumber, twilioPhoneNumber))
+         .limit(1);
+      return (res.length > 0) ? res[0] : undefined;
+   } catch (e) {
+      return undefined;
+   }
+}
+
+export async function getClientFromClientId (clientId: string) {
+   try {
+      const res = await db.select()
+         .from(clientsTable)
+         .where(eq(clientsTable.clientid, clientId))
+         .limit(1);
+      return (res.length > 0) ? res[0] : undefined;
+   } catch (e) {
+      return undefined;
+   }
+}
+
 export async function getInfoForReviewClient (clientId: string) {
    const clients: any = await dalDbOperation(async () => {
       const res = await db.select()

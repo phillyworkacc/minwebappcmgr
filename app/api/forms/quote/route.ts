@@ -1,16 +1,7 @@
-import { db } from "@/db";
-import { clientsTable, conversationsTable, messagesTable } from "@/db/schemas";
-import { uuid } from "@/utils/uuid";
-import { eq } from "drizzle-orm";
+import { getClientFromClientId } from "@/app/actions/clients";
+import { createNewMessageUpsertConversation, notifyClient, sendSMSMessage } from "@/app/actions/twilio-sms";
 import { NextRequest, NextResponse } from "next/server";
 import twilio from "twilio";
-
-export const runtime = "nodejs";
-
-const twilioClient = twilio(
-  process.env.TWILIO_ACCOUNT_SID!,
-  process.env.TWILIO_AUTH_TOKEN!
-);
 
 const getCORSHeaders = () => {
    const headers = new Headers();
@@ -38,40 +29,31 @@ export async function POST(req: NextRequest) {
 	}
 
 	try {
-		const resClients = await db
-			.select().from(clientsTable)
-			.where(eq(clientsTable.clientid, clientId)).limit(1);
-		const client = resClients[0];
+		const client = await getClientFromClientId(clientId);
+		if (!client) return NextResponse.json(JSON.stringify({ success: false }), { status: 200, headers: getCORSHeaders() });
 
-		// Create Conversation (Lead) for Client
-		const conversationId = uuid();
-		const messageId = uuid().replaceAll('-','_');
-		await db.insert(conversationsTable).values({
-			conversationId, clientId,
-			customerName: name,
-			customerPhone: phoneNumber,
-			lastMessageId: messageId,
-		});
-		
-		// Add Message to Conversation
-		const now = `${Date.now()}`;
-		const messageBody = `New Quote Request 🔔
+		const createConvo = await createNewMessageUpsertConversation(
+			client.clientid!,
+			`New Quote Request 🔔
 Name: ${name}
 Phone: ${phoneNumber}
-Message: "${message}"`;
-		await db.insert(messagesTable).values({
-			messageId, conversationId,
-			body: messageBody, direction: 'in',
-			date: now
-		});
+Message: "${message}"`,
+			{
+				customerName: name,
+				customerPhone: phoneNumber
+			},
+			"in"
+		);
+		if (!createConvo) return NextResponse.json(JSON.stringify({ success: false }), { status: 200, headers: getCORSHeaders() });
 
 		// Auto-reply to customer
-		await twilioClient.messages.create({
-			from: client.twilioPhoneNumber!,
-			to: phoneNumber,
-			body: `Hi ${name} thanks for reaching out to ${client.businessName}!
-We've received your request and will be in touch shortly.`
-		});
+		const sent = await sendSMSMessage(client.twilioPhoneNumber!, phoneNumber, `Hi ${name} thanks for reaching out to ${client.businessName}!
+We've received your request and will be in touch shortly.`);
+		if (!sent.success) return NextResponse.json(JSON.stringify({ success: false }), { status: 200, headers: getCORSHeaders() });
+
+		// Notify Client about new quote request
+		const sentNotification = await notifyClient(client.clientid!, phoneNumber, "quote");
+		if (!sentNotification) return NextResponse.json(JSON.stringify({ success: false }), { status: 200, headers: getCORSHeaders() });
 		
 		return NextResponse.json(JSON.stringify({ success: true }), { status: 200, headers: getCORSHeaders() })
 	} catch (e) {
