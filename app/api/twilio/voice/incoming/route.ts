@@ -1,5 +1,4 @@
 import { getClientFromTwilioPhone } from "@/app/actions/clients";
-import { sendMinwebEmail } from "@/app/actions/email";
 import { NextRequest } from "next/server";
 import twilio from "twilio";
 
@@ -12,7 +11,6 @@ export async function POST (req: NextRequest) {
 
    // lookup client by Twilio number
    const client = await getClientFromTwilioPhone(to);
-   await sendMinwebEmail("Incoming Twilio Call", `Biz Name: ${client?.businessName!} <br />Client Phone Number: ${client?.phoneNumber!} <br />To: ${to} <br />From: ${from}`);
    const twiml = new twilio.twiml.VoiceResponse();
 
    if (!client) {
