@@ -18,6 +18,18 @@ export async function getAllUserClients () {
    return clients;
 }
 
+export async function getClientFromPhoneNumber (clientPhoneNumber: string) {
+   try {
+      const res = await db.select()
+         .from(clientsTable)
+         .where(eq(clientsTable.phoneNumber, clientPhoneNumber))
+         .limit(1);
+      return (res.length > 0) ? res[0] : undefined;
+   } catch (e) {
+      return undefined;
+   }
+}
+
 export async function getClientFromTwilioPhone (twilioPhoneNumber: string) {
    try {
       const res = await db.select()
