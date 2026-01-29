@@ -9,10 +9,10 @@ export async function POST (req: NextRequest) {
    const to = formData.get("To") as string;     // Twilio number
    const from = formData.get("From") as string; // Customer number
 
-   await sendMinwebEmail("Incoming Twilio Call", `To: ${to} <br />From: ${from}`);
 
    // lookup client by Twilio number
    const client = await getClientFromTwilioPhone(to);
+   await sendMinwebEmail("Incoming Twilio Call", `Biz Name: ${client?.businessName!} <br />Client Phone Number: ${client?.phoneNumber!} <br />To: ${to} <br />From: ${from}`);
    const twiml = new twilio.twiml.VoiceResponse();
 
    if (!client) {
