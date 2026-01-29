@@ -31,6 +31,6 @@ Feedback: "${feedback}"`);
 	
 		return new Response("OK", { status: 200 });
 	} catch (e) {
-		return false;
+		return new Response("Failed to send review", { status: 500 });
 	}
 }
