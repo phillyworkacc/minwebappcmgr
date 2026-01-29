@@ -15,7 +15,7 @@ export default function PhoneNumbersPage () {
          callback();
          return;
       }
-      const smsSend = await sendSMSMessage(phoneNumber, message);
+      const smsSend = await sendSMSMessage("+447727653159", phoneNumber, message);
       if (smsSend.success) {
          toast.success(smsSend.result!);
       } else {
