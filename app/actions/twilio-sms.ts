@@ -4,6 +4,7 @@ import { clientsTable, conversationsTable, messagesTable } from "@/db/schemas";
 import { uuid } from "@/utils/uuid";
 import { and, eq } from "drizzle-orm";
 import twilio from "twilio";
+import { getClientFromClientId } from "./clients";
 
 export async function sendSMSMessage (fromClientTwilioPhoneNumber: string, receivingPhoneNumber: string, message: string) {
    try {
@@ -34,6 +35,27 @@ export async function sendSMSMessage (fromClientTwilioPhoneNumber: string, recei
          success: false,
          error: "Failed to send sms message"
       }
+   }
+}
+
+export async function sendMessageToClientCustomer (clientId: string, conversationId: string, customerPhone: string, message: string) {
+   try {
+      // get client information
+      const client = await getClientFromClientId(clientId);
+      if (!client) return false;
+
+      // send message in sms
+      const sent = await sendSMSMessage(client.twilioPhoneNumber!, customerPhone, message);
+      if (!sent.success) return false;
+
+      // add message to the conversation in the database
+      const createMsg = await createNewMessage(client.clientid!, conversationId, message, "out");
+      if (!createMsg) return false;
+
+      return true;
+   } catch (e) {
+      console.log(e);
+      return false;
    }
 }
 

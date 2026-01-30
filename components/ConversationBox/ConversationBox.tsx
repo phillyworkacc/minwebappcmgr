@@ -3,9 +3,10 @@ import "./ConversationBox.css"
 import { getInitialBgColor } from "@/utils/funcs"
 import { formatMilliseconds } from "@/utils/date";
 import { ChevronLeft, SendHorizontal } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getConversationMessages } from "@/app/actions/conversations";
 import { toast } from "sonner";
+import { sendMessageToClientCustomer } from "@/app/actions/twilio-sms";
 import Spacing from "../Spacing/Spacing";
 import LoadingCard from "../Card/LoadingCard";
 
@@ -20,7 +21,18 @@ export default function ConversationBox ({ conversations }: ConversationBoxProps
    const [openedConversation, setOpenedConversation] = useState<string | null>(null);
    const [selectedConversation, setSelectedConversation] = useState<ConversationList | null>(null);
 
+   const [message, setMessage] = useState('');
    const [messages, setMessages] = useState<Message[] | 'loading'>('loading');
+   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+
+   useEffect(() => {
+      if (messages == 'loading') return;
+
+      const el = messagesContainerRef.current;
+      if (!el) return;
+
+      el.scrollTop = el.scrollHeight;
+   }, [messages]); // runs when messages change
 
    const selectConversation = async (conversation: ConversationList) => {
       setMessages("loading");
@@ -32,6 +44,24 @@ export default function ConversationBox ({ conversations }: ConversationBoxProps
       } else {
          setMessages(conversationMessages);
       }
+   }
+
+   const sendMessageToCustomer = async () => {
+      if (message.trim() == "") return;
+
+      const messageBody = message;
+      setMessage('');
+      setMessages((p: any) => ([ ...p, {
+         id: 1,
+         messageId: 'null',
+         conversationId: selectedConversation?.conversationId!,
+         body: message,
+         direction: "out",
+         date: `${Date.now()}`
+      } ]));
+
+      const sendMessage = await sendMessageToClientCustomer(selectedConversation?.clientId!, selectedConversation?.conversationId!, selectedConversation?.customerPhone!, messageBody);
+      if (!sendMessage) setMessages((p: any) => ([ ...p.slice(0,-1) ]));
    }
 
    useEffect(() => {
@@ -96,7 +126,7 @@ export default function ConversationBox ({ conversations }: ConversationBoxProps
                      <div className="text-t grey-4 fit">{selectedConversation?.customerPhone!}</div>
                   </div>
                </div>
-               <div className="messages-container">
+               <div className="messages-container" ref={messagesContainerRef}>
                   {messages == "loading" ? (<>
                      {Array.from({ length: 4 }, (_, i) => i+1).map((v, index) => (
                         <div className='box full' key={index}>
@@ -117,8 +147,13 @@ export default function ConversationBox ({ conversations }: ConversationBoxProps
                   </>)}
                </div>
                <div className="send-message-container">
-                  <input type="text" className="xxs pd-13 pdx-15 full" placeholder="Message" />
-                  <button className="send-button">
+                  <input
+                     type="text"
+                     className="xxs pd-13 pdx-15 full"
+                     placeholder="Message"
+                     value={message} onChange={e => setMessage(e.target.value)}
+                  />
+                  <button className="send-button" onClick={sendMessageToCustomer}>
                      <SendHorizontal size={17} />
                   </button>
                </div>

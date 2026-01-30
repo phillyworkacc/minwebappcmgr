@@ -68,10 +68,6 @@
 .conversation-box .contact-messages > .messages-container {
    width: 100%;
    height: 100%;
-   display: flex;
-   flex-direction: column;
-   justify-content: end;
-   gap: 2px;
    padding: 20px;
    overflow-y: scroll;
    overflow-x: hidden;
@@ -106,7 +102,7 @@
    width: fit-content;
    max-width: 400px;
    background-color: #2937ff;
-   text-align: right;
+   text-align: left;
    border-radius: 12px 12px 0 12px;
    color: white;
    padding: 8px;
