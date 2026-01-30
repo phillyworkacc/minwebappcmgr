@@ -34,7 +34,7 @@ export async function POST (req: NextRequest) {
       });
 
       const createMsgConvo = await createNewMessageUpsertConversation(clientData.clientid!, message, {
-         customerName: `Unknown (${from.slice(-4)})`, customerPhone: from
+         customerName: `Unknown (${from.slice(-4)})`, customerPhone: customer
       }, "out");
    }
 

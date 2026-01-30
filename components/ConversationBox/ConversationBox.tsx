@@ -23,6 +23,7 @@ export default function ConversationBox ({ conversations }: ConversationBoxProps
    const [messages, setMessages] = useState<Message[] | 'loading'>('loading');
 
    const selectConversation = async (conversation: ConversationList) => {
+      setMessages("loading");
       setOpenedConversation(conversation.conversationId);
       setSelectedConversation(conversation);
       const conversationMessages: any = await getConversationMessages(conversation.conversationId);
@@ -90,7 +91,10 @@ export default function ConversationBox ({ conversations }: ConversationBoxProps
                      background: getInitialBgColor(selectedConversation?.customerName!).backgroundColor, 
                      color: getInitialBgColor(selectedConversation?.customerName!).textColor 
                   }}>{selectedConversation?.customerName![0].toUpperCase()}</div>
-                  <div className="text-xs bold-600 fit">{selectedConversation?.customerName!}</div>
+                  <div className="box fit column">
+                     <div className="text-xxs bold-600 fit">{selectedConversation?.customerName!}</div>
+                     <div className="text-t grey-4 fit">{selectedConversation?.customerPhone!}</div>
+                  </div>
                </div>
                <div className="messages-container">
                   {messages == "loading" ? (<>
@@ -107,7 +111,7 @@ export default function ConversationBox ({ conversations }: ConversationBoxProps
                      {messages.map(message => (
                         <div key={message.date} className={`message-${message.direction}`}>
                            <div className="message" style={{ whiteSpace: "pre-wrap" }}>{message.body}</div>
-                           <div className="text-xt grey-4 fit pd-05">Sent at {formatMilliseconds(parseInt(message.date), true, true)}</div>
+                           <div className="text-xt grey-4 fit pd-05">Sent at {formatMilliseconds(parseInt(message.date), false, true)}</div>
                         </div>
                      ))}
                   </>)}
