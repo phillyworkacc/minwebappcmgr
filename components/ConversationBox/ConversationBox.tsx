@@ -2,28 +2,35 @@
 import "./ConversationBox.css"
 import { getInitialBgColor } from "@/utils/funcs"
 import { formatMilliseconds } from "@/utils/date";
-import { ChevronLeft, SendHorizontal } from "lucide-react";
+import { ChevronLeft, CircleCheck, SendHorizontal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { getConversationMessages } from "@/app/actions/conversations";
+import { getConversationMessages, markJobAsComplete } from "@/app/actions/conversations";
 import { toast } from "sonner";
 import { sendMessageToClientCustomer } from "@/app/actions/twilio-sms";
 import Spacing from "../Spacing/Spacing";
 import LoadingCard from "../Card/LoadingCard";
+import AwaitButton from "../AwaitButton/AwaitButton";
 
 type ConversationBoxProps = {
-   conversations: ConversationList[];
+   convos: ConversationList[];
 }
 
-export default function ConversationBox ({ conversations }: ConversationBoxProps) {
+export default function ConversationBox ({ convos }: ConversationBoxProps) {
    const [deviceType, setDeviceType] = useState<"desktop" | "mobile">("desktop");
    const mobileThreshold = 750;
 
+   const [conversations, setConversations] = useState<ConversationList[]>(convos);
    const [openedConversation, setOpenedConversation] = useState<string | null>(null);
    const [selectedConversation, setSelectedConversation] = useState<ConversationList | null>(null);
 
    const [message, setMessage] = useState('');
    const [messages, setMessages] = useState<Message[] | 'loading'>('loading');
    const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+
+   useEffect(() => {
+      setDeviceType(window.innerWidth >= mobileThreshold ? 'desktop' : 'mobile');
+      window.addEventListener('resize', () => setDeviceType(window.innerWidth >= mobileThreshold ? 'desktop' : 'mobile'));
+   }, []);
 
    useEffect(() => {
       if (messages == 'loading') return;
@@ -46,6 +53,23 @@ export default function ConversationBox ({ conversations }: ConversationBoxProps
       }
    }
 
+   const markCustomerJobAsComplete = async (callback: Function) => {
+      const conversation = selectedConversation!;
+      const markedAsComplete = await markJobAsComplete(conversation.conversationId, conversation.clientId, conversation.customerPhone);
+      if (markedAsComplete) {
+         setConversations(p => ([
+            ...p.filter(c => (c.conversationId !== conversation.conversationId)), {
+               ...p.find(c => (c.conversationId == conversation.conversationId && c.customerPhone == conversation.customerPhone))!,
+               jobCompletedAt: Date.now().toString()
+            }
+         ]))
+         toast.success("Job Complete!");
+      } else {
+         toast.error("Failed to mark as complete");
+      }
+      callback();
+   }
+
    const sendMessageToCustomer = async () => {
       if (message.trim() == "") return;
 
@@ -63,11 +87,6 @@ export default function ConversationBox ({ conversations }: ConversationBoxProps
       const sendMessage = await sendMessageToClientCustomer(selectedConversation?.clientId!, selectedConversation?.conversationId!, selectedConversation?.customerPhone!, messageBody);
       if (!sendMessage) setMessages((p: any) => ([ ...p.slice(0,-1) ]));
    }
-
-   useEffect(() => {
-      setDeviceType(window.innerWidth >= mobileThreshold ? 'desktop' : 'mobile');
-      window.addEventListener('resize', () => setDeviceType(window.innerWidth >= mobileThreshold ? 'desktop' : 'mobile'));
-   }, []);
 
    return (
       <div className="conversation-box">
@@ -121,10 +140,22 @@ export default function ConversationBox ({ conversations }: ConversationBoxProps
                      background: getInitialBgColor(selectedConversation?.customerName!).backgroundColor, 
                      color: getInitialBgColor(selectedConversation?.customerName!).textColor 
                   }}>{selectedConversation?.customerName![0].toUpperCase()}</div>
-                  <div className="box fit column">
+                  <div className="box full column">
                      <div className="text-xxs bold-600 fit">{selectedConversation?.customerName!}</div>
-                     <div className="text-t grey-4 fit">{selectedConversation?.customerPhone!}</div>
+                     <div className="text-t grey-4 fit">
+                        {selectedConversation?.customerPhone!}
+                        {selectedConversation?.jobCompletedAt !== null && (
+                           <> - Job Completed at {formatMilliseconds(parseInt(selectedConversation?.jobCompletedAt!), false, true)}</>
+                        )}
+                     </div>
                   </div>
+                  {(selectedConversation?.jobCompletedAt == null) && (<>
+                     <div className="box fit">
+                        <AwaitButton className="xxxxs whitespace-nowrap" onClick={markCustomerJobAsComplete}>
+                           <CircleCheck size={15} /> Job Completed
+                        </AwaitButton>
+                     </div>
+                  </>)}
                </div>
                <div className="messages-container" ref={messagesContainerRef}>
                   {messages == "loading" ? (<>

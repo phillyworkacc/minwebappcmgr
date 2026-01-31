@@ -80,8 +80,9 @@ type AutomationRun = {
    id: number;
    automationId: string;
    clientId: string;
+   conversationId: string;
    customerPhone: string;
-   status: boolean;
+   status: "pending" | "complete" | "fail";
    runAt: number;
 }
 
@@ -104,6 +105,7 @@ type ConversationList = {
       direction: string;
       date: string;
    };
+   jobCompletedAt: string | null;
 }
 
 type Message = {
@@ -115,11 +117,11 @@ type Message = {
    date: string;
 }
 
-type Jobs = {
+type Job = {
    id: number;
    conversationId: string;
    clientId: string;
-   serviceType: string;
+   customerPhone: string;
    completedAt: string;
 }
 

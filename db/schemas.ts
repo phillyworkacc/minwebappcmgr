@@ -42,10 +42,11 @@ export const automationsTable = pgTable("automations", {
 export const automationRunsTable = pgTable("automation_runs", {
    id: serial("id").primaryKey(),
    automationId: text("automation_id"),
+   conversationId: text("conversation_id"),
    clientId: text("client_id"),
    customerPhone: text("customer_phone"),
-   status: boolean("status"),
-   runAt: integer("run_at")
+   status: text("status"),
+   runAt: bigint("run_at", { mode: "number" })
 })
 
 export const clientFormsTable = pgTable("client_forms", {
@@ -110,6 +111,6 @@ export const jobsTable = pgTable("jobs", {
    id: serial("id").primaryKey(),
    conversationId: text("conversation_id"),
    clientId: text("client_id"),
-   serviceType: text("service_type"),
+   customerPhone: text("customer_phone"),
    completedAt: text("completed_at")
 })

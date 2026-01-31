@@ -1,6 +1,6 @@
 import { dalDbOperation, dalRequireAuth } from "@/dal/helpers";
 import { db } from "@/db";
-import { clientsTable, conversationsTable, messagesTable } from "@/db/schemas";
+import { clientsTable, conversationsTable, jobsTable, messagesTable } from "@/db/schemas";
 import { and, eq } from "drizzle-orm";
 import LoadingPage from "./loading";
 import ClientConversations from "./ClientConversations";
@@ -37,12 +37,18 @@ export default async function ClientConversationsPage ({ params }: ClientConvers
                   body: messagesTable.body, 
                   direction: messagesTable.direction, 
                   date: messagesTable.date
-               }
+               },
+               jobCompletedAt: jobsTable.completedAt
             })
             .from(conversationsTable)
             .innerJoin(messagesTable, and(
                eq(messagesTable.conversationId, conversationsTable.conversationId),
                eq(messagesTable.messageId, conversationsTable.lastMessageId)
+            ))
+            .leftJoin(jobsTable, and(
+               eq(jobsTable.conversationId, conversationsTable.conversationId),
+               eq(jobsTable.clientId, conversationsTable.clientId),
+               eq(jobsTable.customerPhone, conversationsTable.customerPhone),
             ))
             .where(eq(conversationsTable.clientId, clientId));
 

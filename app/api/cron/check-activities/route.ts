@@ -81,4 +81,5 @@ export async function GET() {
          return NextResponse.json({ res: `Failed to send email or update db: ${e}` }, { status: 500 });
       }
    }
+   return NextResponse.json({ res: `Complete` }, { status: 500 });
 }

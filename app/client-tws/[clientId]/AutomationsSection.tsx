@@ -37,6 +37,7 @@ export default function AutomationsSection ({ clientInfo, automations }: Automat
 
    const saveAutomationChanges = async (type: string) => {
       const automationToSave = clientAutomations.find(a => a.type == type)!;
+      toast(automationToSave.delay);
       const { automationId, clientId } = automationToSave;
       const result = await updateAutomation(automationId, clientId, automationToSave);
       if (result) {
@@ -65,6 +66,7 @@ export default function AutomationsSection ({ clientInfo, automations }: Automat
    }
 
    const changeAutomation = (type: string, newInfo: { message?: string, delay?: number }) => {
+      toast(JSON.stringify(newInfo))
       setClientAutomations(prev => ([
          ...prev.filter(a => a.type !== type),
          {
@@ -91,9 +93,10 @@ export default function AutomationsSection ({ clientInfo, automations }: Automat
                               <Select
                                  options={delayOptions.map(d => d.label)}
                                  onSelect={(o, delayIndex) => {
-                                    if (delayIndex) changeAutomation(automation.type, { delay: delayOptions[delayIndex].value });
+                                    changeAutomation(automation.type, { delay: delayOptions[delayIndex!].value });
                                  }}
                                  style={{ borderRadius: "15px" }}
+                                 defaultOptionIndex={delayOptions.indexOf(delayOptions.find(d => d.value == automation.delay)!)}
                               />
                            </div>
                            <div className="text-xxs bold-500 mt-1">Message</div>

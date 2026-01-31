@@ -22,7 +22,7 @@ export default function ClientConversations ({ clientInfo, clientConversations }
             <div className="text-l full bold-700">{clientInfo.name}'s Conversations</div>
          </div>
          
-         <ConversationBox conversations={clientConversations} />
+         <ConversationBox convos={clientConversations} />
       </AppWrapper>
    )
 }

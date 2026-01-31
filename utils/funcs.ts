@@ -79,3 +79,9 @@ export function isValidUKMobile(number: string) {
    const cleaned = number.replace(/[\s-]/g, '');
    return /^(?:\+44|0)7\d{9}$/.test(cleaned);
 }
+
+export function automationMessageConverter (message: string, customerName: string, businessName: string) {
+   return message
+      .replaceAll("{{customer_name}}", customerName)
+      .replaceAll("{{business_name}}", businessName);
+}
