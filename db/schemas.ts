@@ -1,4 +1,4 @@
-import { bigint, boolean, integer, pgTable, serial, text, uniqueIndex } from "drizzle-orm/pg-core";
+import { bigint, boolean, integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
    id: serial("id").primaryKey(),
@@ -94,7 +94,7 @@ export const conversationsTable = pgTable("conversations", {
    conversationId: text("conversation_id").unique().notNull(),
    clientId: text("client_id"),
    customerName: text("customer_name"),
-   customerPhone: text("customer_phone").notNull().unique(),
+   customerPhone: text("customer_phone"),
    lastMessageId: text("last_message_id")
 })
 
