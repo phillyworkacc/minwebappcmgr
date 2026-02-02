@@ -1,7 +1,6 @@
 import { getClientFromClientId } from "@/app/actions/clients";
 import { createNewMessageUpsertConversation, notifyClient, sendSMSMessage } from "@/app/actions/twilio-sms";
 import { NextRequest, NextResponse } from "next/server";
-import twilio from "twilio";
 
 const getCORSHeaders = () => {
    const headers = new Headers();

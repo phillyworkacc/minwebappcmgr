@@ -176,3 +176,24 @@ Log in to reply.`;
       return false;
    }
 }
+
+export async function notifyClientAboutBadReview (clientId: string) {
+   try {
+      // get customer from customer phone
+      const clients = await db.select().from(clientsTable)
+         .where(eq(clientsTable.clientid, clientId)).limit(1);
+      
+      if (clients.length < 1) return false;
+      const client = clients[0];
+
+      // customize notification message
+      const notificationMessage = `Hi ${client.businessName}, you've received a new customer review on your account. Please log in to your dashboard to view. Acting quickly can help protect your reputation.`;
+    
+      // send message
+      const sentNotificationSms = await sendSMSMessage(client.twilioPhoneNumber!, client.phoneNumber!, notificationMessage);
+      return sentNotificationSms.success;
+   } catch (e) {
+      console.log(e);
+      return false;
+   }
+}

@@ -114,3 +114,12 @@ export const jobsTable = pgTable("jobs", {
    customerPhone: text("customer_phone"),
    completedAt: text("completed_at")
 })
+
+export const badReviewsTable = pgTable("bad_reviews", {
+   id: serial("id").primaryKey(),
+   clientId: text("client_id"),
+   name: text("name"),
+   email: text("email"),
+   review: text("review"),
+   createdAt: text("created_at")
+})

@@ -1,7 +1,6 @@
 import { getClientFromClientId } from "@/app/actions/clients";
 import { createNewMessageUpsertConversation, notifyClient, sendSMSMessage } from "@/app/actions/twilio-sms";
 import { NextRequest, NextResponse } from "next/server";
-import twilio from "twilio";
 
 const getCORSHeaders = () => {
    const headers = new Headers();
@@ -48,49 +47,6 @@ Message: "${message}"`,
 			"in"
 		);
 		if (!createConvo) return NextResponse.json(JSON.stringify({ success: false }), { status: 200, headers: getCORSHeaders() });
-
-// 		const oldLead = await db.select().from(conversationsTable)
-// 			.where(and(
-// 				eq(conversationsTable.clientId, clientId),
-// 				eq(conversationsTable.customerPhone, phoneNumber)
-// 			)).limit(1);
-
-// 		if (oldLead.length > 0) {
-// 			// Add Message to Conversation
-// 			const now = `${Date.now()}`;
-// 			const messageId = uuid().replaceAll('-','_');
-// 			const messageBody = `Website Chat 💬
-// Name: ${name}
-// Phone: ${phoneNumber}
-// Message: "${message}"`;
-// 			await db.insert(messagesTable).values({
-// 				messageId, conversationId: oldLead[0].conversationId,
-// 				body: messageBody, direction: 'in',
-// 				date: now
-// 			});
-// 		} else {
-// 			// Create Conversation (Lead) for Client
-// 			const conversationId = uuid();
-// 			const messageId = uuid().replaceAll('-','_');
-// 			await db.insert(conversationsTable).values({
-// 				conversationId, clientId,
-// 				customerName: name,
-// 				customerPhone: phoneNumber,
-// 				lastMessageId: messageId,
-// 			});
-
-// 			// Add Message to Conversation
-// 			const now = `${Date.now()}`;
-// 			const messageBody = `Website Chat 💬
-// Name: ${name}
-// Phone: ${phoneNumber}
-// Message: "${message}"`;
-// 			await db.insert(messagesTable).values({
-// 				messageId, conversationId,
-// 				body: messageBody, direction: 'in',
-// 				date: now
-// 			});
-// 		}
 		
 		// Auto-reply to customer
 		const sent = await sendSMSMessage(client.twilioPhoneNumber!, phoneNumber, `Hi ${name}! Thanks for your message to ${client.businessName}!
