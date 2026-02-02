@@ -1,6 +1,8 @@
 'use client'
 import AwaitButton from "@/components/AwaitButton/AwaitButton";
 import Card from "@/components/Card/Card";
+import DefaultWebsiteIcon from "@/public/loading-site.png";
+import Link from "next/link";
 import { useModal } from "@/components/Modal/ModalContext";
 import { CirclePlus, SquareArrowOutUpRight, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -8,8 +10,7 @@ import { addWebsite, removeWebsiteFromClient } from "@/app/actions/websites";
 import { useEffect, useState } from "react";
 import { getWebsiteMetadata } from "@/app/actions/extras";
 import { WebsiteIcon } from "@/components/Icons/Icon";
-import DefaultWebsiteIcon from "@/public/loading-site.png";
-import Link from "next/link";
+import { uuid } from "@/utils/uuid";
 
 export default function WebsitesSection({ clientInfo, websites }: { clientInfo: Client, websites: Website[] }) {
    const { showModal, close } = useModal();
@@ -31,9 +32,9 @@ export default function WebsitesSection({ clientInfo, websites }: { clientInfo: 
                id: 100,
                userid: clientInfo.userid,
                clientid: clientInfo.clientid,
-               websiteid: 'websiteid',
+               websiteid: added,
                url: websiteUrl.replaceAll("/",""),
-               date: `${Date.now}`
+               date: Date.now.toString()
             }]))
             close();
          } else {
