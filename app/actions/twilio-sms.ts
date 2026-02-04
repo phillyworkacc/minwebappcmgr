@@ -79,8 +79,10 @@ export async function createNewMessage (clientId: string, conversationId: string
          ));
       
       // push messages
-      await pusherServer.trigger(conversationId, "new-message", body);
-      console.log("Triggering Pusher", { conversationId, body })
+      await pusherServer.trigger(conversationId, "new-message", {
+         messageId, conversationId,
+         body, direction, date: now
+      });
 
       return true;
    } catch (e) {
@@ -130,7 +132,10 @@ export async function createNewConversation (clientId: string, messageBody: stri
       })
 
       // push messages
-      await pusherServer.trigger(conversationId, "new-message", messageBody);
+      await pusherServer.trigger(conversationId, "new-message", {
+         messageId, conversationId,
+         body: messageBody, direction, date: now
+      });
    
       // create conversation
       await db.insert(conversationsTable).values({

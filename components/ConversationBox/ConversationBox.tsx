@@ -38,8 +38,8 @@ export default function ConversationBox ({ convos }: ConversationBoxProps) {
       toast("conversation selected")
       const channel = pusherClient.subscribe(selectedConversation.conversationId)
 
-      channel.bind("new-message", (message: any) => {
-         setMessages(prev => [...prev, message])
+      channel.bind("new-message", (message: Message) => {
+         setMessages(prev => ([...prev, message] as Message[]))
       })
 
       return () => {
