@@ -41,7 +41,10 @@ export async function POST(req: NextRequest) {
       const sentNotification = await notifyClient(client.clientid!, from, "message");
       if (!sentNotification) throw new Error("Failed to send notification to client");
    
-      return new Response(null, { status: 200 });
+      return new Response('<Response/>', {
+         status: 200,
+         headers: { 'Content-Type': 'text/xml' },
+      });
    } catch (e) {
       console.log(e);
       return new Response("Error", { status: 500 });
