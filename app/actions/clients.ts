@@ -1,8 +1,8 @@
 "use server"
 import { dalDbOperation, dalRequireAuth } from "@/dal/helpers";
 import { db } from "@/db";
-import { automationsTable, clientsTable } from "@/db/schemas";
-import { and, eq } from "drizzle-orm";
+import { activitiesTable, automationRunsTable, automationsTable, badReviewsTable, clientsTable, conversationsTable, jobsTable, messagesTable, websitesTable } from "@/db/schemas";
+import { and, eq, inArray } from "drizzle-orm";
 import { hashPwd, uuid } from "@/utils/uuid";
 
 export async function getAllUserClients () {
@@ -175,7 +175,28 @@ export async function deleteClientAccount (clientId: string) {
                eq(clientsTable.userid, user.userid!),
                eq(clientsTable.clientid, clientId)
             ));
-         return (res.rowCount > 0);
+         
+         const allClientsConversations = await db.select()
+            .from(conversationsTable).where(eq(conversationsTable.clientId, clientId));
+         
+         const res2 = await db.delete(conversationsTable).where(eq(conversationsTable.clientId, clientId));
+         const res3 = await db.delete(jobsTable).where(eq(jobsTable.clientId, clientId));
+         const res4 = await db.delete(messagesTable).where(
+            inArray(messagesTable.conversationId, allClientsConversations.map(c => c.conversationId))
+         );
+         const res5 = await db.delete(automationsTable).where(eq(automationsTable.clientId, clientId));
+         const res6 = await db.delete(automationRunsTable).where(eq(automationRunsTable.clientId, clientId));
+         const res7 = await db.delete(activitiesTable).where(eq(activitiesTable.clientid, clientId));
+         const res8 = await db.delete(badReviewsTable).where(eq(badReviewsTable.clientId, clientId));
+         const res9 = await db.delete(websitesTable).where(eq(websitesTable.clientid, clientId));
+
+         return (
+            res.rowCount > 0 && res2.rowCount > 0 &&
+            res3.rowCount > 0 && res4.rowCount > 0 &&
+            res5.rowCount > 0 && res6.rowCount > 0 &&
+            res7.rowCount > 0 && res8.rowCount > 0 &&
+            res9.rowCount > 0
+         );
       })
    )
    return deleted;

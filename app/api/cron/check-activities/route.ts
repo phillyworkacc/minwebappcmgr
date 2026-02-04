@@ -78,6 +78,7 @@ export async function GET() {
          
          return NextResponse.json({ ok: "Sent email successfully" }, { status: 200 });
       } catch (e) {
+         console.log(e);
          return NextResponse.json({ res: `Failed to send email or update db: ${e}` }, { status: 500 });
       }
    }
