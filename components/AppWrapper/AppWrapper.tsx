@@ -8,6 +8,7 @@ import { CustomIcon, MinwebLogo } from '../Icons/Icon'
 import { BookCopy, ChevronRight, CircleUserRound, Globe2, ListTodo, Menu, PoundSterling, TrendingUp, UserRoundCheck, UserStar } from "lucide-react"
 import { useModal } from "../Modal/ModalContext"
 import userDefaultImage from "@/public/clientdefault.jpg"
+import phillyImage from "@/public/philly.jpeg"
 
 export default function AppWrapper ({ children }: { children: ReactNode }) {
    const { data: session } = useSession();
@@ -72,7 +73,7 @@ export default function AppWrapper ({ children }: { children: ReactNode }) {
                   </button>
                </div>
                <div className="account-image" onClick={() => router.push("/account")}>
-                  <CustomIcon url={session?.user?.image! || userDefaultImage.src} size={40} round />
+                  <CustomIcon url={phillyImage.src || session?.user?.image! || userDefaultImage.src} size={40} round />
                </div>
             </div>
          </div>
