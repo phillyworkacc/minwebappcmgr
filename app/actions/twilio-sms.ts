@@ -5,6 +5,7 @@ import { uuid } from "@/utils/uuid";
 import { and, eq } from "drizzle-orm";
 import twilio from "twilio";
 import { getClientFromClientId } from "./clients";
+import { pusherServer } from "@/lib/pusher-server";
 
 export async function sendSMSMessage (fromClientTwilioPhoneNumber: string, receivingPhoneNumber: string, message: string) {
    try {
@@ -76,6 +77,10 @@ export async function createNewMessage (clientId: string, conversationId: string
             eq(conversationsTable.clientId, clientId),
             eq(conversationsTable.conversationId, conversationId)
          ));
+      
+      // push messages
+      await pusherServer.trigger(conversationId, "new-message", body);
+      console.log("Triggering Pusher", { conversationId, body })
 
       return true;
    } catch (e) {
@@ -123,6 +128,9 @@ export async function createNewConversation (clientId: string, messageBody: stri
          messageId, conversationId,
          body: messageBody, direction, date: now
       })
+
+      // push messages
+      await pusherServer.trigger(conversationId, "new-message", messageBody);
    
       // create conversation
       await db.insert(conversationsTable).values({

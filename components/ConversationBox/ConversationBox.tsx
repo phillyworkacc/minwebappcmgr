@@ -10,6 +10,7 @@ import { sendMessageToClientCustomer } from "@/app/actions/twilio-sms";
 import Spacing from "../Spacing/Spacing";
 import LoadingCard from "../Card/LoadingCard";
 import AwaitButton from "../AwaitButton/AwaitButton";
+import { pusherClient } from "@/lib/pusher-client";
 
 type ConversationBoxProps = {
    convos: ConversationList[];
@@ -31,6 +32,21 @@ export default function ConversationBox ({ convos }: ConversationBoxProps) {
       setDeviceType(window.innerWidth >= mobileThreshold ? 'desktop' : 'mobile');
       window.addEventListener('resize', () => setDeviceType(window.innerWidth >= mobileThreshold ? 'desktop' : 'mobile'));
    }, []);
+
+   useEffect(() => {
+      if (!selectedConversation) return;
+      toast("conversation selected")
+      const channel = pusherClient.subscribe(selectedConversation.conversationId)
+
+      channel.bind("new-message", (message: any) => {
+         setMessages(prev => [...prev, message])
+      })
+
+      return () => {
+         channel.unbind_all();
+         pusherClient.unsubscribe(selectedConversation.conversationId);
+      }
+   }, [selectedConversation])
 
    useEffect(() => {
       if (messages == 'loading') return;
