@@ -35,8 +35,7 @@ export default function ConversationBox ({ convos }: ConversationBoxProps) {
 
    useEffect(() => {
       if (!selectedConversation) return;
-      toast("conversation selected")
-      const channel = pusherClient.subscribe(selectedConversation.conversationId)
+      const channel = pusherClient.subscribe(selectedConversation.conversationId);
 
       channel.bind("new-message", (message: Message) => {
          setMessages(prev => ([...prev, message] as Message[]))
@@ -91,14 +90,6 @@ export default function ConversationBox ({ convos }: ConversationBoxProps) {
 
       const messageBody = message;
       setMessage('');
-      setMessages((p: any) => ([ ...p, {
-         id: 1,
-         messageId: 'null',
-         conversationId: selectedConversation?.conversationId!,
-         body: message,
-         direction: "out",
-         date: `${Date.now()}`
-      } ]));
 
       const sendMessage = await sendMessageToClientCustomer(selectedConversation?.clientId!, selectedConversation?.conversationId!, selectedConversation?.customerPhone!, messageBody);
       if (!sendMessage) setMessages((p: any) => ([ ...p.slice(0,-1) ]));
