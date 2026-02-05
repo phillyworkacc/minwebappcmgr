@@ -141,6 +141,34 @@ export default function ClientPage ({ client, websites, clientPayments, clientAu
                </div>
             </div>
          </div>
+         
+         <div className="box full pd-15">
+            <Card styles={{padding: "25px", boxShadow: "0 1px 3px rgba(0,0,0,0.098)", userSelect: "text" }}>
+               <div className="text-sm full bold-700 mb-05">Client Information</div>
+               <div className="text-s grey-5 full pd-05 bold-600">{clientInfo.name} ({clientInfo.businessName})</div>
+               <div className="text-s grey-5 full pd-05">{clientInfo.email}</div>
+               <div className="box full pd-05 dfb column gap-5 mt-1">
+                  <div className="text-xxs grey-5 full bold-500">Twilio Phone Number</div>
+                  <div className="text-xxs full">{clientInfo.twilioPhoneNumber}</div>
+               </div>
+               <div className="box full pd-05 dfb column gap-5 mb-1">
+                  <div className="text-xxs grey-5 full bold-500">Phone Number</div>
+                  <div className="text-xxs full">{clientInfo.phoneNumber}</div>
+               </div>
+               <div className="box full dfb column mt-05 mb-05 gap-10">
+                  <button 
+                     className="xxxs fit pd-1 pdx-15 tiny-shadow whitespace-nowrap"
+                     onClick={() => {
+                        copyToClipboard(clientInfo.clientid);
+                        toast.success("Copied Client Id");
+                     }}
+                  >
+                     <Copy size={15} /> Copy Client Id
+                  </button>
+
+               </div>
+            </Card>
+         </div>
 
          <WebsitesSection clientInfo={clientInfo} websites={websites} />
 
