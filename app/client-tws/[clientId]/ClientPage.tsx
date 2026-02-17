@@ -126,7 +126,7 @@ export default function ClientPage ({ client, websites, clientPayments, clientAu
                <div className="text-xxs pd-05">Started working with {clientInfo.name} on {formatMilliseconds(parseInt(clientInfo.createdat), true)}</div>
                <div className="text-xxs pd-05">Last updated on {formatMilliseconds(parseInt(clientInfo.latestupdate), true)}</div>
                <div className="htv mt-05 mb-05 gap-10 align-start justify-start">
-                  {(clientInfo.email !== '') && (<Link href={`mailto:${clientInfo.email}`}>
+                  {(clientInfo.email !== '') && (<Link href={`mailto:${clientInfo.email}`} target="_blank">
                      <button className="xxxs fit pd-1 pdx-15 tiny-shadow whitespace-nowrap">
                         <Mail size={17} /> Email {clientInfo.name}
                      </button>

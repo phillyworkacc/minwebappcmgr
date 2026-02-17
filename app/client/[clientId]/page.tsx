@@ -2,9 +2,9 @@ import { dalDbOperation, dalRequireAuth, dalRequireAuthRedirect } from "@/dal/he
 import { db } from "@/db";
 import { clientsTable, paymentsTable, websitesTable } from "@/db/schemas";
 import { and, eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 import LoadingPage from "./loading";
 import ClientPage from "./ClientPage";
-import { redirect } from "next/navigation";
 
 type ClientProps = {
    params: Promise<{
@@ -12,7 +12,7 @@ type ClientProps = {
    }>
 }
 
-export async function generateMetadata() {
+export async function generateMetadata () {
    return {
       title: `Minweb - Client Page`
    };
