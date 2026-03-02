@@ -24,12 +24,31 @@ export default function AppWrapper ({ children }: { children: ReactNode }) {
       { name: "Reviews", href: "/reviews", icon: <UserStar size={17} />, color: "#c27400" },
       { name: "Activities", href: "/activities", icon: <ListTodo size={17} />, color: "#000875" },
       { name: "Websites", href: "/websites", icon: <Globe2 size={17} />, color: "#93c900" },
+   ];
+
+   const quickAdds = [
+      { link: "/add-client", label: "Add Client" },
+      { link: "/add-client-tws", label: "Add Client TWS" },
+      { link: "/add-payment", label: "Add Payment" },
+      { link: "/add-activity", label: "Add Activity" },
    ]
 
    const showHeaderLinksModalBtn = () => {
       showModal({
          content: <>
-            <div className="text-l full bold-600 mb-15">Header Links</div>
+            <div className="text-l full bold-600">Header Links</div>
+            <div className="box full pd-2 dfb gap-10 wrap">
+               {quickAdds.map(quickAddAction => (
+                  <button 
+                     key={quickAddAction.link}
+                     className="xxs pd-1 pdx-2 outline-black tiny-shadow"
+                     onClick={() => {
+                        router.push(quickAddAction.link);
+                        close();
+                     }}
+                  >{quickAddAction.label}</button>
+               ))}
+            </div>
             <div className="box full dfb column gap-10">
                {links.map(link => (
                   <div 
