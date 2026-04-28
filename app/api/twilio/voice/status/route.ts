@@ -14,22 +14,22 @@ export async function POST (req: NextRequest) {
       }
          
       const formData = await req.formData();
-      const callStatus = formData.get("CallStatus") as string;
+      const dialStatus = formData.get("DialCallStatus") as string;
       const from = formData.get("From") as string; // customer
       const to = formData.get("To") as string;     // Actual Client Phone number
    
-      console.log(`dial status: ${callStatus}`);
+      console.log(`dial status: ${dialStatus}`);
       console.log(`from: ${from}`);
       console.log(`to: ${to}`);
       console.log(`customer: ${customer}`);
    
-      const allowedStatuses = ["no-answer", "busy", "failed", "canceled"];
-      if (!allowedStatuses.includes(callStatus)) {
+      const allowedStatuses = ["no-answer", "busy", "failed"];
+      if (!allowedStatuses.includes(dialStatus)) {
          return new Response("Ignored", { status: 200 });
       }
       
       // Only text back if NOT answered
-      if (allowedStatuses.includes(callStatus)) {
+      if (allowedStatuses.includes(dialStatus)) {
          // rate-limit (one SMS per 10 mins per number)
          const autoReplyRateLimitTime = 10 * 60 * 1000; // 10 minutes
          const lastReply = await getLastAutoReply(customer);
