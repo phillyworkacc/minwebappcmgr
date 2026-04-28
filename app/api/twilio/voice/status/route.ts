@@ -20,17 +20,17 @@ export async function POST (req: NextRequest) {
       const to = formData.get("To") as string;     // Actual Client Phone number
    
       console.log(`dial status: ${dialStatus}`);
-      console.log(`dial status: ${duration}`);
+      console.log(`dial duration: ${duration}`);
       console.log(`from: ${from}`);
       console.log(`to: ${to}`);
       console.log(`customer: ${customer}`);
       
       // const isMissed = dialStatus !== "completed" || duration < 5;
-      const isMissed = (dialStatus === "no-answer" || dialStatus === "busy" || dialStatus === "failed" || (dialStatus === "completed" && duration < 5));
+      const isMissed = (dialStatus === "no-answer" || dialStatus === "busy" || dialStatus === "failed" || (dialStatus === "completed" && duration < 10));
       if (!isMissed) return new Response("Call answered", { status: 200 });
       
       console.log(`call missed: ${isMissed}`);
-      
+
       // Only text back if NOT answered
       if (isMissed) {
          // rate-limit (one SMS per 10 mins per number)
@@ -67,6 +67,7 @@ export async function POST (req: NextRequest) {
       console.log("Missed Call Text Back Sent");
       return new Response("OK", { status: 200 });
    } catch (e) {
+      console.log(e);
       return new Response("Fail", { status: 500 });
    }
 }

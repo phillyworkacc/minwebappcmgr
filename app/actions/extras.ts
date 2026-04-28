@@ -75,7 +75,7 @@ export async function uploadImageToCloudinary (file: File) {
 export async function getLastAutoReply (customerPhone: string) {
    const res = await db.select().from(autoReplyLogsTable)
       .where(eq(autoReplyLogsTable.phone, customerPhone)).limit(1);
-   return res[0];
+   return res.length > 0 ? res[0] : null;
 }
 
 export async function updateLastAutoReply (customerPhone: string) {
