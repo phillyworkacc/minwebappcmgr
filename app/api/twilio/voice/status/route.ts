@@ -18,6 +18,7 @@ export async function POST (req: NextRequest) {
    const to = formData.get("To") as string;     // Actual Client Phone number
 
    // Only text back if NOT answered
+   console.log(dialStatus);
    if (dialStatus === "no-answer" || dialStatus === "busy" || dialStatus === "failed") {
       // TODO: rate-limit (one SMS per X mins per number)
 
