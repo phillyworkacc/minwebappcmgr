@@ -15,21 +15,28 @@ export async function POST (req: NextRequest) {
          
       const formData = await req.formData();
       const dialStatus = formData.get("DialCallStatus") as string;
+      const duration = parseInt(formData.get("DialCallDuration") as string || "0");
       const from = formData.get("From") as string; // customer
       const to = formData.get("To") as string;     // Actual Client Phone number
    
+      const allowedStatuses = ["no-answer", "busy", "failed"];
+      if (!allowedStatuses.includes(dialStatus)) return new Response("Ignored", { status: 200 });
+
+      
+      // const isMissed = dialStatus !== "completed" || duration < 5;
+      const isMissed = (dialStatus === "no-answer" || dialStatus === "busy" || dialStatus === "failed" || (dialStatus === "completed" && duration < 5));
+      if (!isMissed) return new Response("Call answered", { status: 200 });
+
+      
       console.log(`dial status: ${dialStatus}`);
+      console.log(`dial status: ${duration}`);
       console.log(`from: ${from}`);
       console.log(`to: ${to}`);
       console.log(`customer: ${customer}`);
-   
-      const allowedStatuses = ["no-answer", "busy", "failed"];
-      if (!allowedStatuses.includes(dialStatus)) {
-         return new Response("Ignored", { status: 200 });
-      }
+      console.log(`call missed: ${isMissed}`);
       
       // Only text back if NOT answered
-      if (allowedStatuses.includes(dialStatus)) {
+      if (allowedStatuses.includes(dialStatus) || isMissed) {
          // rate-limit (one SMS per 10 mins per number)
          const autoReplyRateLimitTime = 10 * 60 * 1000; // 10 minutes
          const lastReply = await getLastAutoReply(customer);
