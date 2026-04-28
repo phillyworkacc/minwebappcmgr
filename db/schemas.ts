@@ -123,3 +123,8 @@ export const badReviewsTable = pgTable("bad_reviews", {
    review: text("review"),
    createdAt: text("created_at")
 })
+
+export const autoReplyLogsTable = pgTable("auto_reply_logs", {
+   phone: text("phone").notNull().unique(),
+   lastSentAt: text("last_sent_at").notNull(),
+})

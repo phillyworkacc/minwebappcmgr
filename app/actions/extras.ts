@@ -1,5 +1,9 @@
 "use server"
 
+import { db } from "@/db";
+import { autoReplyLogsTable } from "@/db/schemas";
+import { eq } from "drizzle-orm";
+
 export async function getWebsiteMetadata (url: string): Promise<{ websiteTitle: string, icon: string; } | null> {
    try {
       const baseUrl = new URL(url).origin;
@@ -66,4 +70,15 @@ export async function uploadImageToCloudinary (file: File) {
    } catch (e) {
       return ''
    }
+}
+
+export async function getLastAutoReply (customerPhone: string) {
+   const res = await db.select().from(autoReplyLogsTable)
+      .where(eq(autoReplyLogsTable.phone, customerPhone)).limit(1);
+   return res[0];
+}
+
+export async function updateLastAutoReply (customerPhone: string) {
+   const res = await db.insert(autoReplyLogsTable).values({ phone: customerPhone, lastSentAt: Date.now().toString() });
+   return (res.rowCount === 1);
 }
