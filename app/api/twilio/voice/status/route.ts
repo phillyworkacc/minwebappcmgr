@@ -1,4 +1,4 @@
-import { getClientFromPhoneNumber, getClientFromTwilioPhone } from "@/app/actions/clients";
+import { getClientFromTwilioPhone } from "@/app/actions/clients";
 import { getLastAutoReply, updateLastAutoReply } from "@/app/actions/extras";
 import { createNewMessageUpsertConversation } from "@/app/actions/twilio-sms";
 import { NextRequest } from "next/server";
@@ -19,19 +19,10 @@ export async function POST (req: NextRequest) {
       const duration = parseInt(formData.get("DialCallDuration") as string || "0");
       const from = formData.get("From") as string; // customer
       const to = formData.get("To") as string;     // Actual Client Phone number
-   
-      console.log(`dial status: ${dialStatus}`);
-      console.log(`dial duration: ${duration}`);
-      console.log(`answered by: ${answeredBy}`);
-      console.log(`from: ${from}`);
-      console.log(`to: ${to}`);
-      console.log(`customer: ${customer}`);
       
       // const isMissed = dialStatus !== "completed" || duration < 5;
       const isMissed = (dialStatus === "no-answer" || dialStatus === "busy" || dialStatus === "failed" || answeredBy !== "human" || (dialStatus === "completed" && duration < 10));
       if (!isMissed) return new Response("Call answered", { status: 200 });
-      
-      console.log(`call missed: ${isMissed}`);
 
       // Only text back if NOT answered
       if (isMissed) {

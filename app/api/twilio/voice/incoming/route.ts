@@ -8,7 +8,6 @@ export async function POST (req: NextRequest) {
    const to = formData.get("To") as string;     // Twilio number
    const from = formData.get("From") as string; // Customer number
 
-
    // lookup client by Twilio number
    const client = await getClientFromTwilioPhone(to);
    const twiml = new twilio.twiml.VoiceResponse();
@@ -30,22 +29,7 @@ export async function POST (req: NextRequest) {
       machineDetection: "Enable"
    } as any);
 
-   // const dial = twiml.dial({
-   //    timeout: 20,
-   //    callerId: client.twilioPhoneNumber!,
-   //    record: "do-not-record",
-   // });
-
    dial.number(client.phoneNumber!);
-
-   // dial.number(
-   //    {
-   //       statusCallback: `https://app.minwebagency.com/api/twilio/voice/status?customer=${encodeURIComponent(from)}`,
-   //       statusCallbackEvent: ["completed"],
-   //       statusCallbackMethod: "POST",
-   //    },
-   //    client.phoneNumber!
-   // );
 
    return new Response(twiml.toString(), {
       headers: { "Content-Type": "text/xml" },
