@@ -51,7 +51,7 @@ export async function POST (req: NextRequest) {
          const message = `Sorry we missed your call to ${clientData.businessName}. How can we help?`;
    
          await client.messages.create({
-            from: from,
+            from: clientData.twilioPhoneNumber!,
             to: customer!,
             body: message,
          });
