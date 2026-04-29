@@ -27,7 +27,8 @@ export async function POST (req: NextRequest) {
       record: "do-not-record",
       action: `https://app.minwebagency.com/api/twilio/voice/status?customer=${encodeURIComponent(from)}`,
       method: "POST",
-   });
+      machineDetection: "Enable"
+   } as any);
 
    // const dial = twiml.dial({
    //    timeout: 20,
