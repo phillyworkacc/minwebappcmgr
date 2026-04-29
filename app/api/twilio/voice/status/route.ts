@@ -1,4 +1,4 @@
-import { getClientFromPhoneNumber } from "@/app/actions/clients";
+import { getClientFromPhoneNumber, getClientFromTwilioPhone } from "@/app/actions/clients";
 import { getLastAutoReply, updateLastAutoReply } from "@/app/actions/extras";
 import { createNewMessageUpsertConversation } from "@/app/actions/twilio-sms";
 import { NextRequest } from "next/server";
@@ -43,10 +43,10 @@ export async function POST (req: NextRequest) {
          }
    
          // lookup client by Actual Client Phone number
-         const clientData = await getClientFromPhoneNumber(to);
+         const clientData = await getClientFromTwilioPhone(to);
          if (!clientData) return new Response("No client", { status: 500 });
    
-         const message = `Sorry we missed your call to ${clientData.businessName!}. How can we help?`;
+         const message = `Sorry we missed your call to ${clientData.businessName}. How can we help?`;
    
          await client.messages.create({
             from: from,
