@@ -195,7 +195,7 @@ export async function notifyClient (clientId: string, customerPhone: string, not
             JSON.stringify({
                title: (notificationType == "quote") ? "Quote Request" : "New SMS Message",
                body: notificationMessage,
-               url: "/messages/123",
+               url: `/messages?convo=${convos[0].conversationId}`,
             })
          );
       }
@@ -233,7 +233,7 @@ export async function notifyClientAboutBadReview (clientId: string) {
             JSON.stringify({
                title: "Bad Review",
                body: notificationMessage,
-               url: "/messages/123",
+               url: "/bad-reviews",
             })
          );
       }
