@@ -193,7 +193,7 @@ export async function notifyClient (clientId: string, customerPhone: string, not
          await webpush.sendNotification(
             userSubscription.subscription as any,
             JSON.stringify({
-               title: "New SMS Message",
+               title: (notificationType == "quote") ? "Quote Request" : "New SMS Message",
                body: notificationMessage,
                url: "/messages/123",
             })
@@ -217,11 +217,28 @@ export async function notifyClientAboutBadReview (clientId: string) {
       const client = clients[0];
 
       // customize notification message
-      const notificationMessage = `Hi ${client.businessName}, you've received a new customer review on your account. Please log in to your dashboard to view. Acting quickly can help protect your reputation.`;
+      const notificationMessage = `Hi ${client.businessName}, you've received a new customer review on your account. Acting quickly can help protect your reputation.`;
     
       // send message
-      const sentNotificationSms = await sendSMSMessage(client.twilioPhoneNumber!, client.phoneNumber!, notificationMessage);
-      return sentNotificationSms.success;
+
+      // OLD METHOD
+      // const sentNotificationSms = await sendSMSMessage(client.twilioPhoneNumber!, client.phoneNumber!, notificationMessage);
+      // return sentNotificationSms.success;
+
+      const userSubscriptions: any[] = await getSubscriptionsForClient(clientId);
+
+      for (const userSubscription of userSubscriptions) {
+         await webpush.sendNotification(
+            userSubscription.subscription as any,
+            JSON.stringify({
+               title: "Bad Review",
+               body: notificationMessage,
+               url: "/messages/123",
+            })
+         );
+      }
+
+      return true;
    } catch (e) {
       console.log(e);
       return false;
