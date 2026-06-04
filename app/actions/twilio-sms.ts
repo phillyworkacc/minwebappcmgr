@@ -6,6 +6,8 @@ import { and, eq } from "drizzle-orm";
 import twilio from "twilio";
 import { getClientFromClientId } from "./clients";
 import { pusherServer } from "@/lib/pusher-server";
+import { getSubscriptionsForClient } from "./notifications";
+import webpush from "@/utils/webpush";
 
 export async function sendSMSMessage (fromClientTwilioPhoneNumber: string, receivingPhoneNumber: string, message: string) {
    try {
@@ -171,9 +173,7 @@ export async function notifyClient (clientId: string, customerPhone: string, not
 
       // customize notification message
       const notificationMessage = 
-         (notificationType == "quote") ? `New quote request from ${customer.customerName || 'a customer'}.
-Log in to view and respond.` : `New message from ${customer.customerName || 'a customer'}.
-Log in to reply.`;
+         (notificationType == "quote") ? `New quote request from ${customer.customerName || 'a customer'}` : `New message from ${customer.customerName || 'a customer'}`;
    
       // get client
       const dbClients = await db.select().from(clientsTable).where(eq(clientsTable.clientid, clientId)).limit(1);
@@ -182,8 +182,25 @@ Log in to reply.`;
       if (dbClients.length < 1) return false;
     
       // send message
-      const sentNotificationSms = await sendSMSMessage(dbClients[0].twilioPhoneNumber!, dbClients[0].phoneNumber!, notificationMessage);
-      return sentNotificationSms.success;
+
+      // OLD METHOD
+      // const sentNotificationSms = await sendSMSMessage(dbClients[0].twilioPhoneNumber!, dbClients[0].phoneNumber!, notificationMessage);
+      // return sentNotificationSms.success;
+
+      const userSubscriptions: any[] = await getSubscriptionsForClient(clientId);
+
+      for (const userSubscription of userSubscriptions) {
+         await webpush.sendNotification(
+            userSubscription.subscription as any,
+            JSON.stringify({
+               title: "New SMS Message",
+               body: notificationMessage,
+               url: "/messages/123",
+            })
+         );
+      }
+
+      return true;
    } catch (e) {
       console.log(e);
       return false;

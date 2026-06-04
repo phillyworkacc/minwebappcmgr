@@ -128,3 +128,11 @@ export const autoReplyLogsTable = pgTable("auto_reply_logs", {
    phone: text("phone").notNull().unique(),
    lastSentAt: text("last_sent_at").notNull(),
 })
+
+export const pushNotificationsTable = pgTable("push_notifications", {
+   id: serial("id").primaryKey(),
+   clientId: text("client_id"),
+   subscription: jsonb("subscription"),
+   createdAt: text("created_at"),
+   updatedAt: text("updated_at")
+})
