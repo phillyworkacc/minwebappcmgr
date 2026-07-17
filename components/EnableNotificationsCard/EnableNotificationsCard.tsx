@@ -8,7 +8,6 @@ export default function EnableNotificationsCard () {
    const { data: session, status } = useSession();
    const [enabledNotifications, setEnabledNotifications] = useState<boolean | null>(null);
 
-   console.log(enabledNotifications)
    useEffect(() => {
       if (localStorage.getItem("client-minweb-enabled-notifications")) {
          setEnabledNotifications(true);
@@ -27,8 +26,8 @@ export default function EnableNotificationsCard () {
 
    async function enablePushNotifications () {
       if (!session) return;
-      console.log(session.user?.email)
       await enableNotifications(session?.user?.email!);
+      setEnabledNotifications(true);
    }
 
    if (!enabledNotifications) {
