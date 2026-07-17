@@ -25,8 +25,8 @@ export default function EnableNotificationsCard () {
 
    async function enablePushNotifications () {
       const user = await getCurrentUser();
-      console.log(user)
       if (user == null) return;
+      console.log(user)
       await enableNotifications(user.email);
       setEnabledNotifications(true);
    }
