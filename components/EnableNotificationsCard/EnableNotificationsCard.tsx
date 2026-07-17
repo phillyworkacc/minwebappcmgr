@@ -1,12 +1,10 @@
 'use client'
 import { CSSProperties, useEffect, useState } from 'react'
 import { enableNotifications } from '@/utils/notifications'
-import { useSession } from 'next-auth/react'
-import Card from '../Card/Card'
 import { getCurrentUser } from '@/app/actions/user'
+import Card from '../Card/Card'
 
 export default function EnableNotificationsCard () {
-   const { data: session, status } = useSession();
    const [enabledNotifications, setEnabledNotifications] = useState<boolean | null>(null);
 
    useEffect(() => {
@@ -27,6 +25,7 @@ export default function EnableNotificationsCard () {
 
    async function enablePushNotifications () {
       const user = await getCurrentUser();
+      console.log(user)
       if (user == null) return;
       await enableNotifications(user.email);
       setEnabledNotifications(true);
