@@ -3,7 +3,7 @@ import { toast } from "sonner";
 export async function enableNotifications (userId: string) {
    try {
       const permission = await Notification.requestPermission();
-      if (permission !== "granted") return;
+      if (permission !== "granted") { console.log("Permission not granted"); return; }
    
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.subscribe({
@@ -11,10 +11,12 @@ export async function enableNotifications (userId: string) {
          applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!),
       });
    
-      await fetch("/api/push/subscribe", {
+      const response = await fetch("/api/push/subscribe", {
          method: "POST",
          body: JSON.stringify({ userId, subscription })
       });
+      const data = await response.json();
+      console.log(data);
 
       localStorage.setItem("client-minweb-enabled-notifications", "enabled");
    } catch (err) { console.log("Failed to enable notifications") }
