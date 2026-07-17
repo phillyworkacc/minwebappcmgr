@@ -16,7 +16,7 @@ export async function GET (request: Request) {
    if (!clientId) return NextResponse.json({ result: null }, { status: 200 });;
    
    const now = Date.now();
-   const oneDay = 24 * 60 * 60 * 1000;
+   const twoDays = 2 * 24 * 60 * 60 * 1000;
 
    const tasksAwaitingFinish: any[] = await db
       .select({
@@ -31,7 +31,7 @@ export async function GET (request: Request) {
       .from(activitiesTable)
       .innerJoin(clientsTable, eq(clientsTable.clientid, activitiesTable.clientid))
       .where(and(
-         lte(activitiesTable.dueDate, now + oneDay),
+         lte(activitiesTable.dueDate, now + twoDays),
          gte(activitiesTable.dueDate, now),
          eq(activitiesTable.notified, false),
          eq(activitiesTable.completed, false)
@@ -41,8 +41,8 @@ export async function GET (request: Request) {
       try {
          const userSubscriptions: any[] = await getSubscriptionsForClient(clientId!);
          
-         for (const userSubscription of userSubscriptions) {
-            for (const task of tasksAwaitingFinish) {
+         for (const task of tasksAwaitingFinish) {
+            for (const userSubscription of userSubscriptions) {
                await webpush.sendNotification(
                   userSubscription.subscription as any,
                   JSON.stringify({
@@ -58,7 +58,7 @@ export async function GET (request: Request) {
             .update(activitiesTable)
             .set({ notified: true })
             .where(and(
-               lte(activitiesTable.dueDate, now + oneDay),
+               lte(activitiesTable.dueDate, now + twoDays),
                gte(activitiesTable.dueDate, now),
                eq(activitiesTable.notified, false),
                eq(activitiesTable.completed, false)
