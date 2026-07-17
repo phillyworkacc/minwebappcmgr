@@ -2,39 +2,30 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { activitiesTable, clientsTable } from "@/db/schemas";
 import { and, eq, gte, lte } from "drizzle-orm";
-import activityEmail from "@/emails/activityEmail";
-import nodemailer from "nodemailer";
+import { getSubscriptionsForClient } from "@/app/actions/notifications";
+import { formatMilliseconds } from "@/utils/date";
+import webpush from "@/utils/webpush";
 
-export async function GET() {
+const baseurl = "https://app.minwebagency.com";
+
+export async function GET (request: Request) {
+   // get search params
+   const { searchParams } = new URL(request.url);
+   const clientId = searchParams.get("clientId");
+
+   if (!clientId) return NextResponse.json({ result: null }, { status: 200 });;
+   
    const now = Date.now();
    const oneDay = 24 * 60 * 60 * 1000;
 
    const tasksAwaitingFinish: any[] = await db
       .select({
-         id: activitiesTable.id,
          activityId: activitiesTable.activityId,
-         userid: activitiesTable.userid,
-         clientid: activitiesTable.clientid,
          title: activitiesTable.title,
-         priority: activitiesTable.priority,
-         markdownDescriptionText: activitiesTable.markdownDescriptionText,
-         completed: activitiesTable.completed,
-         completeDate: activitiesTable.completeDate,
          dueDate: activitiesTable.dueDate,
          date: activitiesTable.date,
          client: {
-            id: clientsTable.id,
-            userid: clientsTable.userid,
-            clientid: clientsTable.clientid,
-            name: clientsTable.name,
-            description: clientsTable.description,
-            image: clientsTable.image,
-            notes: clientsTable.notes,
-            status: clientsTable.status,
-            websites: clientsTable.websites,
-            review: clientsTable.review,
-            latestupdate: clientsTable.latestupdate,
-            createdat: clientsTable.createdat,
+            name: clientsTable.name
          }
       })
       .from(activitiesTable)
@@ -48,23 +39,20 @@ export async function GET() {
    
    if (tasksAwaitingFinish.length > 0) {
       try {
-         const transporter = nodemailer.createTransport({
-            service: "gmail",
-            secure: true,
-            host: "smtp.gmail.com",
-            port: 465,
-            auth: {
-               user: 'agencyminweb@gmail.com',
-               pass: process.env.GOOGLE_APP_PASSWORD!
-            },
-         });
-      
-         await transporter.sendMail({
-            from: `"Minweb Agency" <agencyminweb@gmail.com>`,
-            to: "ayomiposi.opadijo@gmail.com",
-            subject: "Activities Due Soon",
-            html: activityEmail(tasksAwaitingFinish)
-         });
+         const userSubscriptions: any[] = await getSubscriptionsForClient(clientId!);
+         
+         for (const userSubscription of userSubscriptions) {
+            for (const task of tasksAwaitingFinish) {
+               await webpush.sendNotification(
+                  userSubscription.subscription as any,
+                  JSON.stringify({
+                     title: task.title,
+                     body: `Complete this for ${task.client.name} before ${formatMilliseconds(task.dueDate, false, true)}`,
+                     url: `${baseurl}/activity/${task.activityId}`,
+                  })
+               );
+            }
+         }
 
          await db
             .update(activitiesTable)
@@ -76,11 +64,11 @@ export async function GET() {
                eq(activitiesTable.completed, false)
             ));
          
-         return NextResponse.json({ ok: "Sent email successfully" }, { status: 200 });
+         return NextResponse.json({ ok: "Sent notification successfully" }, { status: 200 });
       } catch (e) {
          console.log(e);
-         return NextResponse.json({ res: `Failed to send email or update db: ${e}` }, { status: 500 });
+         return NextResponse.json({ res: `Failed to notify user or update db: ${e}` }, { status: 500 });
       }
    }
-   return NextResponse.json({ res: `Complete` }, { status: 500 });
+   return NextResponse.json({ res: JSON.stringify(tasksAwaitingFinish) }, { status: 200 });
 }

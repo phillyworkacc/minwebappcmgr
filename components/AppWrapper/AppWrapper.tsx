@@ -9,6 +9,7 @@ import { BookCopy, ChevronRight, CircleUserRound, Globe2, ListTodo, Menu, PoundS
 import { useModal } from "../Modal/ModalContext"
 import userDefaultImage from "@/public/clientdefault.jpg"
 import phillyImage from "@/public/philly.jpeg"
+import EnableNotificationsCard from "../EnableNotificationsCard/EnableNotificationsCard"
 
 export default function AppWrapper ({ children }: { children: ReactNode }) {
    const { data: session } = useSession();
@@ -98,6 +99,8 @@ export default function AppWrapper ({ children }: { children: ReactNode }) {
          </div>
          <div className="content">
             <div className="content-wrapper">
+               <div className="box mb-05" />
+               <EnableNotificationsCard />
                <div className="box mb-05" />
                {children}
             </div>

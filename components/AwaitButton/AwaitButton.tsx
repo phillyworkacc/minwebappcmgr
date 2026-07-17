@@ -1,7 +1,7 @@
 'use client'
 import { wait } from "@/utils/wait";
 import { useState } from "react";
-import Spinner from "../Spinner/Spinner";
+import Spinner, { CustomSpinner } from "../Spinner/Spinner";
 
 type AwaitButtonProps = {
    className: string;
@@ -27,7 +27,7 @@ export default function AwaitButton ({ children, onClick, className, waitTime, a
    return (
       <button className={className} onClick={clickBtn} disabled={loadingState}>
          {loadingState ? <>
-            <Spinner black={blackSpinner} /> {children}
+            <CustomSpinner color={blackSpinner ? "#000" : "#fff"} /> {children}
          </> : children}
       </button>
    )
