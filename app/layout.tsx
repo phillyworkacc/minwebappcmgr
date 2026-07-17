@@ -4,6 +4,7 @@ import { DMSansFont } from "@/fonts/fonts";
 import { Toaster } from "sonner";
 import { ModalProvider } from "@/components/Modal/ModalContext";
 import SessionWrapper from "@/components/SessionWrapper/SessionWrapper";
+import NotificationsProvider from "@/components/NotificationsProvider/NotificationsProvider";
 
 export const metadata: Metadata = {
   title: "MinWeb",
@@ -17,21 +18,23 @@ export default function RootLayout({
 }>) {
   return (
     <SessionWrapper>
-      <html lang="en">
-        <head>
-          <link rel="manifest" href="/manifest.json" />
-          <link rel="apple-touch-icon" href="/favicon.ico" />
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-          <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
-        </head>
-        <body className={DMSansFont.className}>
-          <ModalProvider>
-            <Toaster richColors position="top-center" />
-            {children}
-          </ModalProvider>
-        </body>
-      </html>
+      <NotificationsProvider>
+        <html lang="en">
+          <head>
+            <link rel="manifest" href="/manifest.json" />
+            <link rel="apple-touch-icon" href="/favicon.ico" />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+            <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+          </head>
+          <body className={DMSansFont.className}>
+            <ModalProvider>
+              <Toaster richColors position="top-center" />
+              {children}
+            </ModalProvider>
+          </body>
+        </html>
+      </NotificationsProvider>
     </SessionWrapper>
   );
 }
