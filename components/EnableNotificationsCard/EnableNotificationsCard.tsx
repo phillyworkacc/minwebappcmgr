@@ -3,6 +3,7 @@ import { CSSProperties, useEffect, useState } from 'react'
 import { enableNotifications } from '@/utils/notifications'
 import { useSession } from 'next-auth/react'
 import Card from '../Card/Card'
+import { getCurrentUser } from '@/app/actions/user'
 
 export default function EnableNotificationsCard () {
    const { data: session, status } = useSession();
@@ -25,8 +26,9 @@ export default function EnableNotificationsCard () {
    if (enabledNotifications == null) return null;
 
    async function enablePushNotifications () {
-      if (!session) return;
-      await enableNotifications(session?.user?.email!);
+      const user = await getCurrentUser();
+      if (user == null) return;
+      await enableNotifications(user.email);
       setEnabledNotifications(true);
    }
 
