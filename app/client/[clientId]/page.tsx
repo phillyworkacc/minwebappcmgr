@@ -5,6 +5,7 @@ import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import LoadingPage from "./loading";
 import ClientPage from "./ClientPage";
+import Link from "next/link";
 
 type ClientProps = {
    params: Promise<{
@@ -67,14 +68,23 @@ export default async function Client ({ params }: ClientProps) {
    )
 
    if (clientInfo.success) {
-      if (clientInfo.data.client[0].websiteBuildType == "template-build-site") {
-         redirect(`/client-tws/${clientId}`);
+      if (clientInfo.data.client.length < 1) {
+         return (<div className="box full dfb column pd-3 pdx-3">
+            <div className="text-ml bold-500 pd-2">Customer Not Found</div>
+            <Link href="/clients" className="box fit">
+               <button className="xxs pd-12 fit pdx-2">Visit our website</button>
+            </Link>
+         </div>)
       } else {
-         return <ClientPage 
-            client={JSON.parse(JSON.stringify(clientInfo.data.client[0]))}
-            websites={JSON.parse(JSON.stringify(clientInfo.data.websites))}
-            clientPayments={JSON.parse(JSON.stringify(clientInfo.data.clientPayments))}
-         />
+         if (clientInfo.data.client[0].websiteBuildType == "template-build-site") {
+            redirect(`/client-tws/${clientId}`);
+         } else {
+            return <ClientPage 
+               client={JSON.parse(JSON.stringify(clientInfo.data.client[0]))}
+               websites={JSON.parse(JSON.stringify(clientInfo.data.websites))}
+               clientPayments={JSON.parse(JSON.stringify(clientInfo.data.clientPayments))}
+            />
+         }
       }
    } else {
       return <LoadingPage />;
