@@ -35,15 +35,15 @@ export default function ReviewPage({ client }: ReviewPageProps) {
       <div className="app">
          <div className="content">
             <div className="content-wrapper">
-               <div className='box full h-full dfb column align-center justify-center'>
-                  <div className="box full mb-05 dfb align-center justify-center">
+               <div className='box full h-full dfb column align-center'>
+                  <div className="box full mb-05 dfb align-center">
                      <CustomUserIcon url={client.image} size={60} round />
                   </div>
 
                   {(pageDisplay == "main") && (<>
-                     <div className="text-sm grey-5 full text-center">{client.name}</div>
-                     <div className="text-l bold-600 full text-center">Write your review</div>
-                     <div className="text-xs grey-5 full text-center pd-05 mb-15">Hi! It's been a pleasure working with you. Looking forward to working together again in the future!</div>
+                     <div className="text-sm grey-5 full">{client.name}</div>
+                     <div className="text-l bold-600 full">Write your review</div>
+                     <div className="text-xs grey-5 full pd-05 mb-05">Hi! It's been a pleasure working with you. Looking forward to working together again in the future!</div>
 
                      <div className="box full pd-1">
                         <textarea 
@@ -65,8 +65,8 @@ export default function ReviewPage({ client }: ReviewPageProps) {
                   </>)}
 
                   {(pageDisplay == "success") && (<>
-                     <div className="text-l bold-600 full text-center">Review Sent</div>
-                     <div className="text-xs grey-5 text-center pd-1">Your feedback has been submitted successfully — we really appreciate your time and support.</div>
+                     <div className="text-l bold-600 full">Review Sent</div>
+                     <div className="text-xs grey-5 pd-1">Your feedback has been submitted successfully — we really appreciate your time and support.</div>
                      <div className="box full dfb column gap-10">
                         <button className="xxs pd-12 full" onClick={() => router.push('https://minwebagency.com')}>Visit our website</button>
                         <button className='xxs pd-12 full outline-black tiny-shadow' onClick={() => setPageDisplay("main")}>Write another review</button>
@@ -74,7 +74,7 @@ export default function ReviewPage({ client }: ReviewPageProps) {
                   </>)}
 
                   {(pageDisplay == "fail") && (<>
-                     <div className="text-l bold-600 full text-center">Failed to Send Review</div>
+                     <div className="text-l bold-600 full">Failed to Send Review</div>
                      <div className="box full dfb column gap-10 mt-1">
                         <button className='xxs pd-12 full outline-black tiny-shadow' onClick={() => setPageDisplay("main")}>Try Again</button>
                      </div>
