@@ -26,6 +26,7 @@ type Client = {
    websites: string;
    review: string;
    latestupdate: string;
+   customGmailAppPassword: string;
    createdat: string;
 }
 

@@ -26,6 +26,7 @@ export const clientsTable = pgTable("clients", {
    websites: text("websites"),
    review: text("review"),
    latestupdate: text("latestupdate"),
+   customGmailAppPassword: text("custom_gmail_app_pwd"),
    createdat: text("createdat"),
 });
 
