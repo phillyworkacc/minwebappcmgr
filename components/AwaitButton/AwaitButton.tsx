@@ -27,7 +27,7 @@ export default function AwaitButton ({ children, onClick, className, waitTime, a
    return (
       <button className={className} onClick={clickBtn} disabled={loadingState}>
          {loadingState ? <>
-            <CustomSpinner color={blackSpinner ? "#000" : "#fff"} /> {children}
+            <CustomSpinner size={15} color={blackSpinner ? "#000" : "#fff"} /> {children}
          </> : children}
       </button>
    )
