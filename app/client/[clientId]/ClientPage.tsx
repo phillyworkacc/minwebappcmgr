@@ -16,13 +16,14 @@ import { copyToClipboard, titleCase } from "@/lib/str";
 import { CustomUserIcon } from "@/components/Icons/Icon";
 import { ClientStatusIndicatorFit } from "@/components/ClientStatusIndicator/ClientStatusIndicator";
 import { clientStatusInfo } from "@/utils/funcs";
-import { Check, Copy, Edit, Mail, Rocket, Trash2, Wrench, X } from "lucide-react";
+import { Check, Copy, Edit, Mail, Mailbox, Rocket, Trash2, Wrench, X } from "lucide-react";
 import { deleteClientAccount, updateClientInfoNotes, updateClientInfoStatus } from "@/app/actions/clients";
 import { formatNumber } from "@/utils/num";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ListView from "@/components/ListView/ListView";
 import ChangePassword from "./ChangePassword";
+import CustomEmailAppPwd from "./CustomEmailAppPwd";
 
 type ClientPageProps = {
    client: Client;
@@ -98,6 +99,12 @@ export default function ClientPage ({ client, websites, clientPayments }: Client
       })
    }
 
+   function addAppPassword () {
+      showModal({
+         content: <CustomEmailAppPwd clientInfo={clientInfo} setClientInfo={setClientInfo} />
+      })
+   }
+
    const copyReviewLink = () => {
       copyToClipboard(`https://app.minwebagency.com/review/${clientInfo.clientid}`);
       toast.success("Copied");
@@ -131,6 +138,9 @@ export default function ClientPage ({ client, websites, clientPayments }: Client
                   </Link>)}
                   <EditProfile clientInfo={clientInfo} setClientInfo={setClientInfo} />
                   <ChangePassword clientInfo={clientInfo} />
+                  <button className="xxxs grey tiny-shadow pd-1 pdx-15 whitespace-nowrap" onClick={addAppPassword}>
+                     <Mailbox size={17} /> Add App Password
+                  </button>
                </div>
             </div>
          </div>

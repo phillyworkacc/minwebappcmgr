@@ -258,6 +258,25 @@ export async function editClientProfile (
    return result
 }
 
+export async function changeClientAppPassword (clientid: string, newAppPassword: string) {
+   try {
+      const result = await dalRequireAuth(user =>
+         dalDbOperation(async () => {
+            const res = await db.update(clientsTable)
+               .set({ customGmailAppPassword: newAppPassword })
+               .where(and(
+                  eq(clientsTable.userid, user.userid!),
+                  eq(clientsTable.clientid, clientid)
+               ));
+            return (res.rowCount > 0);
+         })
+      )
+      return result.success ? result.data : false;
+   } catch (e) {
+      return false;
+   }
+}
+
 export async function editClientTWSProfile (
    clientid: string,
    newInfo: {

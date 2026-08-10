@@ -30,7 +30,6 @@ export async function POST (req: NextRequest) {
 
    try {
       const client = await getClientFromClientId(clientId);
-      console.log(client)
       if (!client) return NextResponse.json(JSON.stringify({ success: false }), { status: 200, headers: getCORSHeaders() });
 
       // validations
